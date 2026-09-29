@@ -271,12 +271,12 @@ document.querySelectorAll('a[href^="#"]').forEach(a=>a.addEventListener('click',
 const files=[];for(let i=1;i<=N;i++)files.push(`t${i}.jpg`,`t${i}s.jpg`);
 const tex={};let done=0;
 const L=new THREE.TextureLoader();
-Promise.all(files.map(f=>new Promise(r=>L.load(f,t=>{t.minFilter=THREE.LinearFilter;t.generateMipmaps=false;t.encoding=f.endsWith('s.jpg')?THREE.LinearEncoding:THREE.sRGBEncoding;tex[f]=t;done++;document.getElementById('loadN').textContent=Math.round(done/files.length*100)+'%';r()},undefined,()=>{done++;r()})))).then(init);
+Promise.all(files.map(f=>new Promise(r=>L.load(f,t=>{const col=!f.endsWith('s.jpg');t.minFilter=col?THREE.LinearMipmapLinearFilter:THREE.LinearFilter;t.generateMipmaps=col;if(col)try{t.anisotropy=Math.min(8,R.capabilities.getMaxAnisotropy())}catch(e){}t.encoding=f.endsWith('s.jpg')?THREE.LinearEncoding:THREE.sRGBEncoding;tex[f]=t;done++;document.getElementById('loadN').textContent=Math.round(done/files.length*100)+'%';r()},undefined,()=>{done++;r()})))).then(init);
 
 function init(){
 const cv=document.getElementById('gl');
 const R=new THREE.WebGLRenderer({canvas:cv,antialias:false,powerPreference:'high-performance'});
-R.setPixelRatio(Math.min(devicePixelRatio,touch?1.25:1.6));
+R.setPixelRatio(Math.min(devicePixelRatio,touch?2:1.6));   // sul telefono piena nitidezza (prima 1.25: si vedevano i pixel)
 R.outputEncoding=THREE.sRGBEncoding;R.toneMapping=THREE.ACESFilmicToneMapping;R.toneMappingExposure=1.05;
 const S=new THREE.Scene();S.background=new THREE.Color(0x070b09);
 const FOG=new THREE.Color(0x0d1714);
@@ -288,7 +288,7 @@ const stations=[];
 const segs=touch?[160,90]:[260,146];
 for(let i=0;i<N;i++){
   const g=new THREE.PlaneGeometry(W,H,segs[0],segs[1]);
-  const u={map:{value:tex[`t${i+1}.jpg`]},dep:{value:tex[`t${i+1}s.jpg`]},disp:{value:5},op:{value:1},time:{value:0},fogc:{value:FOG},camz:{value:0},glow:{value:1}};
+  const u={map:{value:tex[`t${i+1}.jpg`]},dep:{value:tex[`t${i+1}s.jpg`]},disp:{value:i===4?0:5},op:{value:1},time:{value:0},fogc:{value:FOG},camz:{value:0},glow:{value:1}};
   const m=new THREE.ShaderMaterial({uniforms:u,transparent:true,depthWrite:false,
     vertexShader:`uniform sampler2D dep;uniform float disp,time;varying vec2 vUv;varying float vD;varying vec3 vW;
       void main(){vUv=uv;float d=texture2D(dep,uv).r;vD=d;vec3 p=position;p.z+=pow(d,1.25)*disp;
