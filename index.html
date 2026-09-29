@@ -313,7 +313,7 @@ S.add(cam);
 const vids={};
 Object.keys(VID).forEach(k=>{const v=VID[k];
   // il video si sposta al fotogramma chiesto dallo scorrimento (codifica tutta a fotogrammi chiave: ricerca immediata)
-  const vd=document.createElement('video');vd.muted=true;vd.playsInline=true;vd.preload='auto';vd.src=v.file;
+  const vd=document.createElement('video');vd.muted=true;vd.defaultMuted=true;vd.setAttribute('muted','');vd.setAttribute('playsinline','');vd.setAttribute('webkit-playsinline','');vd.playsInline=true;vd.preload='auto';vd.src=v.file;vd.load();
   v.vd=vd;v.ready=false;v.seeking=false;v.want=0;
   vd.addEventListener('loadeddata',()=>{v.n=Math.round(vd.duration*24);v.ready=true;v.seeking=true;v.cur=0;vd.currentTime=.02});
   vd.addEventListener('seeked',()=>{v.seeking=false;v.tex.needsUpdate=true;v.shown=true;if(v.want!==v.cur)seekTo(v,v.want)});
@@ -321,6 +321,11 @@ Object.keys(VID).forEach(k=>{const v=VID[k];
   const m=new THREE.Mesh(new THREE.PlaneGeometry(1,1),new THREE.MeshBasicMaterial({map:t,color:new THREE.Color(1.22,1.2,1.16),transparent:true,depthTest:false,depthWrite:false,fog:false,toneMapped:false}));
   m.renderOrder=-100;m.position.z=-60;cam.add(m);v.mesh=m;v.tex=t;v.cur=-1;v.shown=false;vids[k]=v;
   stations[+k].mesh.visible=false;stations[+k].video=true;});
+/* iPhone: Safari prepara i fotogrammi del video solo dopo un play(). Lo si avvia muto, una volta, e si ferma subito;
+   finché il video non ha un fotogramma pronto resta visibile la foto della tappa (mai un buco nel bosco) */
+const sblocca=()=>Object.values(vids).forEach(v=>{if(v.unlocked||v.trying)return;v.trying=true;const p=v.vd.play();
+  if(p&&p.then)p.then(()=>{v.unlocked=true;v.vd.pause();if(!v.ready&&v.vd.readyState>=2)v.vd.dispatchEvent(new Event('loadeddata'))}).catch(()=>{}).finally(()=>{v.trying=false});else v.trying=false});
+sblocca();['touchstart','touchend','scroll','click'].forEach(e=>addEventListener(e,sblocca,{passive:true}));
 function seekTo(v,j){if(!v.ready)return;v.want=j;if(v.seeking||j===v.cur)return;v.seeking=true;v.cur=j;v.vd.currentTime=Math.min(v.vd.duration-.02,(j+.5)/24);}
 function fitVideo(v,f){if(f!==undefined)v.f=f;const K=v.fx,t=(v.f||0)*(K.length-1),i=Math.min(K.length-2,Math.floor(t)),fx=K[i]+(K[i+1]-K[i])*(t-i);
   const D=60,h=2*D*Math.tan(cam.fov*Math.PI/360),w=h*cam.aspect,va=1918/1080;
@@ -424,7 +429,7 @@ function camAt(p){
     v.mesh.material.opacity=THREE.MathUtils.smoothstep(d,24,32)*(+k===0?1-THREE.MathUtils.smoothstep(d,95,110):1-THREE.MathUtils.smoothstep(d,24+GAP,32+GAP));v.mesh.visible=v.mesh.material.opacity>.003&&v.shown;if(v.mesh.visible)vidMax=Math.max(vidMax,v.mesh.material.opacity);});
   stations.forEach((s,i)=>{const d=cam.position.z-s.z;s.u.time.value=t;
     s.u.op.value=THREE.MathUtils.smoothstep(d,24,32)*(1-THREE.MathUtils.smoothstep(d,95,130))*(1-vidMax);
-    s.mesh.visible=!s.video&&s.u.op.value>.003;
+    s.mesh.visible=(!s.video||!(vids[i]&&vids[i].shown))&&s.u.op.value>.003;
     if(d>31&&d<50&&d<best){best=d;near=i}});
   const inHero=sp<.03;
   hero.classList.toggle('off',!inHero);
