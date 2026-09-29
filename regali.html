@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Yamat · Regali</title>
+<meta name="description" content="La guida ai regali Yamat per cifra: da 34,99 € al bouquet Fioritura Eterna, e il buono regalo digitale.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,300..600,0..100,0..1;1,9..144,300..600,0..100,0..1&family=Figtree:wght@300;400;500&display=swap">
+<link rel="stylesheet" href="yamat.css">
+<style>
+.tabs{position:sticky;top:0;z-index:20;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding:calc(env(safe-area-inset-top,0px) + 86px) var(--gutter) 16px;background:linear-gradient(var(--night) 80%,transparent);margin-bottom:10px}
+.tabs::-webkit-scrollbar{display:none}
+.tabs a{flex:none;font:500 10px/1 var(--sans);letter-spacing:.24em;text-transform:uppercase;border:1px solid var(--line);border-radius:999px;padding:13px 18px;color:var(--bone-dim);transition:all .5s var(--ease)}
+.tabs a.on,.tabs a:hover{background:var(--bone);color:var(--night);border-color:var(--bone)}
+.tier{padding-block:clamp(60px,10vh,120px);scroll-margin-top:150px}
+.tier .head h2 .n{font-variant-numeric:lining-nums}
+.big{display:grid;grid-template-columns:1.2fr 1fr;gap:clamp(30px,5vw,90px);align-items:center}
+.big figure{margin:0;aspect-ratio:4/5;overflow:hidden;border-radius:2px}
+.big figure img{width:100%;height:100%;object-fit:cover}
+.big h3{font-size:clamp(54px,7vw,120px)}
+.big p{max-width:40ch;opacity:.86}
+.big .row{display:flex;gap:20px;align-items:center;flex-wrap:wrap;margin-top:30px}
+.big .price{font-size:30px;color:var(--gold-2)}
+@media (max-width:800px){.big{grid-template-columns:1fr}}
+.gift{position:relative;overflow:hidden;border:1px solid var(--line);border-radius:2px;display:grid;grid-template-columns:1fr 1fr;min-height:420px}
+.gift .card-g{display:grid;place-items:center;background:radial-gradient(120% 90% at 30% 20%,#1b2a22,var(--night));padding:40px}
+.gift .gc{width:min(360px,80%);aspect-ratio:1.6;border-radius:14px;background:linear-gradient(135deg,#1e2c24,#0c1411);border:1px solid rgba(233,201,143,.35);box-shadow:0 40px 80px -30px #000,inset 0 1px 0 rgba(255,255,255,.08);padding:24px;display:flex;flex-direction:column;justify-content:space-between;transform:rotate(-6deg);transition:transform 1.2s var(--ease)}
+.gift:hover .gc{transform:rotate(0) translateY(-8px)}
+.gc img{height:12px;width:auto;align-self:flex-start}
+.gc b{font:italic 300 30px/1 var(--display);font-variation-settings:"SOFT" 100,"WONK" 1;color:var(--gold-2)}
+.gc span{font:500 9px/1 var(--sans);letter-spacing:.3em;text-transform:uppercase;color:var(--bone-dim)}
+.gift .txt{padding:clamp(30px,5vw,70px);display:grid;align-content:center;gap:18px}
+.gift h2{font-size:clamp(40px,4.6vw,76px)}
+@media (max-width:800px){.gift{grid-template-columns:1fr}}
+.cal{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--line)}
+.cal div{padding:34px 26px 34px 0;border-bottom:1px solid var(--line)}
+.cal div + div{padding-left:26px;border-left:1px solid var(--line)}
+.cal .label{display:block;margin-bottom:16px}
+.cal b{display:block;font:300 clamp(28px,2.6vw,40px)/1.05 var(--display);font-variation-settings:"SOFT" 100,"opsz" 60;margin-bottom:12px}
+.cal p{margin:0;color:var(--bone-dim)}
+@media (max-width:800px){.cal{grid-template-columns:1fr}.cal div + div{padding-left:0;border-left:0}}
+</style>
+</head>
+<body>
+<main>
+  <section class="phead">
+    <div class="bg"><img src="g/scrigno_1.jpg" alt=""></div>
+    <div>
+      <span class="label">Guida ai regali · Natale 2026</span>
+      <h1 class="display rvx"><span class="rv"><span>Il regalo</span></span><span class="rv"><span><em>che resta</em></span></span></h1>
+      <p class="up">Candele fatte a mano, scelte per cifra. Fioritura Eterna, lo Scrigno Fiorito e Kora arrivano già nella loro confezione.</p>
+    </div>
+  </section>
+
+  <nav class="tabs" id="tabs" aria-label="Cifre">
+    <a href="#t40">Fino a 40 €</a><a href="#t60">Fino a 60 €</a><a href="#t90">Fino a 90 €</a><a href="#tbig">Il grande regalo</a><a href="#tgc">Buono regalo</a><a href="#tcal">Le date</a>
+  </nav>
+
+  <section class="wrap tier" id="t40">
+    <div class="head"><div><span class="label">Il pensiero</span><h2 class="display rvx" style="margin-top:22px"><span class="rv"><span>Fino a <em class="n">40 €</em></span></span></h2></div><p>Tre candele di soia, un colore e un accordo. Il regalo che non ha bisogno di biglietto.</p></div>
+    <div class="shop" data-ids="kitrelax"></div>
+  </section>
+  <section class="wrap tier" id="t60">
+    <div class="head"><div><span class="label">Il gesto</span><h2 class="display rvx" style="margin-top:22px"><span class="rv"><span>Fino a <em class="n">60 €</em></span></span></h2></div><p>Il cemento lavorato a mano, lo scrigno sigillato a ceralacca, le tre fiamme di Trilogy.</p></div>
+    <div class="shop" data-ids="scrigno,c01,c02d,trilogy"></div>
+  </section>
+  <section class="wrap tier" id="t90">
+    <div class="head"><div><span class="label">L’oggetto</span><h2 class="display rvx" style="margin-top:22px"><span class="rv"><span>Fino a <em class="n">90 €</em></span></span></h2></div><p>Kora, il bosco d’inverno in edizione limitata. L’Ovale, con le sue due fiamme, per le stanze grandi.</p></div>
+    <div class="shop" data-ids="kora,ovale"></div>
+  </section>
+
+  <section class="wrap tier" id="tbig">
+    <div class="big">
+      <figure class="mask"><img src="g/fioritura_2.jpg" alt="Fioritura Eterna, una rosa di cera"></figure>
+      <div>
+        <span class="label up">Il grande regalo</span>
+        <h3 class="display rvx" style="margin-top:20px"><span class="rv"><span>Fioritura</span></span><span class="rv"><span><em>Eterna</em></span></span></h3>
+        <p class="up">Diciotto rose e margherite di cera di soia, scolpite a mano una per una, avvolte in organza e legate con il nastro dentro la scatola artigianale Yamat. Quando ne accendi una, il profumo del bosco si libera nella stanza.</p>
+        <div class="row up"><span class="price num">119,99 €</span><a class="btn" href="prodotto.html?p=fioritura">Scopri il bouquet</a></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap tier" id="tgc">
+    <div class="gift up">
+      <div class="card-g"><div class="gc"><img src="logo_yamat_light.png" alt="YAMÂT"><b>Buono regalo</b><span>Digitale · importo libero</span></div></div>
+      <div class="txt">
+        <span class="label">Per chi arriva all’ultimo</span>
+        <h2 class="display">Il buono <em>regalo</em></h2>
+        <p class="muted" style="margin:0;max-width:40ch">Digitale, con l’importo che scegli tu. Arriva per email, e chi lo riceve sceglie la sua candela.</p>
+        <div><a class="btn" href="https://www.yamatcandle.com/gift-card" target="_blank" rel="noopener">Regala un buono ↗</a></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap tier" id="tcal">
+    <div class="head"><div><span class="label">Le date</span><h2 class="display rvx" style="margin-top:22px"><span class="rv"><span>Il calendario <em>del regalo</em></span></span></h2></div></div>
+    <div class="cal up">
+      <div><span class="label">27 – 30 novembre</span><b>Black Friday</b><p>Il 20% in meno su tutta la collezione, per quattro giorni.</p></div>
+      <div><span class="label">Dicembre</span><b>Per Natale</b><p>In Italia la consegna è in 2–4 giorni. L’ultimo giorno utile per riceverla entro Natale lo scriviamo qui a inizio dicembre.</p></div>
+      <div><span class="label">Fino all’ultimo</span><b>Il buono</b><p>Il buono regalo è digitale: si può regalare anche la vigilia.</p></div>
+    </div>
+  </section>
+</main>
+<footer data-auto></footer>
+
+<script src="data.js"></script>
+<script src="yamat.js"></script>
+<script>
+const Y=window.YAMAT,byId=Object.fromEntries(Y.products.map(p=>[p.id,p]));
+document.querySelectorAll('[data-ids]').forEach(el=>{el.innerHTML=el.dataset.ids.split(',').map((id,i)=>yCard(byId[id],i)).join('')});
+/* la cifra attiva si accende nella barra */
+const tabs=[...document.querySelectorAll('#tabs a')];
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){tabs.forEach(t=>t.classList.toggle('on',t.getAttribute('href')==='#'+e.target.id))}}),{rootMargin:'-45% 0px -50% 0px'});
+document.querySelectorAll('.tier').forEach(s=>io.observe(s));
+yReveal();
+</script>
+</body>
+</html>

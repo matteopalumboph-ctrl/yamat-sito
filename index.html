@@ -1,0 +1,447 @@
+<meta charset="utf-8">
+<meta name="robots" content="noindex">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Yamat · Il bosco</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="yamat.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,300..600,0..100,0..1;1,9..144,300..600,0..100,0..1&family=Figtree:wght@300;400;500&display=swap">
+<style>
+:root{
+  color-scheme: dark;
+  --night:#070b09;
+  --forest:#0c1411;
+  --bone:#f1e9d8;
+  --bone-dim:#b8ad97;
+  --gold:#cfa35e;
+  --gold-2:#e9c98f;
+  --wine:#7d2233;
+  --line:rgba(241,233,216,.14);
+  --display:"Fraunces", "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  --sans:"Figtree", "Avenir Next", "Helvetica Neue", Arial, sans-serif;
+  --gutter:clamp(16px,4vw,64px);
+  --ease:cubic-bezier(.19,1,.22,1);
+}
+*{box-sizing:border-box}
+html.lenis,html.lenis body{height:auto}
+.lenis.lenis-smooth{scroll-behavior:auto!important}
+body{margin:0;background:var(--night);color:var(--bone);font:300 16px/1.7 var(--sans);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+img{display:block;max-width:100%}
+::selection{background:var(--gold);color:var(--night)}
+:focus-visible{outline:1px solid var(--gold);outline-offset:4px}
+.wrap{padding-inline:var(--gutter)}
+.label{font:500 11px/1.2 var(--sans);letter-spacing:.32em;text-transform:uppercase;color:var(--gold)}
+.display{font-family:var(--display);font-weight:300;font-variation-settings:"SOFT" 100,"WONK" 0,"opsz" 144;line-height:.95;letter-spacing:-.02em;text-wrap:balance;margin:0}
+.display em{font-style:italic;font-variation-settings:"SOFT" 100,"WONK" 1,"opsz" 144;color:var(--gold-2)}
+.num{font-variant-numeric:tabular-nums lining-nums}
+
+/* riga di testo che sale da una maschera */
+.rv{display:block;overflow:hidden;padding-bottom:.08em}
+.rv > span{display:block;transform:translateY(110%);transition:transform 1.4s var(--ease)}
+.on .rv > span,.shown .rv > span{transform:none}
+.on .rv:nth-child(2) > span{transition-delay:.08s}.on .rv:nth-child(3) > span{transition-delay:.16s}
+.fade,.chap .fade{opacity:0;transform:translateY(14px);transition:opacity 1.2s var(--ease) .25s,transform 1.2s var(--ease) .25s}
+.on .fade,.shown .fade,.chap.on .fade{opacity:1;transform:none}
+.chap.on p.fade{opacity:.88}
+.chap .num-big{opacity:0;transition:opacity 1.6s var(--ease)}.chap.on .num-big{opacity:1}
+
+/* apertura */
+#load{position:fixed;inset:0;z-index:90;background:var(--night);display:grid;place-items:center;text-align:center;transition:opacity 1.6s var(--ease),visibility 1.6s}
+#load.done{opacity:0;visibility:hidden}
+#load .flame{width:10px;height:28px;margin:0 auto 26px;border-radius:50% 50% 45% 45%/60% 60% 40% 40%;background:radial-gradient(circle at 50% 70%,#fff4d6 0%,#ffc166 40%,rgba(255,140,40,0) 72%);filter:blur(.4px);animation:fl 1.8s ease-in-out infinite;transform-origin:50% 100%}
+@keyframes fl{0%,100%{transform:scale(1,1) rotate(-1deg)}50%{transform:scale(.92,1.08) rotate(1.5deg)}}
+#load .n{font:300 12px/1 var(--sans);letter-spacing:.3em;color:var(--bone-dim);margin-top:20px}
+
+/* il volo nel bosco */
+#volo{position:relative}
+#volo .stage{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden}
+#gl{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:pan-y;pointer-events:none}
+.hero{position:absolute;inset:0;display:grid;place-items:center;text-align:center;padding-inline:var(--gutter);pointer-events:none;transition:opacity 1.2s var(--ease),transform 1.6s var(--ease)}
+.hero .label{display:block;margin-bottom:28px}
+.hero h1{font-size:clamp(58px,10.5vw,176px)}
+.hero p{max-width:40ch;margin:30px auto 0;color:var(--bone);opacity:.8;font-size:clamp(15px,1.1vw,17px)}
+.hero .go{margin-top:54px;display:grid;justify-items:center;gap:16px}
+.hero .go i{display:block;width:1px;height:64px;background:linear-gradient(var(--gold),transparent);animation:go 2.8s var(--ease) infinite;transform-origin:top}
+@keyframes go{0%{transform:scaleY(0)}50%{transform:scaleY(1)}100%{transform:scaleY(1);opacity:0}}
+.hero.off{opacity:0;transform:scale(1.06)}
+@media (max-aspect-ratio:4/5){.hero{place-items:end center;padding-bottom:calc(env(safe-area-inset-bottom,0px) + 6svh)}.hero .label{margin-bottom:16px}.hero h1{font-size:clamp(50px,14vw,76px)}.hero p{margin-top:16px}.hero .go{margin-top:22px;gap:10px}.hero .go i{height:36px}}
+
+.chap{position:absolute;bottom:clamp(48px,12vh,130px);max-width:min(560px,88vw);pointer-events:none}
+.chap.l{left:var(--gutter)}.chap.r{right:calc(var(--gutter) + 120px);text-align:right}
+.chap.on{pointer-events:auto}
+.chap .label{display:block;margin-bottom:18px}
+.chap h2{font-size:clamp(56px,8.4vw,140px)}
+.chap p{margin:22px 0 0;max-width:38ch;font-size:clamp(15px,1.1vw,17px);opacity:.85}
+.chap.r p{margin-left:auto}
+.chap .row{display:flex;gap:22px;align-items:center;margin-top:30px;flex-wrap:wrap}
+.chap.r .row{justify-content:flex-end}
+.price{font:300 22px/1 var(--display);font-variation-settings:"SOFT" 100,"opsz" 40}
+.btn{display:inline-flex;align-items:center;gap:14px;background:var(--bone);color:var(--night);font:500 11px/1 var(--sans);letter-spacing:.24em;text-transform:uppercase;padding:18px 26px;border-radius:999px;position:relative;overflow:hidden;isolation:isolate;transition:color .6s var(--ease)}
+.btn::before{content:"";position:absolute;inset:0;background:var(--gold);transform:translateY(101%);transition:transform .7s var(--ease);z-index:-1;border-radius:inherit}
+.btn:hover::before{transform:none}
+.btn.ghost{background:rgba(7,11,9,.3);color:var(--bone);border:1px solid var(--line);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.btn.ghost:hover{color:var(--night)}
+.chap .num-big{position:absolute;top:-.55em;font:italic 300 clamp(120px,16vw,260px)/1 var(--display);font-variation-settings:"SOFT" 100,"WONK" 1,"opsz" 144;color:rgba(207,163,94,.10);z-index:-1;pointer-events:none}
+.chap.l .num-big{left:-.1em}.chap.r .num-big{right:-.05em}
+
+.path{position:absolute;right:var(--gutter);top:50%;transform:translateY(-50%);display:grid;gap:22px;justify-items:end}
+.path::before{content:"";position:absolute;right:4px;top:4px;bottom:4px;width:1px;background:var(--line)}
+.path::after{content:"";position:absolute;right:4px;top:4px;width:1px;height:calc(var(--p,0)*100% - 8px);background:linear-gradient(var(--gold-2),var(--gold))}
+.path button{appearance:none;background:none;border:0;color:var(--bone-dim);display:flex;align-items:center;gap:14px;cursor:pointer;font:italic 300 15px/1 var(--display);padding:0;position:relative;z-index:1}
+.path button span{opacity:0;transform:translateX(10px);transition:opacity .6s var(--ease),transform .6s var(--ease)}
+.path button:hover span,.path button.on span{opacity:1;transform:none}
+.path button i{width:9px;height:9px;border-radius:50%;background:var(--night);border:1px solid currentColor;transition:all .6s var(--ease)}
+.path button.on{color:var(--gold-2)}.path button.on i{background:var(--gold);border-color:var(--gold);box-shadow:0 0 18px 4px rgba(233,201,143,.45)}
+.sound{position:absolute;left:var(--gutter);top:calc(env(safe-area-inset-top,0px) + 86px);font:500 10px/1 var(--sans);letter-spacing:.26em;text-transform:uppercase;color:var(--bone-dim);background:rgba(7,11,9,.3);border:1px solid var(--line);border-radius:999px;padding:11px 16px;cursor:pointer;display:flex;gap:10px;align-items:center;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.sound:hover{color:var(--bone);border-color:var(--gold)}
+.sound b{display:inline-flex;gap:2px;align-items:flex-end;height:10px}.sound b i{width:2px;height:3px;background:currentColor}
+.sound.on b i{animation:eq 1.1s ease-in-out infinite}.sound.on b i:nth-child(2){animation-delay:.2s}.sound.on b i:nth-child(3){animation-delay:.45s}
+@keyframes eq{50%{height:10px}}
+@media (max-width:800px){.path{display:none}.chap.r{right:auto;left:var(--gutter);text-align:left}.chap.r p{margin-left:0}.chap.r .row{justify-content:flex-start}.chap.r .num-big{right:auto;left:-.1em}}
+
+
+/* il viaggio continua */
+.next{border-top:1px solid var(--line)}
+.next a{position:relative;display:grid;grid-template-columns:60px 1fr auto;gap:24px;align-items:center;padding:34px 0;border-bottom:1px solid var(--line);overflow:hidden}
+.next .k{font:italic 300 20px/1 var(--display);color:var(--gold)}
+.next b{font:300 clamp(44px,6.4vw,110px)/1 var(--display);font-variation-settings:"SOFT" 100,"opsz" 144;letter-spacing:-.02em;transition:transform 1s var(--ease)}
+.next b em{font-style:italic;color:var(--gold-2);font-variation-settings:"SOFT" 100,"WONK" 1,"opsz" 144}
+.next small{color:var(--bone-dim);font-size:14px;text-align:right;max-width:26ch}
+.next a:hover b{transform:translateX(20px)}
+@media (max-width:800px){.next a{grid-template-columns:36px 1fr}.next small{grid-column:2;text-align:left}
+/* dopo il bosco */
+.after{position:relative;background:var(--night)}
+.after::before{content:"";position:absolute;left:0;right:0;top:-30vh;height:30vh;background:linear-gradient(transparent,var(--night));pointer-events:none}
+.sec{padding-block:clamp(100px,16vh,190px)}
+.head{display:grid;grid-template-columns:1fr auto;align-items:end;gap:32px;margin-bottom:clamp(44px,8vh,90px)}
+.head h2{font-size:clamp(52px,7.6vw,128px)}
+.head p{max-width:36ch;color:var(--bone-dim);margin:0;text-align:right}
+@media (max-width:800px){.head{grid-template-columns:1fr}.head p{text-align:left}}
+@media (prefers-reduced-motion:reduce){*{transition-duration:.01ms!important;animation:none!important}}
+</style>
+
+<div id="load" role="status" aria-live="polite">
+  <div>
+    <div class="flame" aria-hidden="true"></div>
+    <img src="logo_yamat_light.png" alt="YAMÂT" style="height:16px;width:auto;margin:0 auto">
+    <p class="n num" id="loadN">0%</p>
+  </div>
+</div>
+
+
+<main>
+  <section id="volo" aria-label="Il viaggio nel bosco">
+    <div class="stage">
+      <canvas id="gl" aria-hidden="true"></canvas>
+
+      <div class="hero" id="hero">
+        <div>
+          <span class="label">Call of Wood · Brescia</span>
+          <h1 class="display">Entra nel <em>bosco.</em></h1>
+          <p>All'imbrunire, lungo il sentiero, qualcuno ha acceso cinque candele. Seguile fino alla radura.</p>
+          <div class="go"><span class="label" style="color:var(--bone-dim)">Scorri</span><i></i></div>
+        </div>
+      </div>
+
+      <article class="chap r" data-c="0">
+        <span class="num-big" aria-hidden="true">i</span>
+        <span class="label fade">I · Il ceppo di muschio</span>
+        <h2 class="display"><span class="rv"><span>Kora</span></span></h2>
+        <p class="fade">Resina, muschio e pino. Vaso in cemento scanalato colato a mano, coperchio sigillato con la ceralacca.</p>
+        <div class="row fade"><span class="price num">79,99 €</span><a class="btn" href="prodotto.html?p=kora">Scopri Kora</a></div>
+      </article>
+      <article class="chap l" data-c="1">
+        <span class="num-big" aria-hidden="true">ii</span>
+        <span class="label fade">II · Tra le radici del faggio</span>
+        <h2 class="display"><span class="rv"><span>Candela .01</span></span><span class="rv"><span><em>e</em> .02D</span></span></h2>
+        <p class="fade">Cemento modellato a mano, cera di soia, stoppino in legno. Il verde salvia col coperchio di bambù, il grigio scuro sulla sua base.</p>
+        <div class="row fade"><span class="price num">49,99 €</span><a class="btn ghost" href="prodotto.html?p=c01">.01</a><a class="btn ghost" href="prodotto.html?p=c02d">.02D</a></div>
+      </article>
+      <article class="chap r" data-c="2">
+        <span class="num-big" aria-hidden="true">iii</span>
+        <span class="label fade">III · Il ruscello</span>
+        <h2 class="display"><span class="rv"><span>Trilogy</span></span><span class="rv"><span><em>Flames</em></span></span></h2>
+        <p class="fade">Tre candele di soia senza vaso, modellate a spirale, con i petali di rosa dentro la cera.</p>
+        <div class="row fade"><span class="price num">59,99 €</span><a class="btn" href="prodotto.html?p=trilogy">Scopri</a></div>
+      </article>
+      <article class="chap l" data-c="3">
+        <span class="num-big" aria-hidden="true">iv</span>
+        <span class="label fade">IV · Il sottobosco in fiore</span>
+        <h2 class="display"><span class="rv"><span>Fioritura</span></span><span class="rv"><span><em>Eterna</em></span></span></h2>
+        <p class="fade">Diciotto rose e margherite di cera, scolpite a mano. Accanto, lo Scrigno Fiorito: sette candele, nastro bordeaux, sigillo di ceralacca.</p>
+        <div class="row fade"><span class="price num">119,99 €</span><a class="btn" href="prodotto.html?p=fioritura">Scopri</a><a class="btn ghost" href="prodotto.html?p=scrigno">Scrigno · 54,99 €</a></div>
+      </article>
+      <article class="chap l" data-c="4">
+        <span class="num-big" aria-hidden="true">v</span>
+        <span class="label fade">V · La radura</span>
+        <h2 class="display"><span class="rv"><span>Ovale</span></span><span class="rv"><span><em>Double .04</em></span></span></h2>
+        <p class="fade">Due stoppini in legno in un solo vaso ovale di cemento. Per le stanze che chiedono due fiamme.</p>
+        <div class="row fade"><span class="price num">89,99 €</span><a class="btn" href="prodotto.html?p=ovale">Scopri</a></div>
+      </article>
+
+      <nav class="path" id="path" aria-label="Tappe del viaggio">
+        <button type="button" data-g="0"><span>Il ceppo</span><i></i></button>
+        <button type="button" data-g="1"><span>Le radici</span><i></i></button>
+        <button type="button" data-g="2"><span>Il ruscello</span><i></i></button>
+        <button type="button" data-g="3"><span>Il sottobosco</span><i></i></button>
+        <button type="button" data-g="4"><span>La radura</span><i></i></button>
+      </nav>
+      <button class="sound" id="sound" type="button" aria-pressed="false"><b aria-hidden="true"><i></i><i></i><i></i></b><span>Suono del bosco</span></button>
+    </div>
+  </section>
+
+  <div class="after">
+    <section id="collezione" class="sec wrap">
+      <div class="head">
+        <div><span class="label">La collezione</span><h2 class="display" style="margin-top:22px"><span class="rv"><span>Otto <em>luci</em></span></span></h2></div>
+        <p>Vasi in cemento lavorati a mano, cera di soia, stoppini in legno. Spedizione gratuita in Italia.</p>
+      </div>
+      <div class="shop" id="shop"></div>
+    </section>
+
+    <section class="wrap" style="padding-bottom:clamp(90px,14vh,160px)">
+      <div style="display:flex;justify-content:center;margin-bottom:clamp(90px,14vh,160px)"><a class="btn ghost" href="collezione.html">Tutta la collezione</a></div>
+      <div class="band up">
+        <div><b>A mano</b><span>Ogni vaso lavorato e rifinito</span></div>
+        <div><b>Soia</b><span>Cera vegetale</span></div>
+        <div><b>Legno</b><span>Lo stoppino che crepita</span></div>
+        <div><b>Brescia</b><span>Il laboratorio</span></div>
+      </div>
+    </section>
+
+    <section class="wrap" id="laboratorio" style="padding-bottom:clamp(90px,14vh,160px)">
+      <span class="label up" style="display:block;margin-bottom:30px">Il viaggio continua</span>
+      <div class="next">
+        <a href="fragranze.html" class="up" data-cursor="Entra"><span class="k">i</span><b>Le <em>fragranze</em></b><small>Sei accordi, dal bosco al frutteto</small></a>
+        <a href="regali.html" class="up" data-cursor="Entra"><span class="k">ii</span><b>I <em>regali</em></b><small>Per cifra, fino al buono digitale</small></a>
+        <a href="laboratorio.html" class="up" data-cursor="Entra"><span class="k">iii</span><b>Il <em>laboratorio</em></b><small>Cemento, soia, legno, a Brescia</small></a>
+      </div>
+    </section>
+
+    <footer data-auto></footer>
+  </div>
+</main>
+
+<script src="data.js"></script>
+<script>document.body.dataset.clear="1"</script>
+<script src="yamat.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/CopyShader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/LuminosityHighPassShader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/EffectComposer.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/RenderPass.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/ShaderPass.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
+<script>
+(function(){
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const touch=matchMedia('(hover: none)').matches;
+const N=5, GAP=26, W=92, H=W*941/1672;
+const FOC=[[.21,.47],[.72,.49],[.2,.5],[.68,.5],[.5,.52]];
+const VID={0:{file:'v1.mp4',n:121,fx:[.22,.22,.22,.21,.2]},1:{file:'v2.mp4',n:121,fx:[.77,.76,.74,.71,.69]}};   // fx = posizione del prodotto nella clip, a 0-25-50-75-100%   // tappe che hanno già la clip del volo
+const SIDE=[1,-1,1,-1,-1];
+
+/* ---------- collezione: nomi, prezzi e foto dal negozio ---------- */
+document.getElementById('shop').innerHTML=window.YAMAT.products.map(yCard).join('');
+yReveal();
+
+/* ---------- scorrimento morbido ---------- */
+let lenis=null;
+/* scorrimento nativo: funziona con rotella, trackpad e dita; la morbidezza la dà la camera */
+document.querySelectorAll('a[href^="#"]').forEach(a=>a.addEventListener('click',e=>{const id=a.getAttribute('href').slice(1);const el=id==='inizio'?document.body:document.getElementById(id);if(!el)return;e.preventDefault();lenis?lenis.scrollTo(id==='inizio'?0:el,{duration:2.2}):el.scrollIntoView({behavior:'smooth'})}));
+
+/* ---------- 3D ---------- */
+const files=[];for(let i=1;i<=N;i++)files.push(`t${i}.jpg`,`t${i}s.jpg`);
+const tex={};let done=0;
+const L=new THREE.TextureLoader();
+Promise.all(files.map(f=>new Promise(r=>L.load(f,t=>{t.minFilter=THREE.LinearFilter;t.generateMipmaps=false;t.encoding=f.endsWith('s.jpg')?THREE.LinearEncoding:THREE.sRGBEncoding;tex[f]=t;done++;document.getElementById('loadN').textContent=Math.round(done/files.length*100)+'%';r()},undefined,()=>{done++;r()})))).then(init);
+
+function init(){
+const cv=document.getElementById('gl');
+const R=new THREE.WebGLRenderer({canvas:cv,antialias:false,powerPreference:'high-performance'});
+R.setPixelRatio(Math.min(devicePixelRatio,touch?1.25:1.6));
+R.outputEncoding=THREE.sRGBEncoding;R.toneMapping=THREE.ACESFilmicToneMapping;R.toneMappingExposure=1.05;
+const S=new THREE.Scene();S.background=new THREE.Color(0x070b09);
+const FOG=new THREE.Color(0x0d1714);
+const cam=new THREE.PerspectiveCamera(52,1,.1,500);
+
+/* le tappe: fotografie vere trasformate in rilievo 3D con la mappa di profondità */
+const SX=[0,0,0,0,0];
+const stations=[];
+const segs=touch?[160,90]:[260,146];
+for(let i=0;i<N;i++){
+  const g=new THREE.PlaneGeometry(W,H,segs[0],segs[1]);
+  const u={map:{value:tex[`t${i+1}.jpg`]},dep:{value:tex[`t${i+1}s.jpg`]},disp:{value:5},op:{value:1},time:{value:0},fogc:{value:FOG},camz:{value:0},glow:{value:1}};
+  const m=new THREE.ShaderMaterial({uniforms:u,transparent:true,depthWrite:false,
+    vertexShader:`uniform sampler2D dep;uniform float disp,time;varying vec2 vUv;varying float vD;varying vec3 vW;
+      void main(){vUv=uv;float d=texture2D(dep,uv).r;vD=d;vec3 p=position;p.z+=pow(d,1.25)*disp;
+        vec4 w=modelMatrix*vec4(p,1.);vW=w.xyz;gl_Position=projectionMatrix*viewMatrix*w;}`,
+    fragmentShader:`uniform sampler2D map;uniform float op,time,glow;uniform vec3 fogc;varying vec2 vUv;varying float vD;varying vec3 vW;
+      void main(){vec3 c=texture2D(map,vUv).rgb;
+        float warm=smoothstep(.62,.98,c.r)*smoothstep(.08,.35,c.r-c.b);
+        float fl=1.+warm*(sin(time*9.3)*.1+sin(time*14.7)*.08+sin(time*3.1)*.06+.18)*glow;
+        c*=fl;
+        float edge=smoothstep(0.,.05,vUv.x)*smoothstep(1.,.95,vUv.x)*smoothstep(0.,.06,vUv.y)*smoothstep(1.,.94,vUv.y);
+        float f=smoothstep(.0,.55,1.-vD)*.35;c=mix(c,fogc,f);
+        gl_FragColor=vec4(c,op*edge);}`});
+  const mesh=new THREE.Mesh(g,m);
+  mesh.position.set(0,0,-24-i*GAP);
+  
+  mesh.renderOrder=-i;
+  S.add(mesh);stations.push({mesh,u,z:mesh.position.z,px:(FOC[i][0]-.5)*W,py:(.5-FOC[i][1])*H});
+}
+
+/* clip del volo: fotogrammi guidati dallo scorrimento, su un piano davanti alla camera */
+S.add(cam);
+const vids={};
+Object.keys(VID).forEach(k=>{const v=VID[k];
+  // il video si sposta al fotogramma chiesto dallo scorrimento (codifica tutta a fotogrammi chiave: ricerca immediata)
+  const vd=document.createElement('video');vd.muted=true;vd.playsInline=true;vd.preload='auto';vd.src=v.file;
+  v.vd=vd;v.ready=false;v.seeking=false;v.want=0;
+  vd.addEventListener('loadeddata',()=>{v.n=Math.round(vd.duration*24);v.ready=true;v.seeking=true;v.cur=0;vd.currentTime=.02});
+  vd.addEventListener('seeked',()=>{v.seeking=false;v.tex.needsUpdate=true;v.shown=true;if(v.want!==v.cur)seekTo(v,v.want)});
+  const t=new THREE.Texture(vd);t.encoding=THREE.sRGBEncoding;t.minFilter=THREE.LinearFilter;t.generateMipmaps=false;
+  const m=new THREE.Mesh(new THREE.PlaneGeometry(1,1),new THREE.MeshBasicMaterial({map:t,color:new THREE.Color(1.22,1.2,1.16),transparent:true,depthTest:false,depthWrite:false,fog:false,toneMapped:false}));
+  m.renderOrder=-100;m.position.z=-60;cam.add(m);v.mesh=m;v.tex=t;v.cur=-1;v.shown=false;vids[k]=v;
+  stations[+k].mesh.visible=false;stations[+k].video=true;});
+function seekTo(v,j){if(!v.ready)return;v.want=j;if(v.seeking||j===v.cur)return;v.seeking=true;v.cur=j;v.vd.currentTime=Math.min(v.vd.duration-.02,(j+.5)/24);}
+function fitVideo(v,f){if(f!==undefined)v.f=f;const K=v.fx,t=(v.f||0)*(K.length-1),i=Math.min(K.length-2,Math.floor(t)),fx=K[i]+(K[i+1]-K[i])*(t-i);
+  const D=60,h=2*D*Math.tan(cam.fov*Math.PI/360),w=h*cam.aspect,va=1918/1080;
+  let W2=w,H2=w/va;if(H2<h){H2=h;W2=h*va}
+  const maxS=(W2-w)/2;v.mesh.scale.set(W2,H2,1);v.mesh.position.x=THREE.MathUtils.clamp((.5-fx)*W2,-maxS,maxS);}
+
+/* raggi di luce tra gli alberi */
+const shaftTex=(()=>{const c=document.createElement('canvas');c.width=64;c.height=256;const g=c.getContext('2d');const gr=g.createLinearGradient(0,0,0,256);gr.addColorStop(0,'rgba(255,236,200,.55)');gr.addColorStop(1,'rgba(255,236,200,0)');g.fillStyle=gr;g.fillRect(0,0,64,256);const gx=g.createLinearGradient(0,0,64,0);gx.addColorStop(0,'rgba(0,0,0,1)');gx.addColorStop(.5,'rgba(0,0,0,0)');gx.addColorStop(1,'rgba(0,0,0,1)');g.globalCompositeOperation='destination-out';g.fillStyle=gx;g.fillRect(0,0,64,256);return new THREE.CanvasTexture(c)})();
+const shafts=[];
+for(let i=0;i<14;i++){const m=new THREE.Mesh(new THREE.PlaneGeometry(2.2+Math.random()*2.5,26),new THREE.MeshBasicMaterial({map:shaftTex,transparent:true,depthWrite:false,blending:THREE.AdditiveBlending,opacity:.05+Math.random()*.06,color:new THREE.Color().setHSL(.1+Math.random()*.05,.5,.75)}));
+  m.position.set((Math.random()-.5)*16,8,-8-Math.random()*(N*GAP));m.rotation.z=.35+Math.random()*.2;m.rotation.y=(Math.random()-.5)*.6;S.add(m);shafts.push(m)}
+
+/* nebbia bassa che scorre */
+const mistMat=new THREE.ShaderMaterial({transparent:true,depthWrite:false,blending:THREE.AdditiveBlending,uniforms:{time:{value:0}},
+  vertexShader:`varying vec2 vUv;varying vec3 vW;void main(){vUv=uv;vec4 w=modelMatrix*vec4(position,1.);vW=w.xyz;gl_Position=projectionMatrix*viewMatrix*w;}`,
+  fragmentShader:`uniform float time;varying vec2 vUv;varying vec3 vW;
+   float h(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5);}
+   float n(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix(mix(h(i),h(i+vec2(1,0)),f.x),mix(h(i+vec2(0,1)),h(i+vec2(1,1)),f.x),f.y);}
+   float fbm(vec2 p){float v=0.,a=.5;for(int i=0;i<5;i++){v+=a*n(p);p*=2.03;a*=.5;}return v;}
+   void main(){float f=fbm(vW.xz*.12+vec2(time*.03,time*.015));float e=smoothstep(0.,.25,vUv.x)*smoothstep(1.,.75,vUv.x);
+     gl_FragColor=vec4(vec3(.55,.66,.68)*f*f*.22*e,1.);}`});
+const mist=new THREE.Mesh(new THREE.PlaneGeometry(40,N*GAP+80,1,1),mistMat);mist.rotation.x=-Math.PI/2;mist.position.set(0,-.4,-(N*GAP)/2);S.add(mist);
+
+/* lucciole, polline e petali di luce, tutti in 3D */
+function points(n,spread,size,col,kind){
+  const g=new THREE.BufferGeometry(),a=new Float32Array(n*3),s=new Float32Array(n);
+  for(let i=0;i<n;i++){a[i*3]=(Math.random()-.5)*spread;a[i*3+1]=Math.random()*9-1.5;a[i*3+2]=12-Math.random()*(N*GAP+30);s[i]=Math.random()}
+  g.setAttribute('position',new THREE.BufferAttribute(a,3));g.setAttribute('seed',new THREE.BufferAttribute(s,1));
+  const m=new THREE.ShaderMaterial({transparent:true,depthWrite:false,blending:THREE.AdditiveBlending,uniforms:{time:{value:0},px:{value:R.getPixelRatio()},col:{value:new THREE.Color(col)},size:{value:size},kind:{value:kind}},
+    vertexShader:`attribute float seed;uniform float time,px,size,kind;varying float vA;
+      void main(){vec3 p=position;float t=time*(.12+seed*.2)+seed*60.;
+        if(kind<.5){p+=vec3(sin(t*1.3)*.6,sin(t*.9)*.35+cos(t*1.7)*.2,cos(t*1.1)*.6);vA=pow(max(0.,sin(time*(1.2+seed*1.8)+seed*30.)),3.);}
+        else{p.y=mod(p.y+time*(.04+seed*.05),9.)-1.5;p.x+=sin(t)*.4;vA=.25+seed*.35;}
+        vec4 mv=modelViewMatrix*vec4(p,1.);gl_Position=projectionMatrix*mv;
+        gl_PointSize=size*(.5+seed)*px*(22./-mv.z);vA*=smoothstep(60.,6.,-mv.z)*smoothstep(.6,2.,-mv.z);}`,
+    fragmentShader:`uniform vec3 col;varying float vA;void main(){float d=length(gl_PointCoord-.5);float a=smoothstep(.5,0.,d);a*=a;gl_FragColor=vec4(col*a*vA*1.6,a*vA);}`});
+  const p=new THREE.Points(g,m);S.add(p);return m;}
+const pm=[points(touch?260:520,18,6,0xffc877,0),points(touch?700:1500,20,1.6,0xe8ecd8,1)];
+
+/* post-produzione: bagliore delle fiamme, vignetta, grana */
+const comp=new THREE.EffectComposer(R);
+comp.addPass(new THREE.RenderPass(S,cam));
+const bloom=new THREE.UnrealBloomPass(new THREE.Vector2(512,512),touch?.6:.75,.8,.86);comp.addPass(bloom);
+const fin=new THREE.ShaderPass({uniforms:{tDiffuse:{value:null},time:{value:0},asp:{value:1}},
+  vertexShader:`varying vec2 vUv;void main(){vUv=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}`,
+  fragmentShader:`uniform sampler2D tDiffuse;uniform float time,asp;varying vec2 vUv;
+   float h(vec2 p){return fract(sin(dot(p,vec2(12.9898,78.233)))*43758.5453);}
+   void main(){vec2 d=vUv-.5;float r=length(d*vec2(asp,1.));
+     vec3 c;c.r=texture2D(tDiffuse,vUv+d*.0025).r;c.g=texture2D(tDiffuse,vUv).g;c.b=texture2D(tDiffuse,vUv-d*.0025).b;
+     c*=mix(1.,.35,smoothstep(.35,1.05,r));
+     c=mix(c,c*vec3(1.05,1.,.92),.5);
+     c+=(h(vUv*vec2(1920.,1080.)+fract(time))-.5)*.045;
+     gl_FragColor=vec4(c,1.);}`});
+comp.addPass(fin);
+
+function size(){const w=cv.clientWidth,h=cv.clientHeight;R.setSize(w,h,false);comp.setSize(w,h);cam.aspect=w/h;
+  cam.fov=w<h?68:52;cam.updateProjectionMatrix();fin.uniforms.asp.value=w/h;Object.values(vids).forEach(v=>fitVideo(v));}
+size();addEventListener('resize',size);
+
+/* il percorso della camera: z avanza, x ondeggia verso ogni tappa */
+const sec=document.getElementById('volo');
+sec.style.height=(N*(touch?170:230)+160)+'vh';
+const chaps=[...document.querySelectorAll('.chap')],pathBtns=[...document.querySelectorAll('.path button')],hero=document.getElementById('hero'),pathEl=document.getElementById('path');
+const Z0=stations[0].z+52, Z1=stations[N-1].z+30;
+let sp=0,mx=0,my=0,tmx=0,tmy=0,active=-2;
+addEventListener('pointermove',e=>{tmx=e.clientX/innerWidth-.5;tmy=e.clientY/innerHeight-.5});
+function prog(){const r=sec.getBoundingClientRect(),tot=sec.offsetHeight-innerHeight;return Math.min(1,Math.max(0,-r.top/tot))}
+const clock=new THREE.Clock();
+function target(i,d){const st=stations[i];const port=cam.aspect<1;
+  const vw=2*d*Math.tan(cam.fov*Math.PI/360)*cam.aspect, vh=vw/cam.aspect;
+  return {x:st.px+(port?0:SIDE[i]*.2*vw), y:st.py+(port?-.14:.16)*vh};}
+function camAt(p){
+  const z=Z0+(Z1-Z0)*p;
+  let i=0;for(let k=0;k<N;k++){if(z<=stations[k].z+32+.0001)i=k}
+  // i = tappa corrente (quella davanti che non abbiamo ancora superato)
+  let cur=0;for(let k=0;k<N;k++){if(z>stations[k].z+24)continue;cur=k+1}
+  cur=Math.min(cur,N-1);
+  const a=target(cur,Math.max(24,z-stations[cur].z));
+  let x=a.x,y=a.y;
+  if(cur<N-1){const s=stations[cur];const m=THREE.MathUtils.smoothstep(-(z-s.z),-32,-24);
+    if(m>0){const b=target(cur+1,z-stations[cur+1].z);x=x+(b.x-x)*m;y=y+(b.y-y)*m}}
+  return {x,y,z};
+}
+(function loop(){
+  const t=clock.getElapsedTime();
+  const target=prog();sp+=(target-sp)*(reduce?1:.055);
+  mx+=(tmx-mx)*.04;my+=(tmy-my)*.04;
+  const c=camAt(sp);
+  const bob=reduce?0:Math.sin(t*.9)*.05;
+  cam.position.set(c.x+mx*.5,c.y+bob*.4-my*.25,c.z);
+  const look=new THREE.Vector3(c.x+mx*.2,c.y-my*.1,c.z-40);
+  cam.lookAt(look);
+  // tappe: si attraversano, dissolvendo appena la camera le raggiunge
+  let near=-1,best=1e9;
+  let vidMax=0;
+  Object.keys(vids).forEach(k=>{const v=vids[k],st=stations[+k];const d=cam.position.z-st.z;
+    // la clip copre la tappa da quando la vediamo (d=80) a quando la superiamo (d=24)
+    const f=THREE.MathUtils.clamp((52-d)/(52-30),0,1);seekTo(v,Math.round(f*(v.n-1)));if(cam.aspect<1)fitVideo(v,f);
+    v.mesh.material.opacity=THREE.MathUtils.smoothstep(d,24,32)*(+k===0?1-THREE.MathUtils.smoothstep(d,95,110):1-THREE.MathUtils.smoothstep(d,24+GAP,32+GAP));v.mesh.visible=v.mesh.material.opacity>.003&&v.shown;if(v.mesh.visible)vidMax=Math.max(vidMax,v.mesh.material.opacity);});
+  stations.forEach((s,i)=>{const d=cam.position.z-s.z;s.u.time.value=t;
+    s.u.op.value=THREE.MathUtils.smoothstep(d,24,32)*(1-THREE.MathUtils.smoothstep(d,95,130))*(1-vidMax);
+    s.mesh.visible=!s.video&&s.u.op.value>.003;
+    if(d>31&&d<50&&d<best){best=d;near=i}});
+  const inHero=sp<.03;
+  hero.classList.toggle('off',!inHero);
+  const act=inHero?-1:near;
+  if(act!==active){active=act;chaps.forEach((el,k)=>el.classList.toggle('on',k===act))}
+  pathBtns.forEach((b,k)=>b.classList.toggle('on',k===near&&!inHero));
+  pathEl.style.setProperty('--p',sp.toFixed(4));
+  pm.forEach(m=>m.uniforms.time.value=t);mistMat.uniforms.time.value=t;fin.uniforms.time.value=t;
+  shafts.forEach((m,i)=>{m.material.opacity=(.05+.04*Math.sin(t*.3+i))*(1-THREE.MathUtils.smoothstep(sp,.9,1))});
+  comp.render();
+  requestAnimationFrame(loop);
+})();
+pathBtns.forEach(b=>b.addEventListener('click',()=>{const k=+b.dataset.g;const z=stations[k].z+42;const p=(z-Z0)/(Z1-Z0);
+  const top=sec.offsetTop+(sec.offsetHeight-innerHeight)*p;lenis?lenis.scrollTo(top,{duration:2.6}):scrollTo({top,behavior:'smooth'})}));
+document.getElementById('load').classList.add('done');
+}
+setTimeout(()=>document.getElementById('load').classList.add('done'),12000);
+
+/* ---------- suono del bosco, generato ---------- */
+let ac=null,master=null;
+document.getElementById('sound').addEventListener('click',e=>{
+  const b=e.currentTarget;
+  if(!ac){ac=new (window.AudioContext||window.webkitAudioContext)();master=ac.createGain();master.gain.value=0;master.connect(ac.destination);
+    const len=ac.sampleRate*4,buf=ac.createBuffer(2,len,ac.sampleRate);
+    for(let ch=0;ch<2;ch++){const d=buf.getChannelData(ch);let l=0;for(let i=0;i<len;i++){l=(l+.02*(Math.random()*2-1))/1.02;d[i]=l*3.2}}
+    const src=ac.createBufferSource();src.buffer=buf;src.loop=true;const lp=ac.createBiquadFilter();lp.type='lowpass';lp.frequency.value=520;
+    const lfo=ac.createOscillator(),lg=ac.createGain();lfo.frequency.value=.07;lg.gain.value=260;lfo.connect(lg);lg.connect(lp.frequency);lfo.start();
+    src.connect(lp);lp.connect(master);src.start();
+    (function crack(){if(!ac)return;const o=ac.createBufferSource(),bb=ac.createBuffer(1,ac.sampleRate*.03,ac.sampleRate),dd=bb.getChannelData(0);
+      for(let i=0;i<dd.length;i++)dd[i]=(Math.random()*2-1)*Math.pow(1-i/dd.length,6);
+      o.buffer=bb;const hp=ac.createBiquadFilter();hp.type='highpass';hp.frequency.value=1800;const g=ac.createGain();g.gain.value=.06+Math.random()*.1;
+      o.connect(hp);hp.connect(g);g.connect(master);o.start();setTimeout(crack,140+Math.random()*(Math.random()<.2?90:900))})();
+  }
+  const on=b.getAttribute('aria-pressed')!=='true';b.setAttribute('aria-pressed',on);b.classList.toggle('on',on);
+  b.querySelector('span').textContent=on?'Silenzio':'Suono del bosco';ac.resume();master.gain.setTargetAtTime(on?.55:0,ac.currentTime,.6);
+});
+})();
+</script>

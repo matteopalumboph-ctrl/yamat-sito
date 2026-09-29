@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Yamat · Candela</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,300..600,0..100,0..1;1,9..144,300..600,0..100,0..1&family=Figtree:wght@300;400;500&display=swap">
+<link rel="stylesheet" href="yamat.css">
+<style>
+.pdp{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:clamp(30px,5vw,90px);padding:calc(env(safe-area-inset-top,0px) + 110px) var(--gutter) 0;align-items:start}
+.gal{display:grid;gap:14px}
+.gal figure{margin:0;overflow:hidden;border-radius:2px;background:var(--forest);cursor:zoom-in;position:relative}
+.gal figure:first-child{aspect-ratio:4/5}
+.gal figure img{width:100%;height:100%;object-fit:cover;transition:transform 1.6s var(--ease)}
+.gal figure:hover img{transform:scale(1.04)}
+.gal .pair{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.gal .pair figure{aspect-ratio:4/5}
+.gal .wide{aspect-ratio:3/2}
+.info{position:sticky;top:110px;padding-bottom:40px}
+.crumb{font-size:12px;letter-spacing:.14em;color:var(--bone-dim);margin-bottom:34px;display:flex;gap:10px}
+.crumb a:hover{color:var(--gold-2)}
+.info h1{font-size:clamp(52px,6.2vw,104px);margin-top:18px}
+.info .pr{display:flex;align-items:baseline;gap:18px;margin-top:26px}
+.info .pr .price{font-size:30px;color:var(--gold-2)}
+.info .pr small{color:var(--bone-dim);font-size:13px}
+.lead{font:italic 300 clamp(20px,1.7vw,25px)/1.35 var(--display);font-variation-settings:"SOFT" 100,"WONK" 1,"opsz" 40;margin:30px 0 14px;color:var(--bone)}
+.body{color:var(--bone);opacity:.84;max-width:48ch;margin:0}
+.notes{display:flex;gap:10px;flex-wrap:wrap;margin-top:26px}
+.notes span{font:italic 300 17px/1 var(--display);border:1px solid var(--line);border-radius:999px;padding:11px 16px;color:var(--gold-2)}
+.opts{margin-top:34px;display:grid;gap:22px}
+.opt h4{font:500 10px/1 var(--sans);letter-spacing:.28em;text-transform:uppercase;color:var(--bone-dim);margin:0 0 12px}
+.opt .ch{display:flex;gap:8px;flex-wrap:wrap}
+.opt .ch span{display:inline-flex;align-items:center;gap:10px;border:1px solid var(--line);border-radius:999px;padding:10px 15px;font-size:13px}
+.opt .ch i{width:14px;height:14px;border-radius:50%;box-shadow:inset 0 0 0 1px rgba(255,255,255,.25)}
+.buybox{margin-top:36px;display:grid;gap:14px}
+.buybox .btn{width:100%;padding:22px}
+.buybox p{margin:0;font-size:13px;color:var(--bone-dim);text-align:center}
+.info .acc{margin-top:40px}
+.facts{display:grid;grid-template-columns:auto 1fr;gap:10px 26px;margin:0}
+.facts dt{color:var(--bone-dim);font-size:13px;letter-spacing:.06em}
+.facts dd{margin:0;color:var(--bone)}
+@media (max-width:900px){.pdp{grid-template-columns:1fr;padding-top:calc(env(safe-area-inset-top,0px) + 90px)}.info{position:static}
+  .gal{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:10px;margin-inline:calc(var(--gutter)*-1);padding-inline:var(--gutter);scrollbar-width:none}
+  .gal::-webkit-scrollbar{display:none}
+  .gal figure,.gal .pair figure,.gal .wide{flex:0 0 86%;aspect-ratio:4/5;scroll-snap-align:center}
+  .gal .pair{display:contents}}
+.count{display:none;justify-content:space-between;margin-top:14px;font-size:12px;letter-spacing:.2em;color:var(--bone-dim)}
+.count b{flex:1;height:1px;background:var(--line);margin:0 16px;align-self:center;position:relative}
+.count b i{position:absolute;left:0;top:0;height:1px;background:var(--gold);transition:width .5s var(--ease)}
+@media (max-width:900px){.count{display:flex}}
+
+.inbosco{position:relative;margin-top:clamp(100px,16vh,180px);min-height:80svh;display:grid;align-items:center;overflow:hidden}
+.inbosco .bg{position:absolute;inset:-10% 0;z-index:-1}.inbosco .bg img{width:100%;height:100%;object-fit:cover;opacity:.75}
+.inbosco::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(var(--night),transparent 25%,transparent 70%,var(--night)),linear-gradient(90deg,rgba(7,11,9,.7),transparent 60%)}
+.inbosco .txt{padding-inline:var(--gutter);max-width:720px}
+.inbosco h2{font-size:clamp(46px,6vw,100px);margin:20px 0 26px}
+
+.bar{position:fixed;left:10px;right:10px;bottom:calc(10px + env(safe-area-inset-bottom,0px));z-index:50;display:none;align-items:center;justify-content:space-between;gap:12px;background:rgba(12,20,17,.86);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid var(--line);border-radius:999px;padding:8px 8px 8px 22px;transform:translateY(140%);transition:transform .8s var(--ease)}
+.bar.on{transform:none}
+.bar b{font:300 18px/1.1 var(--display);font-variation-settings:"SOFT" 100,"opsz" 40;font-weight:300}
+.bar small{display:block;color:var(--gold-2);font-size:12px}
+.bar .btn{padding:15px 18px}
+@media (max-width:900px){.bar{display:flex}}
+
+.lb{position:fixed;inset:0;z-index:90;background:rgba(7,11,9,.96);display:grid;place-items:center;opacity:0;visibility:hidden;transition:opacity .6s var(--ease),visibility .6s}
+.lb.on{opacity:1;visibility:visible}
+.lb img{max-width:92vw;max-height:86vh;object-fit:contain;transform:scale(.96);transition:transform .8s var(--ease)}
+.lb.on img{transform:none}
+.lb button{position:absolute;appearance:none;background:rgba(7,11,9,.4);border:1px solid var(--line);color:var(--bone);border-radius:999px;cursor:pointer;font:500 10px/1 var(--sans);letter-spacing:.24em;text-transform:uppercase;padding:14px 18px}
+.lb .x{top:calc(env(safe-area-inset-top,0px) + 20px);right:var(--gutter)}
+.lb .pv{left:var(--gutter);top:50%}.lb .nx{right:var(--gutter);top:50%}
+</style>
+</head>
+<body>
+<main id="main"></main>
+<footer data-auto></footer>
+<div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="Foto ingrandita"><img alt=""><button class="x" type="button">Chiudi</button><button class="pv" type="button" aria-label="Foto precedente">←</button><button class="nx" type="button" aria-label="Foto successiva">→</button></div>
+
+<script src="data.js"></script>
+<script>
+/* costruisce la pagina prima della testata comune */
+const Y=window.YAMAT, q=new URLSearchParams(location.search).get('p')||'kora';
+const P=Y.products.find(x=>x.id===q)||Y.products[0];
+const SW={'Caffè':'#6b4a33','Grigio blu notte':'#3b4452','Grigio':'#8f8f8a','Grigio salvia':'#9aa593','Verde':'#9db8a0','Panna':'#efe6d2','Azzurro':'#a9c6d6','Celeste':'#bcd9e4','Verde acqua':'#9fd3c7','Rosa antico':'#cf9e98'};
+const shopUrl=`${Y.shop}/product-page/${P.wix}`;
+document.title=`${P.name} · Yamat`;
+const g=P.gallery, fig=(src,cls='')=>`<figure class="${cls}" data-cursor="Zoom"><img src="${src}" alt="${P.name}" loading="lazy"></figure>`;
+let gal=fig(g[0]);for(let i=1;i<g.length;i+=3){if(g[i+1]){gal+=`<div class="pair">${fig(g[i])}${fig(g[i+1])}</div>`}else if(g[i]){gal+=fig(g[i],'wide')}if(g[i+2])gal+=fig(g[i+2],'wide')}
+const hasProf=P.options.some(o=>/Profumo|Panna|Verde acqua|Rosa antico/.test(o[0])&&o[0]!=='Colore');
+const opts=P.options.map(([n,v])=>{const isC=/Colore|Vaso/.test(n);const title=/^(Panna|Verde acqua|Rosa antico)$/.test(n)?'Profumo della candela '+n.toLowerCase():n;
+  return `<div class="opt"><h4>${title}</h4><div class="ch">${v.map(x=>`<span>${isC&&SW[x]?`<i style="background:${SW[x]}"></i>`:''}${x}</span>`).join('')}</div></div>`}).join('');
+const facts=P.facts.map(([a,b])=>`<dt>${a}</dt><dd>${b}</dd>`).join('');
+const tappe=['','Il ceppo di muschio','Tra le radici del faggio','Il ruscello','Il sottobosco in fiore','La radura'];
+const rel=Y.products.filter(x=>x.id!==P.id).sort((a,b)=>(b.kind===P.kind)-(a.kind===P.kind)).slice(0,4);
+document.getElementById('main').innerHTML=`
+<section class="pdp">
+  <div><div class="gal" id="gal">${gal}</div><div class="count"><span id="ci">01</span><b><i id="cb"></i></b><span>${String(g.length).padStart(2,'0')}</span></div></div>
+  <div class="info">
+    <div class="crumb"><a href="collezione.html">Collezione</a><span>/</span><span>${P.name}</span></div>
+    <span class="label">${P.tag?P.tag+' · ':''}${P.line}</span>
+    <h1 class="display">${P.name.replace(/(\.\S+)$/,'<em>$1</em>')}</h1>
+    <div class="pr"><span class="price num">${P.price} €</span><small>Spedizione gratuita in Italia</small></div>
+    <p class="lead">${P.lead}</p>
+    <p class="body">${P.body}</p>
+    ${hasProf?'':`<div class="notes">${P.notes.map(n=>`<span>${n}</span>`).join('')}</div>`}
+    ${opts?`<div class="opts">${opts}</div>`:''}
+    <div class="buybox"><a class="btn" href="${shopUrl}" target="_blank" rel="noopener">Acquista su yamatcandle.com ↗</a>
+      <p>${opts?'Le opzioni si scelgono nel negozio. ':''}Consegna in 2–4 giorni in Italia.</p></div>
+    <div class="acc">
+      <details open><summary>Materiali<i></i></summary><div class="in"><dl class="facts">${facts}</dl></div></details>
+      <details><summary>Come si accende<i></i></summary><div class="in"><p>La prima volta lascia che la cera si sciolga fino ai bordi. Prima di ogni accensione accorcia lo stoppino. Mai più di quattro ore di fila, mai incustodita.</p><p><a class="lnk" href="cura.html">La guida alla cura</a></p></div></details>
+      <details><summary>Spedizione e resi<i></i></summary><div class="in"><p>Gratuita in Italia, in 2–4 giorni. In Europa e nel resto del mondo in 3–6 giorni: 25 € fino a 3 kg, 45 € fino a 5 kg, 80 € oltre.</p><p><a class="lnk" href="assistenza.html">Resi e pagamenti</a></p></div></details>
+    </div>
+  </div>
+</section>
+${P.tappa?`<section class="inbosco"><div class="bg"><img src="t${P.tappa}.jpg" alt="" data-par=".1" style="object-position:${[0,21,72,20,68,50][P.tappa]}% 50%"></div><div class="txt">
+  <span class="label up">Nel bosco · tappa ${['','I','II','III','IV','V'][P.tappa]}</span>
+  <h2 class="display rvx"><span class="rv"><span>${tappe[P.tappa]}</span></span></h2>
+  <a class="btn ghost up" href="index.html">Fai il viaggio nel bosco</a></div></section>`:''}
+<section class="wrap sec">
+  <div class="head"><div><span class="label">Nella stessa luce</span><h2 class="display rvx" style="margin-top:22px"><span class="rv"><span>Anche <em>queste</em></span></span></h2></div>
+  <a class="lnk" href="collezione.html">Tutta la collezione</a></div>
+  <div class="shop">${rel.map((p,i)=>'@'+i).join('')}</div>
+</section>
+<div class="bar" id="bar"><div><b>${P.name}</b><small class="num">${P.price} €</small></div><a class="btn" href="${shopUrl}" target="_blank" rel="noopener">Acquista ↗</a></div>`;
+</script>
+<script src="yamat.js"></script>
+<script>
+const sh=document.querySelector('.sec .shop');sh.innerHTML=rel.map(yCard).join('');
+yReveal();yPar();
+/* barra d'acquisto sul telefono */
+const bb=document.querySelector('.buybox'),bar=document.getElementById('bar');
+new IntersectionObserver(([e])=>bar.classList.toggle('on',!e.isIntersecting&&e.boundingClientRect.top<0)).observe(bb);
+/* contatore della galleria sul telefono */
+const gl=document.getElementById('gal'),figs=[...gl.querySelectorAll('figure')];
+gl.addEventListener('scroll',()=>{const i=Math.round(gl.scrollLeft/(figs[0].offsetWidth+10));document.getElementById('ci').textContent=String(i+1).padStart(2,'0');document.getElementById('cb').style.width=((i+1)/figs.length*100)+'%'},{passive:true});
+document.getElementById('cb').style.width=(1/figs.length*100)+'%';
+/* foto ingrandita */
+const lb=document.getElementById('lb'),li=lb.querySelector('img');let k=0;
+const show=i=>{k=(i+figs.length)%figs.length;li.src=figs[k].querySelector('img').src};
+figs.forEach((f,i)=>f.addEventListener('click',()=>{show(i);lb.classList.add('on')}));
+lb.querySelector('.x').onclick=()=>lb.classList.remove('on');
+lb.querySelector('.pv').onclick=()=>show(k-1);lb.querySelector('.nx').onclick=()=>show(k+1);
+lb.addEventListener('click',e=>{if(e.target===lb)lb.classList.remove('on')});
+addEventListener('keydown',e=>{if(!lb.classList.contains('on'))return;if(e.key==='Escape')lb.classList.remove('on');if(e.key==='ArrowLeft')show(k-1);if(e.key==='ArrowRight')show(k+1)});
+</script>
+</body>
+</html>

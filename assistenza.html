@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Yamat · Assistenza</title>
+<meta name="description" content="Spedizioni, resi, pagamenti, buono regalo e contatti di Yamat Candle.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,300..600,0..100,0..1;1,9..144,300..600,0..100,0..1&family=Figtree:wght@300;400;500&display=swap">
+<link rel="stylesheet" href="yamat.css">
+<style>
+.lay{display:grid;grid-template-columns:260px minmax(0,1fr);gap:clamp(30px,6vw,110px);align-items:start;padding-top:calc(env(safe-area-inset-top,0px) + 150px)}
+.side{position:sticky;top:120px;display:grid;gap:4px}
+.side a{font:300 22px/1.5 var(--display);font-variation-settings:"SOFT" 100,"opsz" 40;color:var(--bone-dim);transition:color .4s,transform .6s var(--ease);display:block}
+.side a.on,.side a:hover{color:var(--gold-2);transform:translateX(8px);font-style:italic}
+.blk{padding-bottom:clamp(70px,11vh,120px);scroll-margin-top:120px}
+.blk h2{font-size:clamp(46px,5.6vw,92px);margin:18px 0 34px}
+.rows{border-top:1px solid var(--line)}
+.rows div{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:20px;padding:20px 0;border-bottom:1px solid var(--line);align-items:baseline}
+.rows b{font-weight:400}
+.rows span{color:var(--gold-2);font:300 22px/1 var(--display);font-variation-settings:"SOFT" 100,"opsz" 40;white-space:nowrap}
+.blk > p{max-width:60ch;opacity:.86}
+.pay{display:flex;gap:10px;flex-wrap:wrap;margin-top:24px}
+.pay span{border:1px solid var(--line);border-radius:999px;padding:12px 18px;font-size:13px}
+.contact{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line)}
+.contact a,.contact div{background:var(--night);padding:34px 30px;display:grid;gap:8px;transition:background .6s}
+.contact a:hover{background:var(--forest)}
+.contact small{font:500 10px/1 var(--sans);letter-spacing:.26em;text-transform:uppercase;color:var(--gold)}
+.contact b{font:300 clamp(22px,2vw,30px)/1.2 var(--display);font-variation-settings:"SOFT" 100,"opsz" 40;font-weight:300;word-break:break-word}
+@media (max-width:900px){.lay{grid-template-columns:1fr;padding-top:calc(env(safe-area-inset-top,0px) + 120px)}.side{position:static;grid-auto-flow:column;overflow-x:auto;gap:18px;scrollbar-width:none;border-bottom:1px solid var(--line);padding-bottom:14px}.side a{white-space:nowrap;font-size:18px}.contact{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<main class="wrap">
+  <div class="lay">
+    <nav class="side" id="side" aria-label="Argomenti">
+      <a href="#spedizioni">Spedizioni</a><a href="#resi">Resi</a><a href="#pagamenti">Pagamenti</a><a href="#buono">Buono regalo</a><a href="#domande">Domande</a><a href="#contatti">Contatti</a>
+    </nav>
+    <div>
+      <section class="blk" id="spedizioni">
+        <span class="label">Assistenza</span>
+        <h1 class="display rvx" style="font-size:clamp(60px,9vw,150px);margin:22px 0 60px"><span class="rv"><span>Siamo <em>qui</em></span></span></h1>
+        <span class="label">01 · Spedizioni</span>
+        <h2 class="display">Dal bosco <em>a casa</em></h2>
+        <div class="rows up">
+          <div><b>Italia · in 2–4 giorni</b><span>Gratis</span></div>
+          <div><b>Europa e resto del mondo · in 3–6 giorni, fino a 3 kg</b><span class="num">25 €</span></div>
+          <div><b>Da 3 a 5 kg</b><span class="num">45 €</span></div>
+          <div><b>Oltre 5 kg</b><span class="num">80 €</span></div>
+        </div>
+      </section>
+
+      <section class="blk" id="resi">
+        <span class="label">02 · Resi</span>
+        <h2 class="display">Se non è <em>quella giusta</em></h2>
+        <p>Scrivici e organizziamo il reso. Si possono restituire i prodotti integri, nella loro confezione. Le spese di spedizione del reso sono a carico di chi lo richiede.</p>
+        <p>Come previsto dal Codice del Consumo, hai 14 giorni dalla consegna per esercitare il diritto di recesso.</p>
+      </section>
+
+      <section class="blk" id="pagamenti">
+        <span class="label">03 · Pagamenti</span>
+        <h2 class="display">Sicuri, <em>come preferisci</em></h2>
+        <p>Paghi nel negozio su yamatcandle.com, solo con partner affidabili.</p>
+        <div class="pay up"><span>Carta di credito</span><span>PayPal</span><span>Klarna</span><span>Clearpay</span><span>Amazon Pay</span></div>
+        <p style="margin-top:24px">I tuoi dati sono trattati secondo la nostra <a class="lnk" href="https://www.iubenda.com/privacy-policy/42851129" target="_blank" rel="noopener">privacy policy</a> e la <a class="lnk" href="https://www.iubenda.com/privacy-policy/42851129/cookie-policy" target="_blank" rel="noopener">cookie policy</a>.</p>
+      </section>
+
+      <section class="blk" id="buono">
+        <span class="label">04 · Buono regalo</span>
+        <h2 class="display">Lascia <em>scegliere</em></h2>
+        <p>Il buono regalo è digitale e l’importo lo decidi tu. Chi lo riceve sceglie la sua candela quando vuole.</p>
+        <p><a class="lnk" href="https://www.yamatcandle.com/gift-card" target="_blank" rel="noopener">Regala un buono ↗</a></p>
+      </section>
+
+      <section class="blk" id="domande">
+        <span class="label">05 · Domande</span>
+        <h2 class="display">Le domande <em>di tutti</em></h2>
+        <div class="acc">
+          <details><summary>Perché lo stoppino crepita?<i></i></summary><div class="in"><p>È di legno, di cedro o di abete. Bruciando fa il suono piano di un piccolo fuoco. Le candele in cemento hanno tutte lo stoppino in legno; Trilogy Flames lo ha in stoffa.</p></div></details>
+          <details><summary>Di che cera sono fatte?<i></i></summary><div class="in"><p>Di cera di soia: vegetale, biodegradabile, a basso impatto. Brucia pulita e lenta.</p></div></details>
+          <details><summary>Posso scegliere colore e profumo?<i></i></summary><div class="in"><p>Sì. Nella .01, nella .02D e nell’Ovale scegli il colore del vaso, quello della cera e uno dei tre profumi. In Trilogy Flames e nel Kit Relax scegli colore e accordo. Kora si sceglie nel colore della cera.</p><p><a class="lnk" href="fragranze.html">Le fragranze</a></p></div></details>
+          <details><summary>Arrivano già confezionate per un regalo?<i></i></summary><div class="in"><p>Fioritura Eterna e lo Scrigno Fiorito hanno la confezione regalo inclusa, Kora la sua confezione elegante.</p><p><a class="lnk" href="regali.html">La guida ai regali</a></p></div></details>
+          <details><summary>Ogni vaso è uguale alla foto?<i></i></summary><div class="in"><p>Ogni vaso è lavorato a mano: colore e superficie cambiano di poco da un pezzo all’altro. È il segno che è stato fatto da una persona, non da una macchina.</p></div></details>
+          <details><summary>Come si cura?<i></i></summary><div class="in"><p>La prima accensione fino ai bordi, lo stoppino accorciato, mai più di quattro ore di fila.</p><p><a class="lnk" href="cura.html">La guida alla cura</a></p></div></details>
+        </div>
+      </section>
+
+      <section class="blk" id="contatti">
+        <span class="label">06 · Contatti</span>
+        <h2 class="display">Scrivici, <em>rispondiamo</em></h2>
+        <div class="contact up">
+          <a href="mailto:yamatcandle@gmail.com"><small>Email</small><b>yamatcandle@gmail.com</b></a>
+          <a href="https://www.instagram.com/yamat_candle/" target="_blank" rel="noopener"><small>Instagram</small><b>@yamat_candle ↗</b></a>
+          <div><small>Laboratorio</small><b>Via Costalunga 34, Brescia</b></div>
+          <a href="https://www.yamatcandle.com/shop" target="_blank" rel="noopener"><small>Negozio</small><b>yamatcandle.com ↗</b></a>
+        </div>
+      </section>
+    </div>
+  </div>
+</main>
+<footer data-auto></footer>
+
+<script src="data.js"></script>
+<script src="yamat.js"></script>
+<script>
+const sa=[...document.querySelectorAll('#side a')];
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)sa.forEach(a=>a.classList.toggle('on',a.getAttribute('href')==='#'+e.target.id))}),{rootMargin:'-40% 0px -55% 0px'});
+document.querySelectorAll('.blk').forEach(b=>io.observe(b));
+if(location.hash){const t=document.querySelector(location.hash);if(t)setTimeout(()=>t.scrollIntoView(),300)}
+yReveal();
+</script>
+</body>
+</html>

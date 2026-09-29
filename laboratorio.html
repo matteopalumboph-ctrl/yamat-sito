@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Yamat · Laboratorio</title>
+<meta name="description" content="Il laboratorio Yamat a Brescia: vasi in cemento lavorati a mano, cera di soia, stoppini in legno di cedro o abete.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,300..600,0..100,0..1;1,9..144,300..600,0..100,0..1&family=Figtree:wght@300;400;500&display=swap">
+<link rel="stylesheet" href="yamat.css">
+<style>
+.manifesto{font:300 clamp(30px,3.9vw,64px)/1.16 var(--display);font-variation-settings:"SOFT" 100,"opsz" 96;letter-spacing:-.01em;max-width:22ch;margin:0}
+.manifesto em{font-style:italic;color:var(--gold-2);font-variation-settings:"SOFT" 100,"WONK" 1,"opsz" 96}
+.manifesto .w{opacity:.16;transition:opacity .6s}
+.manifesto .w.lit{opacity:1}
+.mat{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(16px,2vw,30px)}
+.mat article{display:grid;gap:22px;align-content:start}
+.mat figure{margin:0;aspect-ratio:3/4;overflow:hidden;border-radius:2px;position:relative}
+.mat figure img{width:100%;height:100%;object-fit:cover}
+.mat .n{font:italic 300 64px/1 var(--display);font-variation-settings:"SOFT" 100,"WONK" 1;color:rgba(207,163,94,.35)}
+.mat h3{font:300 clamp(32px,3vw,46px)/1 var(--display);font-variation-settings:"SOFT" 100,"opsz" 60;margin:-8px 0 0}
+.mat p{margin:0;color:var(--bone-dim);max-width:36ch}
+@media (max-width:900px){.mat{grid-template-columns:1fr}}
+.steps{position:relative}
+.step{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:clamp(24px,5vw,80px);padding-block:clamp(40px,7vh,80px);border-top:1px solid var(--line);align-items:center}
+.step .k{font:italic 300 clamp(90px,13vw,210px)/.8 var(--display);font-variation-settings:"SOFT" 100,"WONK" 1,"opsz" 144;color:transparent;-webkit-text-stroke:1px rgba(233,201,143,.5)}
+.step h3{font:300 clamp(34px,3.6vw,58px)/1 var(--display);font-variation-settings:"SOFT" 100,"opsz" 96;margin:0 0 16px}
+.step p{margin:0;color:var(--bone);opacity:.84;max-width:44ch}
+@media (max-width:800px){.step{grid-template-columns:1fr}}
+.rooms{display:flex;gap:18px;overflow-x:auto;scroll-snap-type:x mandatory;padding:0 var(--gutter) 30px;scrollbar-width:thin;scrollbar-color:var(--gold) transparent;cursor:grab}
+.rooms.drag{cursor:grabbing;scroll-snap-type:none}
+.rooms figure{flex:0 0 clamp(260px,30vw,460px);margin:0;scroll-snap-align:start}
+.rooms .ph{aspect-ratio:4/5;overflow:hidden;border-radius:2px}
+.rooms img{width:100%;height:100%;object-fit:cover;pointer-events:none;transition:transform 1.6s var(--ease)}
+.rooms figure:hover img{transform:scale(1.05)}
+.rooms figcaption{display:flex;justify-content:space-between;gap:14px;padding-top:14px;border-top:1px solid var(--line);margin-top:14px;font-size:13px;color:var(--bone-dim)}
+.rooms figcaption b{font:italic 300 18px/1.2 var(--display);color:var(--bone)}
+.addr{display:grid;grid-template-columns:1fr auto;gap:30px;align-items:end;border-top:1px solid var(--line);padding-top:40px}
+.addr h2{font-size:clamp(46px,6vw,100px)}
+@media (max-width:800px){.addr{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<main>
+  <section class="phead">
+    <div class="bg"><img src="t1.jpg" alt=""></div>
+    <div>
+      <span class="label">Il laboratorio · Brescia</span>
+      <h1 class="display rvx"><span class="rv"><span>Fatto a mano,</span></span><span class="rv"><span><em>nel bosco</em></span></span></h1>
+      <p class="up">Siamo Yamat, nati dal richiamo del legno. Il laboratorio è immerso in un bosco italiano, e il silenzio della natura guida ogni gesto.</p>
+    </div>
+  </section>
+
+  <section class="wrap sec">
+    <span class="label up" style="display:block;margin-bottom:34px">La storia</span>
+    <p class="manifesto" id="man">Qui, tra alberi secolari, muschio e terra umida, modelliamo a mano i vasi in cemento. Ogni pezzo è <em>unico, imperfetto per natura,</em> come una scultura fatta dal tempo e dal vento.</p>
+  </section>
+
+  <section class="wrap" style="padding-bottom:clamp(90px,15vh,180px)">
+    <div class="head"><div><span class="label">I materiali</span><h2 class="display rvx" style="margin-top:22px"><span class="rv"><span>Tre <em>materie</em></span></span></h2></div><p>Poche, scelte, sempre le stesse.</p></div>
+    <div class="mat">
+      <article class="up"><figure class="mask"><img src="g/c02d_1.jpg" alt="Vaso quadrato in cemento visto dall'alto"></figure><span class="n">i</span><h3>Il vaso</h3><p>Cemento resistente alle alte temperature, lavorato a mano. Robusto, durevole, e ogni volta diverso.</p></article>
+      <article class="up" style="transition-delay:.08s"><figure class="mask"><img src="g/kora_3.jpg" alt="La cera di Kora e il coperchio sigillato"></figure><span class="n">ii</span><h3>La cera</h3><p>Soia al 100%: una cera vegetale, biodegradabile, a basso impatto. Brucia pulita e lenta.</p></article>
+      <article class="up" style="transition-delay:.16s"><figure class="mask"><img src="g/c01_1.jpg" alt="Lo stoppino in legno nella cera"></figure><span class="n">iii</span><h3>Lo stoppino</h3><p>Legno sottile, di cedro o di abete. Mentre brucia crepita piano, come un fuoco nel bosco.</p></article>
+    </div>
+  </section>
+
+  <section class="wrap steps">
+    <div class="head"><div><span class="label">Il metodo</span><h2 class="display rvx" style="margin-top:22px"><span class="rv"><span>Cinque <em>gesti</em></span></span></h2></div></div>
+    <div class="step up"><span class="k">01</span><div><h3>Il cemento</h3><p>Il vaso si lavora a mano, uno alla volta. Le imperfezioni restano: sono la firma del pezzo.</p></div></div>
+    <div class="step up"><span class="k">02</span><div><h3>La cera</h3><p>Cera di soia pura, nei colori della collezione: panna, verde, verde acqua, celeste, azzurro, rosa antico, caffè, grigio blu notte.</p></div></div>
+    <div class="step up"><span class="k">03</span><div><h3>Lo stoppino</h3><p>In legno per le candele in cemento, doppio nell’Ovale. In stoffa per Trilogy Flames.</p></div></div>
+    <div class="step up"><span class="k">04</span><div><h3>La chiusura</h3><p>Il coperchio in legno massello sulle .01 e .02D. Il sigillo di ceralacca sul coperchio di Kora e sul nastro dello Scrigno.</p></div></div>
+    <div class="step up"><span class="k">05</span><div><h3>Piccoli lotti</h3><p>Kora, Trilogy Flames e le candele numerate sono edizioni limitate, fatte in piccoli lotti per tenere alta la qualità.</p></div></div>
+  </section>
+
+  <section class="sec" style="padding-bottom:clamp(60px,10vh,120px)">
+    <div class="wrap head"><div><span class="label">Le stanze</span><h2 class="display rvx" style="margin-top:22px"><span class="rv"><span>Una stanza, <em>una fiamma</em></span></span></h2></div><p>Dove vivono le candele, fuori dal bosco. Scorri di lato.</p></div>
+    <div class="rooms" id="rooms">
+      <figure><div class="ph"><img src="r/s01-A_kora_v2.jpg" alt="Kora in un salotto milanese con la neve alla finestra"></div><figcaption><b>Milano, la prima neve</b><span>Kora</span></figcaption></figure>
+      <figure><div class="ph"><img src="r/s01-X_kora_v1.jpg" alt="Kora sulla panca di larice davanti ai pini innevati"></div><figcaption><b>Dolomiti, il larice</b><span>Kora</span></figcaption></figure>
+      <figure><div class="ph"><img src="r/s02-A_01-02D_v2.jpg" alt="Le candele .01 e .02D su un tavolo di legno"></div><figcaption><b>Cascina, la nebbia</b><span>.01 e .02D</span></figcaption></figure>
+      <figure><div class="ph"><img src="r/s02-B_02D_v2.jpg" alt="La .02D aperta su un tavolo, luce radente"></div><figcaption><b>La luce radente</b><span>.02D</span></figcaption></figure>
+      <figure><div class="ph"><img src="r/s03-A_trilogy_v2.jpg" alt="Trilogy Flames sul bordo della vasca"></div><figcaption><b>Venezia, il bagno</b><span>Trilogy Flames</span></figcaption></figure>
+      <figure><div class="ph"><img src="r/s03-B_kitrelax_v1.jpg" alt="Kit Relax sul davanzale"></div><figcaption><b>Il davanzale</b><span>Kit Relax</span></figcaption></figure>
+      <figure><div class="ph"><img src="r/s01-B_kora_v1.jpg" alt="Kora da vicino, la fiamma e il sigillo"></div><figcaption><b>La fiamma</b><span>Kora</span></figcaption></figure>
+    </div>
+  </section>
+
+  <section class="wrap" style="padding-bottom:clamp(90px,15vh,180px)">
+    <div class="band up">
+      <div><b>A mano</b><span>Ogni vaso lavorato e rifinito</span></div>
+      <div><b>Soia</b><span>Cera vegetale, biodegradabile</span></div>
+      <div><b>Legno</b><span>Cedro o abete</span></div>
+      <div><b>Brescia</b><span>Il laboratorio</span></div>
+    </div>
+    <div class="addr up" style="margin-top:clamp(80px,12vh,140px)">
+      <div><span class="label">Scrivici</span><h2 class="display" style="margin-top:20px">Via Costalunga 34, <em>Brescia</em></h2></div>
+      <div style="display:flex;gap:14px;flex-wrap:wrap"><a class="btn" href="mailto:yamatcandle@gmail.com">yamatcandle@gmail.com</a><a class="btn ghost" href="https://www.instagram.com/yamat_candle/" target="_blank" rel="noopener">Instagram ↗</a></div>
+    </div>
+  </section>
+</main>
+<footer data-auto></footer>
+
+<script src="data.js"></script>
+<script src="yamat.js"></script>
+<script>
+/* il manifesto si accende parola per parola scorrendo */
+const man=document.getElementById('man');
+man.innerHTML=man.innerHTML.replace(/(<em>|<\/em>)|([^\s<]+)/g,(m,tag,w)=>tag?tag:`<span class="w">${w}</span>`);
+const ws=[...man.querySelectorAll('.w')];
+const lit=()=>{const r=man.getBoundingClientRect(),h=innerHeight;const p=Math.min(1,Math.max(0,(h*.85-r.top)/(r.height+h*.35)));const n=Math.round(p*ws.length);ws.forEach((w,i)=>w.classList.toggle('lit',i<n))};
+addEventListener('scroll',()=>requestAnimationFrame(lit),{passive:true});lit();
+/* le stanze si trascinano col mouse */
+const rm=document.getElementById('rooms');let down=false,sx=0,sl=0;
+rm.addEventListener('mousedown',e=>{down=true;sx=e.pageX;sl=rm.scrollLeft;rm.classList.add('drag')});
+addEventListener('mouseup',()=>{down=false;rm.classList.remove('drag')});
+rm.addEventListener('mousemove',e=>{if(down){e.preventDefault();rm.scrollLeft=sl-(e.pageX-sx)*1.4}});
+rm.querySelectorAll('figure').forEach(f=>f.dataset.cursor='Trascina');
+yReveal();
+</script>
+</body>
+</html>
