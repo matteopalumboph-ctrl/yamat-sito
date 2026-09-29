@@ -73,6 +73,8 @@ img{display:block;max-width:100%}
 .chap.on{pointer-events:auto}
 .chap .label{display:block;margin-bottom:18px}
 .chap h2{font-size:clamp(56px,8.4vw,140px)}
+/* il titolo si vede solo nella sua tappa, anche con "Riduci movimento" attivo */
+.chap h2{opacity:0;transition:opacity .9s var(--ease)}.chap.on h2{opacity:1}
 .chap p{margin:22px 0 0;max-width:38ch;font-size:clamp(15px,1.1vw,17px);opacity:.85}
 .chap.r p{margin-left:auto}
 .chap .row{display:flex;gap:22px;align-items:center;margin-top:30px;flex-wrap:wrap}
