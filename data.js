@@ -31,10 +31,10 @@ window.YAMAT = {
       id: 'c01', name: 'Candela .01', price: '49,99', wix: 'yamat-candle-03', kind: 'cemento', tappa: 2,
       line: 'Tra le radici del faggio', short: 'Cemento, soia, legno',
       lead: 'La forma più essenziale di Yamat.',
-      body: 'Un vaso in cemento modellato a mano, cera di soia e uno stoppino in legno che crepita piano mentre brucia. Il coperchio è in legno massello.',
+      body: 'Un vaso in cemento modellato a mano, cera di soia e uno stoppino in legno che crepita piano mentre brucia. Il coperchio è di cemento, come il vaso: stessa materia, stessa mano.',
       notes: ['Pesca bianca', 'Uva bianca'],
       options: [['Vaso', ['Grigio', 'Grigio salvia']], ['Colore della cera', ['Celeste', 'Panna', 'Verde acqua']], ['Profumo', ['Melograno, pesca rossa, ylang-ylang', 'Pesca bianca, uva bianca', 'Mosto d’uva, orchidea']]],
-      facts: [['Vaso', 'Cemento resistente al calore'], ['Coperchio', 'Legno massello'], ['Cera', 'Soia'], ['Stoppino', 'Legno a croce']],
+      facts: [['Vaso', 'Cemento resistente al calore'], ['Coperchio', 'Cemento, come il vaso'], ['Cera', 'Soia'], ['Stoppino', 'Legno a croce']],
       img: 'shop/c01.jpg',
       gallery: ['g/c01_0.jpg', 'r/s02-A_01-02D_v2.jpg', 'g/c01_1.jpg', 't2.jpg']
     },
