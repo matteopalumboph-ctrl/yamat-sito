@@ -1,7 +1,7 @@
 /* Yamat · catalogo del prototipo.
    Solo fatti veri: nomi, prezzi, opzioni e testi presi dal negozio Wix il 29/9/2026 (stores v1). */
 window.YAMAT = {
-  shop: 'https://www.yamatcandle.com',
+  shop: 'https://negozio.yamatcandle.com',
   products: [
     {
       id: 'kora', name: 'Kora', price: '79,99', wix: 'yamat-candle-kora', kind: 'cemento', tappa: 1,
