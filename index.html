@@ -101,6 +101,19 @@ img{display:block;max-width:100%}
 @keyframes eq{50%{height:10px}}
 @media (max-width:800px){.path{display:none}.chap.r{right:auto;left:var(--gutter);text-align:left}.chap.r p{margin-left:0}.chap.r .row{justify-content:flex-start}.chap.r .num-big{right:auto;left:-.1em}}
 
+/* telefono: il prodotto in alto, il testo in basso su un velo scuro, mai uno sopra l'altro */
+@media (max-aspect-ratio:4/5){
+  #volo .stage::after{content:"";position:absolute;left:0;right:0;bottom:0;height:60%;background:linear-gradient(rgba(7,11,9,0),rgba(7,11,9,.8) 40%,rgba(7,11,9,.95));pointer-events:none;z-index:1}
+  .chap,.hero{z-index:2}
+  .chap{bottom:calc(env(safe-area-inset-bottom,0px) + 26px);left:var(--gutter);right:var(--gutter);max-width:none}
+  .chap h2{font-size:clamp(40px,11.5vw,58px)}
+  .chap .label{margin-bottom:10px}
+  .chap p{margin-top:12px;font-size:14.5px;line-height:1.55}
+  .chap .row{margin-top:16px;gap:10px}
+  .chap .btn{padding:15px 20px}
+  .chap .num-big{display:none}
+}
+
 
 /* il viaggio continua */
 .next{border-top:1px solid var(--line)}
@@ -310,7 +323,9 @@ function seekTo(v,j){if(!v.ready)return;v.want=j;if(v.seeking||j===v.cur)return;
 function fitVideo(v,f){if(f!==undefined)v.f=f;const K=v.fx,t=(v.f||0)*(K.length-1),i=Math.min(K.length-2,Math.floor(t)),fx=K[i]+(K[i+1]-K[i])*(t-i);
   const D=60,h=2*D*Math.tan(cam.fov*Math.PI/360),w=h*cam.aspect,va=1918/1080;
   let W2=w,H2=w/va;if(H2<h){H2=h;W2=h*va}
-  const maxS=(W2-w)/2;v.mesh.scale.set(W2,H2,1);v.mesh.position.x=THREE.MathUtils.clamp((.5-fx)*W2,-maxS,maxS);}
+  /* sul telefono il prodotto sale nella metà alta: sotto c'è il testo */
+  const port=cam.aspect<1;if(port){W2*=1.2;H2*=1.2}
+  const maxS=(W2-w)/2;v.mesh.scale.set(W2,H2,1);v.mesh.position.x=THREE.MathUtils.clamp((.5-fx)*W2,-maxS,maxS);v.mesh.position.y=port?.2*h:0;}
 
 /* raggi di luce tra gli alberi */
 const shaftTex=(()=>{const c=document.createElement('canvas');c.width=64;c.height=256;const g=c.getContext('2d');const gr=g.createLinearGradient(0,0,0,256);gr.addColorStop(0,'rgba(255,236,200,.55)');gr.addColorStop(1,'rgba(255,236,200,0)');g.fillStyle=gr;g.fillRect(0,0,64,256);const gx=g.createLinearGradient(0,0,64,0);gx.addColorStop(0,'rgba(0,0,0,1)');gx.addColorStop(.5,'rgba(0,0,0,0)');gx.addColorStop(1,'rgba(0,0,0,1)');g.globalCompositeOperation='destination-out';g.fillStyle=gx;g.fillRect(0,0,64,256);return new THREE.CanvasTexture(c)})();
@@ -376,7 +391,7 @@ function prog(){const r=sec.getBoundingClientRect(),tot=sec.offsetHeight-innerHe
 const clock=new THREE.Clock();
 function target(i,d){const st=stations[i];const port=cam.aspect<1;
   const vw=2*d*Math.tan(cam.fov*Math.PI/360)*cam.aspect, vh=vw/cam.aspect;
-  return {x:st.px+(port?0:SIDE[i]*.2*vw), y:st.py+(port?-.14:.16)*vh};}
+  return {x:st.px+(port?0:SIDE[i]*.2*vw), y:st.py+(port?[-.22,-.22,-.22,-.2,-.08][i]:.16)*vh};}
 function camAt(p){
   const z=Z0+(Z1-Z0)*p;
   let i=0;for(let k=0;k<N;k++){if(z<=stations[k].z+32+.0001)i=k}
