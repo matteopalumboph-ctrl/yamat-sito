@@ -255,7 +255,10 @@ const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
 const touch=matchMedia('(hover: none)').matches;
 const N=5, GAP=26, W=92, H=W*941/1672;
 const FOC=[[.21,.47],[.72,.49],[.2,.5],[.68,.5],[.5,.52]];
-const VID={0:{file:'v1.mp4',n:121,fx:[.22,.22,.22,.21,.2]},1:{file:'v2.mp4',n:192,fx:[.75,.75,.74,.73,.73]},2:{file:'v3.mp4',n:192,fx:[.22,.23,.24,.28,.3],ps:1.1,py:.15},3:{file:'v4.mp4',n:192,fx:[.64,.64,.63,.63,.62],ps:1,py:.12},4:{file:'v5.mp4',n:84,fx:[.5,.5,.5,.5,.5],ps:1,py:.02}};   // fx = posizione del prodotto nella clip a 0-25-50-75-100%. v2 (coperchio di cemento), v3-v5: Flow Veo 3.1 Lite 29/9
+/* fx = posizione del prodotto nella clip a 0-25-50-75-100%. Ogni clip ha due tagli, ingranditi con Real-ESRGAN (1/10):
+   w1..w5.mp4 orizzontale 1920x1080, p1..p5.mp4 per il telefono 1080x1440 (ritaglio largo PW della clip, da x0) */
+const PW=1080/2560;
+const VID={0:{id:1,n:121,fx:[.22,.22,.22,.21,.2],x0:0},1:{id:2,n:192,fx:[.75,.75,.74,.73,.73],x0:1356/2560},2:{id:3,n:192,fx:[.22,.23,.24,.28,.3],ps:1.1,py:.15,x0:128/2560},3:{id:4,n:192,fx:[.64,.64,.63,.63,.62],ps:1,py:.12,x0:1076/2560},4:{id:5,n:84,fx:[.5,.5,.5,.5,.5],ps:1,py:.02,x0:740/2560}};
 const SIDE=[1,-1,1,-1,-1];
 
 /* ---------- collezione: nomi, prezzi e foto dal negozio ---------- */
@@ -271,12 +274,14 @@ document.querySelectorAll('a[href^="#"]').forEach(a=>a.addEventListener('click',
 const files=[];for(let i=1;i<=N;i++)files.push(`t${i}.jpg`,`t${i}s.jpg`);
 const tex={};let done=0;
 const L=new THREE.TextureLoader();
-Promise.all(files.map(f=>new Promise(r=>L.load(f,t=>{const col=!f.endsWith('s.jpg');t.minFilter=col?THREE.LinearMipmapLinearFilter:THREE.LinearFilter;t.generateMipmaps=col;if(col)try{t.anisotropy=Math.min(8,R.capabilities.getMaxAnisotropy())}catch(e){}t.encoding=f.endsWith('s.jpg')?THREE.LinearEncoding:THREE.sRGBEncoding;tex[f]=t;done++;document.getElementById('loadN').textContent=Math.round(done/files.length*100)+'%';r()},undefined,()=>{done++;r()})))).then(init);
+Promise.all(files.map(f=>new Promise(r=>L.load(f,t=>{const col=!f.endsWith('s.jpg');if(touch&&col&&t.image.width>2560){const c=document.createElement('canvas');c.width=2560;c.height=Math.round(t.image.height*2560/t.image.width);c.getContext('2d').drawImage(t.image,0,0,c.width,c.height);t.image=c}t.minFilter=col?THREE.LinearMipmapLinearFilter:THREE.LinearFilter;t.generateMipmaps=col;t.encoding=f.endsWith('s.jpg')?THREE.LinearEncoding:THREE.sRGBEncoding;tex[f]=t;done++;document.getElementById('loadN').textContent=Math.round(done/files.length*100)+'%';r()},undefined,()=>{done++;r()})))).then(init);
 
 function init(){
 const cv=document.getElementById('gl');
 const R=new THREE.WebGLRenderer({canvas:cv,antialias:false,powerPreference:'high-performance'});
-R.setPixelRatio(Math.min(devicePixelRatio,touch?2:1.6));   // sul telefono piena nitidezza (prima 1.25: si vedevano i pixel)
+/* nitidezza piena dello schermo (fino a 3x sul telefono, 2x sul computer); se il dispositivo non regge si scala da solo, vedi loop */
+let pr=Math.min(devicePixelRatio||1,touch?3:2);R.setPixelRatio(pr);
+const AN=Math.min(8,R.capabilities.getMaxAnisotropy());Object.keys(tex).forEach(f=>{if(!f.endsWith('s.jpg')){tex[f].anisotropy=AN;tex[f].needsUpdate=true}});
 R.outputEncoding=THREE.sRGBEncoding;R.toneMapping=THREE.ACESFilmicToneMapping;R.toneMappingExposure=1.05;
 const S=new THREE.Scene();S.background=new THREE.Color(0x070b09);
 const FOG=new THREE.Color(0x0d1714);
@@ -313,22 +318,39 @@ S.add(cam);
 const vids={};
 Object.keys(VID).forEach(k=>{const v=VID[k];
   // il video si sposta al fotogramma chiesto dallo scorrimento (codifica tutta a fotogrammi chiave: ricerca immediata)
-  const vd=document.createElement('video');vd.muted=true;vd.defaultMuted=true;vd.setAttribute('muted','');vd.setAttribute('playsinline','');vd.setAttribute('webkit-playsinline','');vd.playsInline=true;vd.preload='auto';vd.src=v.file;vd.load();
-  v.vd=vd;v.ready=false;v.seeking=false;v.want=0;
-  vd.addEventListener('loadeddata',()=>{v.n=Math.round(vd.duration*24);v.ready=true;v.seeking=true;v.cur=0;vd.currentTime=.02});
+  const vd=document.createElement('video');vd.muted=true;vd.defaultMuted=true;vd.setAttribute('muted','');vd.setAttribute('playsinline','');vd.setAttribute('webkit-playsinline','');vd.playsInline=true;vd.preload='auto';
+  v.vd=vd;v.ready=false;v.seeking=false;v.want=0;v.kind='';
+  vd.addEventListener('loadeddata',()=>{v.n=Math.round(vd.duration*24);v.ts.value.set(vd.videoWidth,vd.videoHeight);v.ready=true;v.seeking=true;v.cur=0;vd.currentTime=.02});
   vd.addEventListener('seeked',()=>{v.seeking=false;v.tex.needsUpdate=true;v.shown=true;if(v.want!==v.cur)seekTo(v,v.want)});
   const t=new THREE.Texture(vd);t.encoding=THREE.sRGBEncoding;t.minFilter=THREE.LinearFilter;t.generateMipmaps=false;
-  const m=new THREE.Mesh(new THREE.PlaneGeometry(1,1),new THREE.MeshBasicMaterial({map:t,color:new THREE.Color(1.22,1.2,1.16),transparent:true,depthTest:false,depthWrite:false,fog:false,toneMapped:false}));
+  v.ts={value:new THREE.Vector2(1920,1080)};
+  const m=new THREE.Mesh(new THREE.PlaneGeometry(1,1),new THREE.ShaderMaterial({uniforms:{map:{value:t},ts:v.ts,opacity:{value:1},tint:{value:new THREE.Vector3(1.22,1.2,1.16)}},transparent:true,depthTest:false,depthWrite:false,
+    vertexShader:`varying vec2 vUv;void main(){vUv=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}`,
+    fragmentShader:`uniform sampler2D map;uniform vec2 ts;uniform float opacity;uniform vec3 tint;varying vec2 vUv;
+      vec3 bic(vec2 uv){vec2 sp=uv*ts,tc=floor(sp-.5)+.5,f=sp-tc;
+        vec2 w0=f*(-.5+f*(1.-.5*f)),w1=1.+f*f*(-2.5+1.5*f),w2=f*(.5+f*(2.-1.5*f)),w3=f*f*(-.5+.5*f),w12=w1+w2;
+        vec2 a=(tc-1.)/ts,b=(tc+w2/w12)/ts,c=(tc+2.)/ts;
+        vec3 r=texture2D(map,vec2(a.x,a.y)).rgb*w0.x*w0.y+texture2D(map,vec2(b.x,a.y)).rgb*w12.x*w0.y+texture2D(map,vec2(c.x,a.y)).rgb*w3.x*w0.y
+              +texture2D(map,vec2(a.x,b.y)).rgb*w0.x*w12.y+texture2D(map,vec2(b.x,b.y)).rgb*w12.x*w12.y+texture2D(map,vec2(c.x,b.y)).rgb*w3.x*w12.y
+              +texture2D(map,vec2(a.x,c.y)).rgb*w0.x*w3.y+texture2D(map,vec2(b.x,c.y)).rgb*w12.x*w3.y+texture2D(map,vec2(c.x,c.y)).rgb*w3.x*w3.y;
+        return clamp(r,0.,1.);}
+      void main(){vec3 c=bic(vUv);
+        c=mix(pow(c*.9478672986+.0521327014,vec3(2.4)),c*.0773993808,vec3(lessThanEqual(c,vec3(.04045))));
+        gl_FragColor=vec4(c*tint,opacity);}`}));
+  m.material.opacity=1;
   m.renderOrder=-100;m.position.z=-60;cam.add(m);v.mesh=m;v.tex=t;v.cur=-1;v.shown=false;vids[k]=v;
   stations[+k].mesh.visible=false;stations[+k].video=true;});
 /* iPhone: Safari prepara i fotogrammi del video solo dopo un play(). Lo si avvia muto, una volta, e si ferma subito;
    finché il video non ha un fotogramma pronto resta visibile la foto della tappa (mai un buco nel bosco) */
-const sblocca=()=>Object.values(vids).forEach(v=>{if(v.unlocked||v.trying)return;v.trying=true;const p=v.vd.play();
+const sblocca=()=>Object.values(vids).forEach(v=>{if(!v.kind||v.unlocked||v.trying)return;v.trying=true;const p=v.vd.play();
   if(p&&p.then)p.then(()=>{v.unlocked=true;v.vd.pause();if(!v.ready&&v.vd.readyState>=2)v.vd.dispatchEvent(new Event('loadeddata'))}).catch(()=>{}).finally(()=>{v.trying=false});else v.trying=false});
-sblocca();['touchstart','touchend','scroll','click'].forEach(e=>addEventListener(e,sblocca,{passive:true}));
+if(location.search.includes('dbg'))window.__dbg={vids,stations,cam,R};sblocca();['touchstart','touchend','scroll','click'].forEach(e=>addEventListener(e,sblocca,{passive:true}));
+function pick(v){const kind=cam.aspect<.66?'p':'w';if(v.kind===kind)return;v.kind=kind;
+  v.va=kind==='p'?.75:16/9;v.K=kind==='p'?v.fx.map(x=>(x-v.x0)/PW):v.fx;
+  v.ready=false;v.shown=false;v.seeking=false;v.cur=-1;v.unlocked=false;v.vd.src=kind+v.id+'.mp4';v.vd.load();sblocca();fitVideo(v);}
 function seekTo(v,j){if(!v.ready)return;v.want=j;if(v.seeking||j===v.cur)return;v.seeking=true;v.cur=j;v.vd.currentTime=Math.min(v.vd.duration-.02,(j+.5)/24);}
-function fitVideo(v,f){if(f!==undefined)v.f=f;const K=v.fx,t=(v.f||0)*(K.length-1),i=Math.min(K.length-2,Math.floor(t)),fx=K[i]+(K[i+1]-K[i])*(t-i);
-  const D=60,h=2*D*Math.tan(cam.fov*Math.PI/360),w=h*cam.aspect,va=1918/1080;
+function fitVideo(v,f){if(!v.kind)return;if(f!==undefined)v.f=f;const K=v.K,t=(v.f||0)*(K.length-1),i=Math.min(K.length-2,Math.floor(t)),fx=K[i]+(K[i+1]-K[i])*(t-i);
+  const D=60,h=2*D*Math.tan(cam.fov*Math.PI/360),w=h*cam.aspect,va=v.va;
   let W2=w,H2=w/va;if(H2<h){H2=h;W2=h*va}
   /* sul telefono il prodotto sale nella metà alta: sotto c'è il testo */
   const port=cam.aspect<1,ps=v.ps||1.2;if(port){W2*=ps;H2*=ps}
@@ -371,20 +393,22 @@ const pm=[points(touch?260:520,18,6,0xffc877,0),points(touch?700:1500,20,1.6,0xe
 const comp=new THREE.EffectComposer(R);
 comp.addPass(new THREE.RenderPass(S,cam));
 const bloom=new THREE.UnrealBloomPass(new THREE.Vector2(512,512),touch?.6:.75,.8,.86);comp.addPass(bloom);
+/* il bagliore lavora sempre alla stessa scala (come prima), qualunque sia la risoluzione dello schermo: stessa resa, meno lavoro */
+const bset=bloom.setSize.bind(bloom);bloom.setSize=()=>bset(Math.round(cv.clientWidth*(touch?2:1.6)),Math.round(cv.clientHeight*(touch?2:1.6)));
 const fin=new THREE.ShaderPass({uniforms:{tDiffuse:{value:null},time:{value:0},asp:{value:1}},
   vertexShader:`varying vec2 vUv;void main(){vUv=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}`,
   fragmentShader:`uniform sampler2D tDiffuse;uniform float time,asp;varying vec2 vUv;
    float h(vec2 p){return fract(sin(dot(p,vec2(12.9898,78.233)))*43758.5453);}
    void main(){vec2 d=vUv-.5;float r=length(d*vec2(asp,1.));
-     vec3 c;c.r=texture2D(tDiffuse,vUv+d*.0025).r;c.g=texture2D(tDiffuse,vUv).g;c.b=texture2D(tDiffuse,vUv-d*.0025).b;
+     vec3 c;c.r=texture2D(tDiffuse,vUv+d*.001).r;c.g=texture2D(tDiffuse,vUv).g;c.b=texture2D(tDiffuse,vUv-d*.001).b;
      c*=mix(1.,.35,smoothstep(.35,1.05,r));
      c=mix(c,c*vec3(1.05,1.,.92),.5);
-     c+=(h(vUv*vec2(1920.,1080.)+fract(time))-.5)*.045;
+     c+=(h(gl_FragCoord.xy+fract(time)*vec2(37.,91.))-.5)*.04;
      gl_FragColor=vec4(c,1.);}`});
 comp.addPass(fin);
 
 function size(){const w=cv.clientWidth,h=cv.clientHeight;R.setSize(w,h,false);comp.setSize(w,h);cam.aspect=w/h;
-  cam.fov=w<h?68:52;cam.updateProjectionMatrix();fin.uniforms.asp.value=w/h;Object.values(vids).forEach(v=>fitVideo(v));}
+  cam.fov=w<h?68:52;cam.updateProjectionMatrix();fin.uniforms.asp.value=w/h;Object.values(vids).forEach(v=>{if(v.kind)pick(v);fitVideo(v)});}
 size();addEventListener('resize',size);
 
 /* il percorso della camera: z avanza, x ondeggia verso ogni tappa */
@@ -411,8 +435,12 @@ function camAt(p){
     if(m>0){const b=target(cur+1,z-stations[cur+1].z);x=x+(b.x-x)*m;y=y+(b.y-y)*m}}
   return {x,y,z};
 }
-(function loop(){
+let fN=0,fT=0,fL=performance.now();
+function frame(){
   const t=clock.getElapsedTime();
+  /* se il dispositivo non tiene il passo (sotto ~28 fotogrammi al secondo) si abbassa la risoluzione di mezzo punto, fino a 1.25 */
+  const now=performance.now(),dt=now-fL;fL=now;
+  if(t>2.5&&dt<250){fT+=dt;if(++fN>=50){if(fT/fN>36&&pr>1.25){pr=Math.max(1.25,pr-.5);R.setPixelRatio(pr);comp.setPixelRatio(pr);pm.forEach(m=>m.uniforms.px.value=pr);size()}fN=0;fT=0}}
   const target=prog();sp+=(target-sp)*(reduce?1:.055);
   mx+=(tmx-mx)*.04;my+=(tmy-my)*.04;
   const c=camAt(sp);
@@ -425,8 +453,9 @@ function camAt(p){
   let vidMax=0;
   Object.keys(vids).forEach(k=>{const v=vids[k],st=stations[+k];const d=cam.position.z-st.z;
     // la clip copre la tappa da quando la vediamo (d=80) a quando la superiamo (d=24)
+    if(!v.kind&&d<104)pick(v);   // la clip si scarica quando la tappa si avvicina: la prima arriva subito, le altre non si rubano la banda
     const f=THREE.MathUtils.clamp((52-d)/(52-30),0,1);seekTo(v,Math.round(f*(v.n-1)));if(cam.aspect<1)fitVideo(v,f);
-    v.mesh.material.opacity=THREE.MathUtils.smoothstep(d,24,32)*(+k===0?1-THREE.MathUtils.smoothstep(d,95,110):1-THREE.MathUtils.smoothstep(d,24+GAP,32+GAP));v.mesh.visible=v.mesh.material.opacity>.003&&v.shown;if(v.mesh.visible)vidMax=Math.max(vidMax,v.mesh.material.opacity);});
+    v.mesh.material.opacity=THREE.MathUtils.smoothstep(d,24,32)*(+k===0?1-THREE.MathUtils.smoothstep(d,95,110):1-THREE.MathUtils.smoothstep(d,24+GAP,32+GAP));v.mesh.material.uniforms.opacity.value=v.mesh.material.opacity;v.mesh.visible=v.mesh.material.opacity>.003&&v.shown;if(v.mesh.visible)vidMax=Math.max(vidMax,v.mesh.material.opacity);});
   stations.forEach((s,i)=>{const d=cam.position.z-s.z;s.u.time.value=t;
     s.u.op.value=THREE.MathUtils.smoothstep(d,24,32)*(1-THREE.MathUtils.smoothstep(d,95,130))*(1-vidMax);
     s.mesh.visible=(!s.video||!(vids[i]&&vids[i].shown))&&s.u.op.value>.003;
@@ -440,8 +469,8 @@ function camAt(p){
   pm.forEach(m=>m.uniforms.time.value=t);mistMat.uniforms.time.value=t;fin.uniforms.time.value=t;
   shafts.forEach((m,i)=>{m.material.opacity=(.05+.04*Math.sin(t*.3+i))*(1-THREE.MathUtils.smoothstep(sp,.9,1))});
   comp.render();
-  requestAnimationFrame(loop);
-})();
+}
+(function loop(){frame();requestAnimationFrame(loop)})();if(window.__dbg)window.__dbg.frame=frame;
 pathBtns.forEach(b=>b.addEventListener('click',()=>{const k=+b.dataset.g;const z=stations[k].z+42;const p=(z-Z0)/(Z1-Z0);
   const top=sec.offsetTop+(sec.offsetHeight-innerHeight)*p;lenis?lenis.scrollTo(top,{duration:2.6}):scrollTo({top,behavior:'smooth'})}));
 document.getElementById('load').classList.add('done');
