@@ -1,2 +1,5 @@
 User-agent: *
 Allow: /
+Disallow: /grazie.html
+
+Sitemap: https://www.yamatcandle.com/sitemap.xml

@@ -3,7 +3,22 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Yamat · Candela</title>
+<title>Candela · Yamat Candle</title>
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="48x48" href="favicon-48.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="theme-color" content="#070b09">
+<meta property="og:site_name" content="Yamat Candle">
+<meta property="og:locale" content="it_IT">
+<meta property="og:type" content="product">
+<meta property="og:title" content="Candela · Yamat Candle">
+<meta property="og:description" content="Candele Yamat fatte a mano a Brescia: vasi in cemento, cera di soia, stoppini in legno.">
+<meta property="og:image" content="https://negozio.yamatcandle.com/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="description" content="Candele Yamat fatte a mano a Brescia: vasi in cemento, cera di soia, stoppini in legno.">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,300..600,0..100,0..1;1,9..144,300..600,0..100,0..1&family=Figtree:wght@300;400;500&display=swap">
 <link rel="stylesheet" href="yamat.css">
@@ -89,7 +104,21 @@
 const Y=window.YAMAT, q=new URLSearchParams(location.search).get('p')||'kora';
 const P=Y.products.find(x=>x.id===q)||Y.products[0];
 const SW={'Caffè':'#6b4a33','Grigio blu notte':'#3b4452','Grigio':'#8f8f8a','Grigio salvia':'#9aa593','Verde':'#9db8a0','Panna':'#efe6d2','Azzurro':'#a9c6d6','Celeste':'#bcd9e4','Verde acqua':'#9fd3c7','Rosa antico':'#cf9e98'};
-document.title=`${P.name} · Yamat`;
+/* per Google e i social: titolo, descrizione, indirizzo unico e scheda prodotto con prezzo, per ogni candela */
+{const U='https://negozio.yamatcandle.com/',url=`${U}prodotto.html?p=${P.id}`,desc=`${P.lead} ${P.body}`.slice(0,300);
+  document.title=`${P.name} · ${P.short} · Yamat Candle`;
+  const meta=(k,v,a='name')=>{let m=document.head.querySelector(`meta[${a}="${k}"]`);if(!m){m=document.createElement('meta');m.setAttribute(a,k);document.head.append(m)}m.content=v};
+  meta('description',desc);meta('og:title',document.title,'property');meta('og:description',desc,'property');meta('og:url',url,'property');meta('og:image',U+P.img,'property');
+  meta('og:image:width','900','property');meta('og:image:height','1125','property');
+  const c=document.createElement('link');c.rel='canonical';c.href=url;document.head.append(c);
+  const ld=document.createElement('script');ld.type='application/ld+json';
+  ld.textContent=JSON.stringify({'@context':'https://schema.org','@type':'Product',name:P.name,description:desc,url,
+    image:[U+P.img,...P.gallery.slice(0,3).map(g=>U+g)],brand:{'@type':'Brand',name:'Yamat Candle'},
+    offers:{'@type':'Offer',url,priceCurrency:'EUR',price:P.price.replace(',','.'),availability:'https://schema.org/InStock',itemCondition:'https://schema.org/NewCondition',
+      seller:{'@type':'Organization',name:'Yamat Candle'},
+      shippingDetails:{'@type':'OfferShippingDetails',shippingRate:{'@type':'MonetaryAmount',value:'0',currency:'EUR'},shippingDestination:{'@type':'DefinedRegion',addressCountry:'IT'},
+        deliveryTime:{'@type':'ShippingDeliveryTime',handlingTime:{'@type':'QuantitativeValue',minValue:0,maxValue:1,unitCode:'DAY'},transitTime:{'@type':'QuantitativeValue',minValue:2,maxValue:4,unitCode:'DAY'}}}}});
+  document.head.append(ld)}
 const g=P.gallery, fig=(src,cls='')=>`<figure class="${cls}" data-cursor="Zoom"><img src="${src}" alt="${P.name}" loading="lazy"></figure>`;
 let gal=fig(g[0]);for(let i=1;i<g.length;i+=3){if(g[i+1]){gal+=`<div class="pair">${fig(g[i])}${fig(g[i+1])}</div>`}else if(g[i]){gal+=fig(g[i],'wide')}if(g[i+2])gal+=fig(g[i+2],'wide')}
 const hasProf=P.options.some(o=>/Profumo|Panna|Verde acqua|Rosa antico/.test(o[0])&&o[0]!=='Colore');
