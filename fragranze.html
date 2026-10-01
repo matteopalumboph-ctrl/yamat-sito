@@ -78,7 +78,7 @@ const Y=window.YAMAT,byId=Object.fromEntries(Y.products.map(p=>[p.id,p]));
 document.getElementById('lib').innerHTML=Y.accords.map(a=>`<article class="acd up" data-img="${byId[a.in[0]].img}">
   <h2 class="display">${a.name.replace(/^(Il|La|I) /,'$1 <em>')}</em></h2>
   <div><p class="w">${a.words}</p><p>${a.text}</p></div>
-  <div class="in">${a.in.map(id=>`<a href="prodotto.html?p=${id}">${byId[id].name}</a>`).join('')}</div></article>`).join('');
+  <div class="in">${a.in.map(id=>`<a href="${byId[id].page}">${byId[id].name}</a>`).join('')}</div></article>`).join('');
 const w=Y.accords.map(a=>`<span>${a.words} <b>·</b></span>`).join('');document.getElementById('tk').innerHTML=w;document.getElementById('tk2').innerHTML=w;
 yReveal();
 </script>

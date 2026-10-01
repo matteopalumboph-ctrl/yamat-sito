@@ -2,7 +2,7 @@
 (function(){
 const Y=window.YAMAT, here=(location.pathname.split('/').pop()||'index.html');
 const PAGES=[['index.html','Il bosco'],['collezione.html','Collezione'],['fragranze.html','Fragranze'],['regali.html','Regali'],['laboratorio.html','Laboratorio'],['cura.html','Cura'],['assistenza.html','Assistenza']];
-const cur=p=>here===p||(p==='collezione.html'&&here==='prodotto.html')?' aria-current="page"':'';
+const cur=p=>here===p||(p==='collezione.html'&&(here==='prodotto.html'||Y.products.some(x=>x.page===here)))?' aria-current="page"':'';
 
 /* testata e menu */
 const top=document.createElement('header');top.className='top';
@@ -30,14 +30,14 @@ addEventListener('scroll',onScroll,{passive:true});onScroll();
 const ft=document.querySelector('footer[data-auto]');
 if(ft){ft.className='wrap';ft.innerHTML=`<div class="foot">
   <div><img src="logo_yamat_light.png" alt="YAMÂT" style="height:20px;width:auto"><img class="cow" src="logo_cow.png" alt="Call of Wood"></div>
-  <div><h4>Collezione</h4><ul>${Y.products.map(p=>`<li><a href="prodotto.html?p=${p.id}">${p.name}</a></li>`).join('')}</ul></div>
+  <div><h4>Collezione</h4><ul>${Y.products.map(p=>`<li><a href="${p.page}">${p.name}</a></li>`).join('')}</ul></div>
   <div><h4>Yamat</h4><ul>${PAGES.map(([h,t])=>`<li><a href="${h}">${t}</a></li>`).join('')}<li><a href="${Y.shop}/gift-card" target="_blank" rel="noopener">Buono regalo ↗</a></li></ul></div>
   <div><h4>Scrivici</h4><ul><li><a href="mailto:yamatcandle@gmail.com">yamatcandle@gmail.com</a></li><li>Via Costalunga 34, Brescia</li><li><a href="https://www.instagram.com/yamat_candle/" target="_blank" rel="noopener">Instagram @yamat_candle</a></li></ul></div>
 </div>
-<div class="fine"><span>© 2026 Yamat Candle · Artigianato italiano, fatto a mano a Brescia · <a href="https://www.iubenda.com/privacy-policy/42851129" target="_blank" rel="noopener">Privacy</a> · <a href="https://www.iubenda.com/privacy-policy/42851129/cookie-policy" target="_blank" rel="noopener">Cookie</a></span><span>Le foto del bosco e delle stanze sono generate con l’IA dalle foto dei prodotti · Prototipo di studio</span></div>`}
+<div class="fine"><span>© 2026 Yamat Candle · Artigianato italiano, fatto a mano a Brescia · <a href="https://www.iubenda.com/privacy-policy/42851129" target="_blank" rel="noopener">Privacy</a> · <a href="https://www.iubenda.com/privacy-policy/42851129/cookie-policy" target="_blank" rel="noopener">Cookie</a></span><span>Le foto del bosco e delle stanze sono generate con l’IA dalle foto dei prodotti</span></div>`}
 
 /* schede prodotto riutilizzabili */
-window.yCard=(p,i=0)=>`<a class="card up" href="prodotto.html?p=${p.id}" data-cursor="Vedi" style="transition-delay:${(i%4)*.08}s">
+window.yCard=(p,i=0)=>`<a class="card up" href="${p.page}" data-cursor="Vedi" style="transition-delay:${(i%4)*.08}s">
  <figure>${p.tag?`<span class="tag">${p.tag}</span>`:''}<img src="${p.img}" alt="${p.name}" loading="lazy"><img class="alt" src="${p.gallery[1]||p.img}" alt="" loading="lazy"></figure>
  <div class="row"><h3>${p.name}</h3><span class="price num">${p.price} €</span></div>
  <div class="row" style="border:0;padding:0;margin-top:-4px"><small>${p.short}</small><span class="buy">Scopri →</span></div></a>`;
@@ -117,8 +117,8 @@ function paint(){const L=(cart&&cart.lineItems)||[],n=L.reduce((a,l)=>a+(l.quant
   pane.classList.toggle('busy',busy);
   pane.querySelector('.items').innerHTML=L.length?L.map(l=>{const p=byWid[l.source.catalogReference.catalogItemId],q=l.quantityInfo.requestedQuantity;
     const opts=(l.attributes.descriptionLines||[]).map(d=>`<small>${d.name.original}: ${d.plainText?d.plainText.original:''}</small>`).join('');
-    return `<div class="it"><a href="${p?'prodotto.html?p='+p.id:'collezione.html'}"><img src="${p?p.img:l.attributes.image.url}" alt=""></a>
-      <div><a class="nm" href="${p?'prodotto.html?p='+p.id:'collezione.html'}">${l.name.original}</a>${opts}
+    return `<div class="it"><a href="${p?p.page:'collezione.html'}"><img src="${p?p.img:l.attributes.image.url}" alt=""></a>
+      <div><a class="nm" href="${p?p.page:'collezione.html'}">${l.name.original}</a>${opts}
       <div class="q"><button type="button" data-q="${l.id}" data-n="${q-1}" aria-label="Uno in meno">−</button><span class="num">${q}</span><button type="button" data-q="${l.id}" data-n="${q+1}" aria-label="Uno in più">+</button>
       <button type="button" class="rm" data-q="${l.id}" data-n="0">Togli</button></div></div>
       <b class="price num">${eur(l.pricing.totalPrice.amount)}</b></div>`}).join('')
