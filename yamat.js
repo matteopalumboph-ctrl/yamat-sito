@@ -8,12 +8,12 @@ const cur=p=>here===p||(p==='collezione.html'&&here==='prodotto.html')?' aria-cu
 const top=document.createElement('header');top.className='top';
 top.innerHTML=`<a class="logo" href="index.html" aria-label="Yamat, il bosco"><img src="logo_yamat_light.png" alt="YAMÂT"></a>
 <nav aria-label="Menu">${PAGES.map(([h,t])=>`<a href="${h}"${cur(h)}>${t}</a>`).join('')}</nav>
-<div class="end"><a class="pill" href="${Y.shop}/shop" target="_blank" rel="noopener">Negozio ↗</a>
+<div class="end"><a class="pill" href="collezione.html">Negozio</a>
 <button class="burger" type="button" aria-label="Apri il menu" aria-expanded="false" aria-controls="sheet"><i></i><i></i></button></div>`;
 document.body.prepend(top);
 const sheet=document.createElement('div');sheet.className='sheet';sheet.id='sheet';sheet.setAttribute('aria-hidden','true');
 sheet.innerHTML=`<ol>${PAGES.map(([h,t])=>`<li><a href="${h}"${cur(h)}>${t}</a></li>`).join('')}</ol>
-<div class="foot-s"><a href="${Y.shop}/shop" target="_blank" rel="noopener">Negozio ↗</a><a href="https://www.instagram.com/yamat_candle/" target="_blank" rel="noopener">@yamat_candle</a><span>Brescia</span></div>`;
+<div class="foot-s"><a href="collezione.html">Negozio</a><a href="https://www.instagram.com/yamat_candle/" target="_blank" rel="noopener">@yamat_candle</a><span>Brescia</span></div>`;
 top.after(sheet);
 const burger=top.querySelector('.burger');
 const setMenu=o=>{document.documentElement.classList.toggle('menu-open',o);burger.setAttribute('aria-expanded',o);burger.setAttribute('aria-label',o?'Chiudi il menu':'Apri il menu');sheet.setAttribute('aria-hidden',!o)};
