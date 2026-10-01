@@ -31,10 +31,16 @@
 .opts{margin-top:34px;display:grid;gap:22px}
 .opt h4{font:500 10px/1 var(--sans);letter-spacing:.28em;text-transform:uppercase;color:var(--bone-dim);margin:0 0 12px}
 .opt .ch{display:flex;gap:8px;flex-wrap:wrap}
-.opt .ch span{display:inline-flex;align-items:center;gap:10px;border:1px solid var(--line);border-radius:999px;padding:10px 15px;font-size:13px}
+.opt .ch span,.opt .ch button{display:inline-flex;align-items:center;gap:10px;border:1px solid var(--line);border-radius:999px;padding:10px 15px;font-size:13px;background:none;color:var(--bone);line-height:1.2}
+.opt .ch button{cursor:pointer;transition:border-color .4s,background .4s,color .4s}
+.opt .ch button:hover{border-color:var(--gold)}
+.opt .ch button.on{border-color:var(--gold-2);background:rgba(233,201,143,.12);color:var(--gold-2)}
+.opt .ch button:disabled{opacity:.4;cursor:not-allowed;text-decoration:line-through}
+.opt.need h4{color:var(--gold-2)}.opt.need .ch button{border-color:rgba(233,201,143,.5)}
+.opt h4 em{font-style:normal;color:var(--bone);letter-spacing:.06em;text-transform:none;font-size:12px;margin-left:8px}
 .opt .ch i{width:14px;height:14px;border-radius:50%;box-shadow:inset 0 0 0 1px rgba(255,255,255,.25)}
 .buybox{margin-top:36px;display:grid;gap:14px}
-.buybox .btn{width:100%;padding:22px}
+.buybox .btn{width:100%;padding:22px}.buybox .btn:disabled{opacity:.6;cursor:progress}
 .buybox p{margin:0;font-size:13px;color:var(--bone-dim);text-align:center}
 .info .acc{margin-top:40px}
 .facts{display:grid;grid-template-columns:auto 1fr;gap:10px 26px;margin:0}
@@ -83,7 +89,6 @@
 const Y=window.YAMAT, q=new URLSearchParams(location.search).get('p')||'kora';
 const P=Y.products.find(x=>x.id===q)||Y.products[0];
 const SW={'Caffè':'#6b4a33','Grigio blu notte':'#3b4452','Grigio':'#8f8f8a','Grigio salvia':'#9aa593','Verde':'#9db8a0','Panna':'#efe6d2','Azzurro':'#a9c6d6','Celeste':'#bcd9e4','Verde acqua':'#9fd3c7','Rosa antico':'#cf9e98'};
-const shopUrl=`${Y.shop}/product-page/${P.wix}`;
 document.title=`${P.name} · Yamat`;
 const g=P.gallery, fig=(src,cls='')=>`<figure class="${cls}" data-cursor="Zoom"><img src="${src}" alt="${P.name}" loading="lazy"></figure>`;
 let gal=fig(g[0]);for(let i=1;i<g.length;i+=3){if(g[i+1]){gal+=`<div class="pair">${fig(g[i])}${fig(g[i+1])}</div>`}else if(g[i]){gal+=fig(g[i],'wide')}if(g[i+2])gal+=fig(g[i+2],'wide')}
@@ -104,9 +109,9 @@ document.getElementById('main').innerHTML=`
     <p class="lead">${P.lead}</p>
     <p class="body">${P.body}</p>
     ${hasProf?'':`<div class="notes">${P.notes.map(n=>`<span>${n}</span>`).join('')}</div>`}
-    ${opts?`<div class="opts">${opts}</div>`:''}
-    <div class="buybox"><a class="btn" href="${shopUrl}" target="_blank" rel="noopener">Acquista su yamatcandle.com ↗</a>
-      <p>${opts?'Le opzioni si scelgono nel negozio. ':''}Consegna in 2–4 giorni in Italia.</p></div>
+    <div class="opts" id="opts">${opts}</div>
+    <div class="buybox"><button class="btn" id="buy" type="button" disabled>Aggiungi al carrello</button>
+      <p id="bmsg" role="status">Consegna in 2–4 giorni in Italia.</p></div>
     <div class="acc">
       <details open><summary>Materiali<i></i></summary><div class="in"><dl class="facts">${facts}</dl></div></details>
       <details><summary>Come si accende<i></i></summary><div class="in"><p>La prima volta lascia che la cera si sciolga fino ai bordi. Prima di ogni accensione accorcia lo stoppino. Mai più di quattro ore di fila, mai incustodita.</p><p><a class="lnk" href="cura.html">La guida alla cura</a></p></div></details>
@@ -123,12 +128,34 @@ ${P.tappa?`<section class="inbosco"><div class="bg"><img src="t${P.tappa}.jpg" a
   <a class="lnk" href="collezione.html">Tutta la collezione</a></div>
   <div class="shop">${rel.map((p,i)=>'@'+i).join('')}</div>
 </section>
-<div class="bar" id="bar"><div><b>${P.name}</b><small class="num">${P.price} €</small></div><a class="btn" href="${shopUrl}" target="_blank" rel="noopener">Acquista ↗</a></div>`;
+<div class="bar" id="bar"><div><b>${P.name}</b><small class="num">${P.price} €</small></div><button class="btn" id="barbuy" type="button">Aggiungi</button></div>`;
 </script>
 <script src="yamat.js"></script>
 <script>
 const sh=document.querySelector('.sec .shop');sh.innerHTML=rel.map(yCard).join('');
 yReveal();yPar();
+/* opzioni e acquisto: dal negozio vivo (nomi, scelte e disponibilità come su Wix) */
+const box=document.getElementById('opts'),buy=document.getElementById('buy'),barb=document.getElementById('barbuy'),bmsg=document.getElementById('bmsg');
+const esc=t=>String(t).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');
+let W=null,sel={},adding=false;
+const missing=()=>W?W.productOptions.filter(o=>!sel[o.name]):[];
+function paintOpts(){
+  box.innerHTML=W.productOptions.map(o=>`<div class="opt" data-o="${esc(o.name)}"><h4>${o.name}${sel[o.name]?`<em>${sel[o.name]}</em>`:''}</h4><div class="ch">${o.choices.filter(c=>c.visible!==false).map(c=>
+    `<button type="button" class="${sel[o.name]===c.description?'on':''}" data-v="${esc(c.description)}" aria-pressed="${sel[o.name]===c.description}"${c.inStock?'':' disabled'}>${SW[c.description]?`<i style="background:${SW[c.description]}"></i>`:''}${c.description}</button>`).join('')}</div></div>`).join('');
+  const m=missing();buy.disabled=adding;buy.textContent=adding?'Aggiungo…':m.length?'Scegli: '+m[0].name.toLowerCase():'Aggiungi al carrello';barb.textContent=adding?'…':'Aggiungi'}
+box.addEventListener('click',e=>{const b=e.target.closest('button[data-v]');if(!b||!W)return;const o=b.closest('.opt').dataset.o;
+  sel[o]=b.dataset.v;paintOpts()});
+async function add(){if(!W||adding)return;const m=missing();
+  if(m.length){paintOpts();const el=box.querySelector(`[data-o="${CSS.escape(m[0].name)}"]`);el.classList.add('need');el.scrollIntoView({behavior:'smooth',block:'center'});return}
+  let options;if(W.productOptions.length){const v=W.manageVariants&&W.variants.find(v=>Object.entries(v.choices).every(([k,x])=>sel[k]===x));options=v?{variantId:v.id}:{options:{...sel}}}
+  adding=true;paintOpts();
+  try{await yCart.add(P.wid,options,1);bmsg.textContent='Aggiunta al carrello. Consegna in 2–4 giorni in Italia.'}
+  catch(e){bmsg.textContent='Non sono riuscito ad aggiungerla. Riprova tra un momento.'}
+  finally{adding=false;paintOpts()}}
+buy.addEventListener('click',add);barb.addEventListener('click',add);
+yCart.products().then(ps=>{W=ps.find(x=>x.id===P.wid);if(!W)throw 0;
+  if(!W.stock.inStock){buy.textContent='Esaurita';bmsg.textContent='Al momento non è disponibile. Scrivici a yamatcandle@gmail.com';return}
+  paintOpts()}).catch(()=>{buy.textContent='Aggiungi al carrello';bmsg.textContent='Il negozio non risponde. Ricarica la pagina tra un momento.'});
 /* barra d'acquisto sul telefono */
 const bb=document.querySelector('.buybox'),bar=document.getElementById('bar');
 new IntersectionObserver(([e])=>bar.classList.toggle('on',!e.isIntersecting&&e.boundingClientRect.top<0)).observe(bb);

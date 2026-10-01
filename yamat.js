@@ -59,6 +59,77 @@ document.addEventListener('click',e=>{const a=e.target.closest('a');if(!a||a.tar
   const h=a.getAttribute('href');if(!h||h.startsWith('#')||h.startsWith('mailto:')||/^https?:/.test(h))return;
   e.preventDefault();setMenu(false);veil.classList.remove('off');veil.classList.add('go');setTimeout(()=>location.href=h,480)});
 
+/* ---------- carrello ----------
+   Il sito parla direttamente col negozio Wix (Wix Headless, client "Sito Yamat", token da visitatore anonimo):
+   catalogo, carrello e quantità si gestiscono qui; si esce dal sito solo per pagare, sulla cassa di Wix,
+   che a ordine fatto riporta a grazie.html. */
+const CID='1c374c8c-0f07-48b1-9f03-073b605be53e',API='https://www.wixapis.com',STORES='215238eb-22a5-4c36-9e7b-e7c08025e04e',TK='ymt_tok';
+let tok=null;try{tok=JSON.parse(localStorage.getItem(TK))}catch(e){}
+const keep=t=>{tok=t;try{localStorage.setItem(TK,JSON.stringify(t))}catch(e){}};
+async function token(body){const r=await fetch(API+'/oauth2/token',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+  if(!r.ok)throw new Error('token');const d=await r.json();keep({a:d.access_token,r:d.refresh_token||(tok&&tok.r),e:Date.now()+(d.expires_in-120)*1000});return tok.a}
+async function auth(){if(tok&&tok.a&&tok.e>Date.now())return tok.a;
+  if(tok&&tok.r){try{return await token({refresh_token:tok.r,grantType:'refresh_token'})}catch(e){}}   // stesso visitatore, stesso carrello
+  return token({clientId:CID,grantType:'anonymous'})}
+async function wix(path,method='GET',body,again=true){const r=await fetch(API+path,{method,headers:{'Authorization':await auth(),'Content-Type':'application/json'},body:body?JSON.stringify(body):undefined});
+  if(r.status===401&&again){if(tok)tok.e=0;return wix(path,method,body,false)}
+  const d=await r.json().catch(()=>({}));if(!r.ok){const e=new Error(d.message||('Errore '+r.status));e.status=r.status;throw e}return d}
+const eur=a=>(+a).toLocaleString('it-IT',{minimumFractionDigits:2,maximumFractionDigits:2})+' €';
+const byWid=Object.fromEntries(Y.products.map(p=>[p.wid,p]));
+let cart=null,busy=false;
+const C={
+  /* catalogo vivo del negozio (opzioni, varianti, disponibilità), tenuto per la sessione */
+  async products(){try{const c=JSON.parse(sessionStorage.getItem('ymt_cat'));if(c&&c.t>Date.now()-6e5)return c.p}catch(e){}
+    const d=await wix('/stores/v1/products/query','POST',{query:{paging:{limit:100}},includeVariants:true});
+    try{sessionStorage.setItem('ymt_cat',JSON.stringify({t:Date.now(),p:d.products}))}catch(e){}return d.products},
+  async load(){if(!tok){cart=null;paint();return}
+    try{cart=(await wix('/ecom/v2/carts/current')).cart}catch(e){cart=null}paint()},
+  async add(wid,options,qty=1){const ref={catalogItemId:wid,appId:STORES};if(options)ref.options=options;
+    cart=(await wix('/ecom/v2/carts/current/add-line-items','POST',{catalogItems:[{catalogReference:ref,quantity:qty}]})).cart;paint();open()},
+  async qty(id,n){busy=true;paint();try{cart=(n>0?await wix('/ecom/v2/carts/current/update-line-items','POST',{lineItems:[{lineItemId:id,quantity:{newQuantity:n}}]})
+      :await wix('/ecom/v2/carts/current/remove-line-items','POST',{lineItemIds:[id]})).cart}finally{busy=false;paint()}},
+  async pay(){busy=true;paint();
+    try{const live=/yamatcandle\.com$/.test(location.hostname),home=live?location.origin:'https://negozio.yamatcandle.com';
+      const {checkoutId}=await wix('/ecom/v1/carts/current/create-checkout','POST',{channelType:'WEB'});
+      const s=await wix('/_api/redirects-api/v1/redirect-session','POST',{ecomCheckout:{checkoutId},callbacks:{postFlowUrl:home+'/',thankYouPageUrl:home+'/grazie.html',cartPageUrl:home+'/collezione.html?carrello=1'}});
+      location.href=s.redirectSession.fullUrl}
+    catch(e){busy=false;paint();note('La cassa non risponde. Riprova tra un momento.')}}
+};
+window.yCart=C;
+
+/* pannello del carrello */
+const cb=document.createElement('button');cb.type='button';cb.className='pill cartb';cb.setAttribute('aria-controls','cart');
+cb.innerHTML='Carrello <span class="n num">0</span>';top.querySelector('.end').insertBefore(cb,burger);
+const pane=document.createElement('div');pane.className='cart';pane.id='cart';pane.setAttribute('role','dialog');pane.setAttribute('aria-modal','true');pane.setAttribute('aria-label','Carrello');pane.setAttribute('aria-hidden','true');
+pane.innerHTML=`<div class="cart-bg"></div><aside><header><span class="label">Il tuo carrello</span><button type="button" class="x">Chiudi</button></header>
+<div class="items"></div><p class="cmsg" role="status"></p>
+<footer><div class="tot"><span>Subtotale</span><b class="price num">0,00 €</b></div><p>Spedizione gratuita in Italia. Le spese per l’estero si calcolano alla cassa.</p>
+<button type="button" class="btn go">Vai alla cassa</button></footer></aside>`;
+document.body.append(pane);
+const open=()=>{setMenu(false);pane.setAttribute('aria-hidden','false');document.documentElement.classList.add('cart-open');pane.querySelector('.x').focus({preventScroll:true})};
+const shut=()=>{pane.setAttribute('aria-hidden','true');document.documentElement.classList.remove('cart-open')};
+const note=t=>{const m=pane.querySelector('.cmsg');m.textContent=t;clearTimeout(note.t);note.t=setTimeout(()=>m.textContent='',6000)};
+C.open=open;C.note=note;
+cb.addEventListener('click',open);pane.querySelector('.x').addEventListener('click',shut);pane.querySelector('.cart-bg').addEventListener('click',shut);
+addEventListener('keydown',e=>{if(e.key==='Escape')shut()});
+function paint(){const L=(cart&&cart.lineItems)||[],n=L.reduce((a,l)=>a+(l.quantityInfo.requestedQuantity||0),0);
+  cb.querySelector('.n').textContent=n;cb.classList.toggle('has',n>0);
+  pane.classList.toggle('busy',busy);
+  pane.querySelector('.items').innerHTML=L.length?L.map(l=>{const p=byWid[l.source.catalogReference.catalogItemId],q=l.quantityInfo.requestedQuantity;
+    const opts=(l.attributes.descriptionLines||[]).map(d=>`<small>${d.name.original}: ${d.plainText?d.plainText.original:''}</small>`).join('');
+    return `<div class="it"><a href="${p?'prodotto.html?p='+p.id:'collezione.html'}"><img src="${p?p.img:l.attributes.image.url}" alt=""></a>
+      <div><a class="nm" href="${p?'prodotto.html?p='+p.id:'collezione.html'}">${l.name.original}</a>${opts}
+      <div class="q"><button type="button" data-q="${l.id}" data-n="${q-1}" aria-label="Uno in meno">−</button><span class="num">${q}</span><button type="button" data-q="${l.id}" data-n="${q+1}" aria-label="Uno in più">+</button>
+      <button type="button" class="rm" data-q="${l.id}" data-n="0">Togli</button></div></div>
+      <b class="price num">${eur(l.pricing.totalPrice.amount)}</b></div>`}).join('')
+    :`<div class="empty"><p>Il carrello è vuoto.</p><a class="lnk" href="collezione.html">Scopri la collezione</a></div>`;
+  pane.querySelector('.tot b').textContent=eur(cart&&cart.subtotal?cart.subtotal.amount:0);
+  pane.querySelector('footer').style.display=L.length?'':'none'}
+pane.addEventListener('click',e=>{const b=e.target.closest('[data-q]');if(!b||busy)return;C.qty(b.dataset.q,+b.dataset.n).catch(()=>note('Non sono riuscito a cambiare il carrello. Riprova.'))});
+pane.querySelector('.go').addEventListener('click',()=>{if(!busy)C.pay()});
+C.load().then(()=>{if(new URLSearchParams(location.search).has('carrello'))open()});
+addEventListener('pageshow',e=>{if(e.persisted){busy=false;C.load()}});   // tornando indietro dalla cassa il carrello si riallinea
+
 /* niente cursore finto: resta la freccia normale; solo i bottoni magnetici */
 if(matchMedia('(hover:hover)').matches){
   /* bottoni magnetici */

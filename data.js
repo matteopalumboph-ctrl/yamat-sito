@@ -1,22 +1,23 @@
 /* Yamat · catalogo del prototipo.
-   Solo fatti veri: nomi, prezzi, opzioni e testi presi dal negozio Wix il 29/9/2026 (stores v1). */
+   Solo fatti veri: nomi, prezzi, opzioni e testi presi dal negozio Wix il 29/9/2026 (stores v1).
+   wid = id del prodotto nel negozio Wix: il carrello del sito (yamat.js) lo usa per parlare col negozio. */
 window.YAMAT = {
   shop: 'https://negozio.yamatcandle.com',
   products: [
     {
-      id: 'kora', name: 'Kora', price: '79,99', wix: 'yamat-candle-kora', kind: 'cemento', tappa: 1,
+      id: 'kora', wid: '930f4fd8-b8b5-bc59-b994-eb10d7e88ad8', name: 'Kora', price: '79,99', wix: 'yamat-candle-kora', kind: 'cemento', tappa: 1,
       line: 'Il ceppo di muschio', short: 'Resina, muschio, pino',
       lead: 'La candela del bosco d’inverno.',
       body: 'Note di resina, muschio e pino, calde e profonde, che riempiono la stanza come l’aria di una baita dopo la neve. Il vaso è modellato a mano, il coperchio è sigillato con la ceralacca, lo stoppino è in legno e crepita piano mentre brucia, come un piccolo camino.',
       notes: ['Resina', 'Muschio', 'Pino'],
-      options: [['Colore della cera', ['Caffè', 'Grigio blu notte']]],
+      options: [['Vaso', ['Grigio scuro', 'Grigio salvia', 'Gold edition, foglia d’oro']], ['Colore della cera', ['Caffè', 'Grigio blu notte']]],
       facts: [['Vaso', 'Cemento modellato a mano'], ['Cera', 'Soia'], ['Stoppino', 'Legno a croce'], ['Confezione', 'Elegante, inclusa']],
       tag: 'Edizione limitata',
       img: 'shop/kora.jpg',
       gallery: ['r/s01-X_kora_v1.jpg', 'r/s01-A_kora_v2.jpg', 'g/kora_1.jpg', 'g/kora_3.jpg', 'r/s01-B_kora_v1.jpg', 'g/kora_5.jpg']
     },
     {
-      id: 'ovale', name: 'Ovale Double .04', price: '89,99', wix: 'yamat-double-04', kind: 'cemento', tappa: 5,
+      id: 'ovale', wid: '79591adb-b83f-52b6-77b3-28298d15a030', name: 'Ovale Double .04', price: '89,99', wix: 'yamat-double-04', kind: 'cemento', tappa: 5,
       line: 'La radura', short: 'Due stoppini in legno',
       lead: 'Due fiamme in un solo vaso.',
       body: 'Un vaso ovale in cemento modellato a mano, con due stoppini in legno che bruciano e crepitano insieme. Pensata per le stanze grandi, dove una fiamma sola non basta.',
@@ -28,7 +29,7 @@ window.YAMAT = {
       gallery: ['g/ovale_0.jpg', 't5.jpg', 'g/ovale_1.jpg']
     },
     {
-      id: 'c01', name: 'Candela .01', price: '49,99', wix: 'yamat-candle-03', kind: 'cemento', tappa: 2,
+      id: 'c01', wid: 'c8539b66-7a44-fe18-affc-afec4be8562a', name: 'Candela .01', price: '49,99', wix: 'yamat-candle-03', kind: 'cemento', tappa: 2,
       line: 'Tra le radici del faggio', short: 'Cemento, soia, legno',
       lead: 'La forma più essenziale di Yamat.',
       body: 'Un vaso in cemento modellato a mano, cera di soia e uno stoppino in legno che crepita piano mentre brucia. Il coperchio è di cemento, come il vaso: stessa materia, stessa mano.',
@@ -39,7 +40,7 @@ window.YAMAT = {
       gallery: ['g/c01_0.jpg', 'r/s02-A_01-02D_v2.jpg', 'g/c01_1.jpg', 't2.jpg']
     },
     {
-      id: 'c02d', name: 'Candela .02D', price: '49,99', wix: 'yamat-candle-01', kind: 'cemento', tappa: 2,
+      id: 'c02d', wid: 'df19c1f7-07d8-a265-42f8-e8dfa824cc6e', name: 'Candela .02D', price: '49,99', wix: 'yamat-candle-01', kind: 'cemento', tappa: 2,
       line: 'Tra le radici del faggio', short: 'Cemento, soia, legno',
       lead: 'Il quadrato scuro, col suo coperchio di legno.',
       body: 'Un vaso quadrato in cemento resistente al calore, modellato a mano, con cera di soia e uno stoppino in legno che crepita piano mentre brucia.',
@@ -50,7 +51,7 @@ window.YAMAT = {
       gallery: ['g/c02d_0.jpg', 'r/s02-B_02D_v2.jpg', 'g/c02d_1.jpg', 'g/c02d_3.jpg']
     },
     {
-      id: 'trilogy', name: 'Trilogy Flames', price: '59,99', wix: 'yamat-candle-trilogy-flames', kind: 'senza', tappa: 3,
+      id: 'trilogy', wid: '7b2c8171-f407-1599-63ed-c3f9b586db67', name: 'Trilogy Flames', price: '59,99', wix: 'yamat-candle-trilogy-flames', kind: 'senza', tappa: 3,
       line: 'Il ruscello', short: 'Tre candele senza vaso',
       lead: 'Una luce sola, in tre fiamme.',
       body: 'Tre candele di cera di soia, senza vaso, pensate per stare insieme. Petali di rosa dentro la cera, stoppino in stoffa, combustione lenta e pulita. Tre tonalità, e per ciascuna un profumo da scegliere.',
@@ -61,7 +62,7 @@ window.YAMAT = {
       gallery: ['g/trilogy_2.jpg', 'r/s03-A_trilogy_v2.jpg', 'g/trilogy_3.jpg', 'g/trilogy_1.jpg', 'g/trilogy_7.jpg', 'g/trilogy_4.jpg', 'g/trilogy_8.jpg']
     },
     {
-      id: 'kitrelax', name: 'Kit Relax', price: '34,99', wix: 'yamat-kit-relax', kind: 'senza', tappa: 0,
+      id: 'kitrelax', wid: 'c439c705-4c27-206c-5284-0636c5a89037', name: 'Kit Relax', price: '34,99', wix: 'yamat-kit-relax', kind: 'senza', tappa: 0,
       line: 'Il rituale della sera', short: 'Tre candele di soia',
       lead: 'Un piccolo regalo che non ha bisogno di biglietto.',
       body: 'Tre candele di cera di soia, senza vaso, per il rituale della sera. Un colore solo, da scegliere tra rosa antico, verde acqua e panna, e un accordo di profumo che si ripete in tutte e tre.',
@@ -72,7 +73,7 @@ window.YAMAT = {
       gallery: ['g/kitrelax_0.jpg', 'r/s03-B_kitrelax_v1.jpg', 'g/kitrelax_3.jpg', 'g/kitrelax_4.jpg', 'g/kitrelax_5.jpg', 'g/kitrelax_6.jpg', 'g/kitrelax_2.jpg']
     },
     {
-      id: 'fioritura', name: 'Fioritura Eterna', price: '119,99', wix: 'yamat-bouquet-fioritura-eterna', kind: 'regalo', tappa: 4,
+      id: 'fioritura', wid: '942f6aa8-8b24-4024-a063-0c6fcc7dd37a', name: 'Fioritura Eterna', price: '119,99', wix: 'yamat-bouquet-fioritura-eterna', kind: 'regalo', tappa: 4,
       line: 'Il sottobosco in fiore', short: 'Diciotto fiori di cera',
       lead: 'Un bouquet che non appassisce mai.',
       body: 'Diciotto candele scolpite a mano, rose e margherite in cera di soia pura, raccolte in un abbraccio di organza e legate con nastro, dentro una scatola artigianale firmata Yamat. Ogni fiore è una piccola fiamma in attesa: quando lo accendi, il profumo del bosco si libera nell’aria.',
@@ -84,7 +85,7 @@ window.YAMAT = {
       gallery: ['g/fioritura_1.jpg', 'g/fioritura_2.jpg', 'g/fioritura_0.jpg', 'g/fioritura_3.jpg']
     },
     {
-      id: 'scrigno', name: 'Scrigno Fiorito', price: '54,99', wix: 'yamat-kit-scrigno-fiorito', kind: 'regalo', tappa: 4,
+      id: 'scrigno', wid: 'bfd1fb19-d708-4c4d-a4e8-ff20fbd1c998', name: 'Scrigno Fiorito', price: '54,99', wix: 'yamat-kit-scrigno-fiorito', kind: 'regalo', tappa: 4,
       line: 'Il sottobosco in fiore', short: 'Sette candele, ceralacca',
       lead: 'Un piccolo scrigno da aprire con cura.',
       body: 'Sette candele in cera di soia, sei fiori in miniatura e una candela cilindrica, custodite in una scatola crema chiusa da un nastro bordeaux e sigillata a ceralacca, come una lettera d’altri tempi.',

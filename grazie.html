@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>Yamat · Grazie</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,300..600,0..100,0..1;1,9..144,300..600,0..100,0..1&family=Figtree:wght@300;400;500&display=swap">
+<link rel="stylesheet" href="yamat.css">
+<style>
+.phead .row{display:flex;gap:16px;flex-wrap:wrap;margin-top:44px}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--line)}
+.steps div{padding:34px 26px 34px 0;border-bottom:1px solid var(--line)}
+.steps div + div{padding-left:26px;border-left:1px solid var(--line)}
+.steps .label{display:block;margin-bottom:16px}
+.steps b{display:block;font:300 clamp(26px,2.4vw,36px)/1.1 var(--display);font-variation-settings:"SOFT" 100,"opsz" 60;margin-bottom:12px}
+.steps p{margin:0;color:var(--bone-dim)}
+@media (max-width:800px){.steps{grid-template-columns:1fr}.steps div + div{padding-left:0;border-left:0}}
+</style>
+</head>
+<body>
+<main>
+  <section class="phead">
+    <div class="bg"><img src="t5.jpg" alt="" style="object-position:50% 50%"></div>
+    <div>
+      <span class="label">Ordine ricevuto</span>
+      <h1 class="display rvx"><span class="rv"><span>Grazie,</span></span><span class="rv"><span><em>a presto</em></span></span></h1>
+      <p class="up">Il tuo ordine è arrivato in laboratorio, a Brescia. La conferma con il riepilogo ti arriva per email.</p>
+      <div class="row up"><a class="btn" href="index.html">Torna nel bosco</a><a class="btn ghost" href="cura.html">Come accenderla</a></div>
+    </div>
+  </section>
+  <section class="wrap sec">
+    <div class="steps up">
+      <div><span class="label">01</span><b>La prepariamo</b><p>Ogni candela è fatta e rifinita a mano, poi confezionata.</p></div>
+      <div><span class="label">02</span><b>Parte</b><p>In Italia arriva in 2–4 giorni, nel resto del mondo in 3–6.</p></div>
+      <div><span class="label">03</span><b>Domande?</b><p>Scrivici a <a class="lnk" href="mailto:yamatcandle@gmail.com">yamatcandle@gmail.com</a></p></div>
+    </div>
+  </section>
+</main>
+<footer data-auto></footer>
+<script src="data.js"></script>
+<script src="yamat.js"></script>
+<script>yReveal();</script>
+</body>
+</html>
