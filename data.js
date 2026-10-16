@@ -86,9 +86,9 @@ window.YAMAT = {
     },
     {
       id: 'scrigno', page: 'scrigno-fiorito.html', wid: 'bfd1fb19-d708-4c4d-a4e8-ff20fbd1c998', name: 'Scrigno Fiorito', price: '54,99', wix: 'yamat-kit-scrigno-fiorito', kind: 'regalo', tappa: 4,
-      line: 'Il sottobosco in fiore', short: 'Sette candele, ceralacca',
+      line: 'Il sottobosco in fiore', short: 'Otto candele, ceralacca',
       lead: 'Un piccolo scrigno da aprire con cura.',
-      body: 'Sette candele in cera di soia, sei fiori in miniatura e una candela cilindrica, custodite in una scatola crema chiusa da un nastro bordeaux e sigillata a ceralacca, come una lettera d’altri tempi.',
+      body: 'Otto candele in cera di soia, sette fiori in miniatura e una candela cilindrica, custodite in una scatola crema chiusa da un nastro bordeaux e sigillata a ceralacca, come una lettera d’altri tempi.',
       notes: ['Profumi delicati'],
       options: [],
       facts: [['Candele', '7 artigianali'], ['Cera', 'Soia pura al 100%'], ['Chiusura', 'Nastro e ceralacca'], ['Confezione', 'Regalo, inclusa']],

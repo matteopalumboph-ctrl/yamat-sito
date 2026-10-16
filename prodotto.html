@@ -76,6 +76,7 @@
 .inbosco::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(var(--night),transparent 25%,transparent 70%,var(--night)),linear-gradient(90deg,rgba(7,11,9,.7),transparent 60%)}
 .inbosco .txt{padding-inline:var(--gutter);max-width:720px}
 .inbosco h2{font-size:clamp(46px,6vw,100px);margin:20px 0 26px}
+@media (max-width:800px){.inbosco{align-items:end;min-height:92svh;padding-bottom:56px}.inbosco::after{background:linear-gradient(var(--night),transparent 22%,transparent 52%,rgba(7,11,9,.82) 78%,var(--night))}}
 
 .bar{position:fixed;left:10px;right:10px;bottom:calc(10px + env(safe-area-inset-bottom,0px));z-index:50;display:none;align-items:center;justify-content:space-between;gap:12px;background:rgba(12,20,17,.86);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid var(--line);border-radius:999px;padding:8px 8px 8px 22px;transform:translateY(140%);transition:transform .8s var(--ease)}
 .bar.on{transform:none}
