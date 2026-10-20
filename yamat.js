@@ -31,7 +31,7 @@ const ft=document.querySelector('footer[data-auto]');
 if(ft){ft.className='wrap';ft.innerHTML=`<div class="foot">
   <div><img src="logo_yamat_light.png" alt="YAMÂT" style="height:20px;width:auto"><img class="cow" src="logo_cow.png" alt="Call of Wood"></div>
   <div><h4>Collezione</h4><ul>${Y.products.map(p=>`<li><a href="${p.page}">${p.name}</a></li>`).join('')}</ul></div>
-  <div><h4>Yamat</h4><ul>${PAGES.map(([h,t])=>`<li><a href="${h}">${t}</a></li>`).join('')}<li><a href="${Y.shop}/gift-card" target="_blank" rel="noopener">Buono regalo ↗</a></li></ul></div>
+  <div><h4>Yamat</h4><ul>${PAGES.map(([h,t])=>`<li><a href="${h}">${t}</a></li>`).join('')}${(Y.checkout==='whatsapp'||(()=>{try{return sessionStorage.getItem('ymt_wa')==='1'}catch(e){return false}})())?'':`<li><a href="${Y.shop}/gift-card" target="_blank" rel="noopener">Buono regalo ↗</a></li>`}</ul></div>
   <div><h4>Scrivici</h4><ul><li><a href="mailto:yamatcandle@gmail.com">yamatcandle@gmail.com</a></li><li>Via Costalunga 34, Brescia</li><li><a href="https://www.instagram.com/yamat_candle/" target="_blank" rel="noopener">Instagram @yamat_candle</a></li></ul></div>
 </div>
 <div class="fine"><span>© 2026 Yamat Candle · Artigianato italiano, fatto a mano a Brescia · <a href="https://www.iubenda.com/privacy-policy/42851129" target="_blank" rel="noopener">Privacy</a> · <a href="https://www.iubenda.com/privacy-policy/42851129/cookie-policy" target="_blank" rel="noopener">Cookie</a></span><span>Le foto del bosco e delle stanze sono generate con l’IA dalle foto dei prodotti</span></div>`}
@@ -77,6 +77,39 @@ async function wix(path,method='GET',body,again=true){const r=await fetch(API+pa
 const eur=a=>(+a).toLocaleString('it-IT',{minimumFractionDigits:2,maximumFractionDigits:2})+' €';
 const byWid=Object.fromEntries(Y.products.map(p=>[p.wid,p]));
 let cart=null,busy=false;
+/* ---------- modalità WhatsApp (senza Wix) ----------
+   Si attiva con Y.checkout==='whatsapp' (data.js) oppure, per provarla, con ?wa=1 (resta per la sessione; ?wa=0 la spegne).
+   Catalogo da data.js, carrello nel browser, ordine = messaggio WhatsApp già scritto. Niente cassa, niente Wix. */
+const WAP=new URLSearchParams(location.search);
+if(WAP.has('wa')){try{sessionStorage.setItem('ymt_wa',WAP.get('wa'))}catch(e){}}
+let WAON=Y.checkout==='whatsapp';try{const f=sessionStorage.getItem('ymt_wa');if(f==='1')WAON=true;if(f==='0')WAON=false}catch(e){}
+const WA_NUM=Y.whatsapp||'393933325473';
+const WK='ymt_wa_cart';
+const waLines=()=>{try{return JSON.parse(localStorage.getItem(WK))||[]}catch(e){return[]}};
+const waSave=L=>{try{localStorage.setItem(WK,JSON.stringify(L))}catch(e){}};
+const priceNum=p=>parseFloat(String(p.price).replace('.','').replace(',','.'));
+const waCart=()=>{const L=waLines();let sub=0;
+  const items=L.map(l=>{const p=byWid[l.wid];const unit=p?priceNum(p):0;const tot=unit*l.q;sub+=tot;
+    return {id:l.k,name:{original:l.name},quantityInfo:{requestedQuantity:l.q},
+      attributes:{descriptionLines:Object.entries(l.o||{}).map(([n,v])=>({name:{original:n},plainText:{original:v}})),image:{url:p?p.img:''}},
+      pricing:{totalPrice:{amount:tot}},source:{catalogReference:{catalogItemId:l.wid}}}});
+  return {lineItems:items,subtotal:{amount:sub}}};
+const waCat=()=>Y.products.map(p=>({id:p.wid,name:p.name,stock:{inStock:true},manageVariants:false,variants:[],
+  productOptions:p.options.map(([n,v])=>({name:n,choices:v.map(x=>({description:x,inStock:true,visible:true}))}))}));
+const waMsg=()=>{const L=waLines();let tot=0;
+  const righe=L.map(l=>{const p=byWid[l.wid];const t=(p?priceNum(p):0)*l.q;tot+=t;
+    const o=Object.entries(l.o||{}).map(([n,v])=>n+': '+v).join(', ');
+    return '• '+l.name+(l.q>1?' ×'+l.q:'')+(o?' ('+o+')':'')+' — '+eur(t)}).join('\n');
+  return 'Ciao Yamat! Vorrei ordinare:\n\n'+righe+'\n\nTotale: '+eur(tot)+'\nSpedizione gratuita in Italia.\n\nNome e cognome:\nIndirizzo di consegna:\nTelefono:\n\nGrazie!'};
+const CWA={
+  async products(){return waCat()},
+  async load(){cart=waCart();paint()},
+  async add(wid,options,qty=1){const p=byWid[wid];const o=(options&&options.options)||{};
+    const L=waLines(),k=wid+'|'+JSON.stringify(o);const f=L.find(x=>x.k===k);
+    if(f)f.q+=qty;else L.push({k,wid,name:p?p.name:'Candela',o,q:qty});waSave(L);cart=waCart();paint();open()},
+  async qty(id,n){let L=waLines();const f=L.find(x=>x.k===id);if(f){f.q=n;if(n<=0)L=L.filter(x=>x.k!==id)}waSave(L);cart=waCart();paint()},
+  async pay(){if(!waLines().length)return;location.href='https://wa.me/'+WA_NUM+'?text='+encodeURIComponent(waMsg())}
+};
 const C={
   /* catalogo vivo del negozio (opzioni, varianti, disponibilità), tenuto per la sessione */
   async products(){try{const c=JSON.parse(sessionStorage.getItem('ymt_cat'));if(c&&c.t>Date.now()-6e5)return c.p}catch(e){}
@@ -95,6 +128,7 @@ const C={
       location.href=s.redirectSession.fullUrl}
     catch(e){busy=false;paint();note('La cassa non risponde. Riprova tra un momento.')}}
 };
+if(WAON)Object.assign(C,CWA);
 window.yCart=C;
 
 /* pannello del carrello */
@@ -106,6 +140,7 @@ pane.innerHTML=`<div class="cart-bg"></div><aside><header><span class="label">Il
 <footer><div class="tot"><span>Subtotale</span><b class="price num">0,00 €</b></div><p>Spedizione gratuita in Italia. Le spese per l’estero si calcolano alla cassa.</p>
 <button type="button" class="btn go">Vai alla cassa</button></footer></aside>`;
 document.body.append(pane);
+if(WAON){const f=pane.querySelector('footer');f.querySelector('p').textContent='Spedizione gratuita in Italia. Ti si apre WhatsApp con l’ordine già scritto: ci rispondiamo per conferma, pagamento e spedizione.';f.querySelector('.go').textContent='Ordina su WhatsApp'}
 const open=()=>{setMenu(false);pane.setAttribute('aria-hidden','false');document.documentElement.classList.add('cart-open');pane.querySelector('.x').focus({preventScroll:true})};
 const shut=()=>{pane.setAttribute('aria-hidden','true');document.documentElement.classList.remove('cart-open')};
 const note=t=>{const m=pane.querySelector('.cmsg');m.textContent=t;clearTimeout(note.t);note.t=setTimeout(()=>m.textContent='',6000)};
