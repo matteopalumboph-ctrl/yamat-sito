@@ -2,7 +2,10 @@
    Solo fatti veri: nomi, prezzi, opzioni e testi presi dal negozio Wix il 29/9/2026 (stores v1).
    page = la pagina statica della candela (la genera build_pagine.mjs da prodotto.html); wid = id del prodotto nel negozio Wix: il carrello del sito (yamat.js) lo usa per parlare col negozio. */
 window.YAMAT = {
-  shop: 'https://negozio.yamatcandle.com',
+  /* checkout 'whatsapp': l'ordine parte come messaggio WhatsApp già scritto (yamat.js). Senza questa riga il sito userebbe la cassa Wix. */
+  checkout: 'whatsapp',
+  whatsapp: '393933325473',
+  shop: 'https://www.yamatcandle.com',
   products: [
     {
       id: 'kora', page: 'kora.html', wid: '930f4fd8-b8b5-bc59-b994-eb10d7e88ad8', name: 'Kora', price: '79,99', wix: 'yamat-candle-kora', kind: 'cemento', tappa: 1,
