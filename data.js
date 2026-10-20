@@ -94,6 +94,18 @@ window.YAMAT = {
       facts: [['Candele', '7 artigianali'], ['Cera', 'Soia pura al 100%'], ['Chiusura', 'Nastro e ceralacca'], ['Confezione', 'Regalo, inclusa']],
       img: 'shop/scrigno.jpg',
       gallery: ['g/scrigno_1.jpg', 'g/scrigno_2.jpg', 'g/scrigno_3.jpg', 'g/scrigno_0.jpg']
+    },
+    {
+      id: 'bloom', page: 'bloom.html', wid: '02c1996a-a8d9-4ab7-b0cf-0407ac8a9af0', name: 'Bloom', price: '27,98', wix: 'bloom-coppia', kind: 'regalo', tappa: 4,
+      line: 'Il sottobosco in fiore', short: 'Peonie di cera, in coppia',
+      lead: 'Una peonia di cera che sta tra due dita.',
+      body: 'Bloom è la singola della Fioritura: ogni fiore è colato e rifinito a mano, petalo per petalo, in cera di soia pura, e profuma di frutta e agrumi, una scorza d’arancia appena aperta, una pesca matura. Si vende in coppia: scegli due colori, uguali o diversi, per un tavolo, una mensola, un regalo che si apre due volte.',
+      notes: ['Frutta', 'Agrumi'],
+      options: [['Primo colore', ['Salvia', 'Lilla', 'Pesca', 'Rosa', 'Miele', 'Neve azzurra']], ['Secondo colore', ['Salvia', 'Lilla', 'Pesca', 'Rosa', 'Miele', 'Neve azzurra']]],
+      facts: [['Prezzo', '13,99 € a candela'], ['Vendita', 'In coppia, 27,98 €'], ['Misura', '10 cm di circonferenza, circa 3 cm di diametro'], ['Cera', 'Soia pura al 100%'], ['Fragranza', 'Frutta e agrumi']],
+      tag: 'Novità',
+      img: 'shop/bloom.jpg',
+      gallery: ['r/bloom_villa.jpg', 'g/bloom_0.jpg', 'g/bloom_1.jpg', 'g/bloom_2.jpg', 'g/bloom_3.jpg', 'g/bloom_4.jpg', 'g/bloom_5.jpg']
     }
   ],
   /* famiglie olfattive, ricavate dalle opzioni vere del negozio */
