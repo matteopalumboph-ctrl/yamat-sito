@@ -8,7 +8,7 @@ window.YAMAT = {
   shop: 'https://www.yamatcandle.com',
   products: [
     {
-      id: 'kora', page: 'kora.html', wid: '930f4fd8-b8b5-bc59-b994-eb10d7e88ad8', name: 'Kora', price: '79,99', wix: 'yamat-candle-kora', kind: 'cemento', tappa: 1,
+      id: 'kora', page: 'kora.html', model: 'kora', wid: '930f4fd8-b8b5-bc59-b994-eb10d7e88ad8', name: 'Kora', price: '79,99', wix: 'yamat-candle-kora', kind: 'cemento', tappa: 1,
       line: 'Il ceppo di muschio', short: 'Resina, muschio, pino',
       lead: 'La candela del bosco d’inverno.',
       body: 'Note di resina, muschio e pino, calde e profonde, che riempiono la stanza come l’aria di una baita dopo la neve. Il vaso è modellato a mano, il coperchio è sigillato con la ceralacca, lo stoppino è in legno e crepita piano mentre brucia, come un piccolo camino.',

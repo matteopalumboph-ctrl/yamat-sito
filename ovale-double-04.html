@@ -25,6 +25,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,300..600,0..100,0..1;1,9..144,300..600,0..100,0..1&family=Figtree:wght@300;400;500&display=swap">
 <link rel="stylesheet" href="yamat.css">
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/"}}</script>
 <style>
 .pdp{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:clamp(30px,5vw,90px);padding:calc(env(safe-area-inset-top,0px) + 110px) var(--gutter) 0;align-items:start}
 .gal{display:grid;gap:14px}
@@ -74,6 +75,30 @@
 .count b i{position:absolute;left:0;top:0;height:1px;background:var(--gold);transition:width .5s var(--ease)}
 @media (max-width:900px){.count{display:flex}}
 
+/* la candela in 3D: una stanza buia a tutto schermo, gira con lo scorrimento */
+.v3d{position:relative;height:250vh;margin-top:clamp(80px,12vh,140px)}
+.v3d-stage{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden;background:radial-gradient(70% 60% at 62% 58%,#17201b 0%,#0b100d 55%,var(--night) 100%)}
+.v3d canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:pan-y;cursor:grab;opacity:0;transition:opacity 1.6s var(--ease)}
+.v3d.ready canvas{opacity:1}.v3d.grab canvas{cursor:grabbing}
+.v3d-copy{position:absolute;left:var(--gutter);bottom:clamp(40px,10vh,110px);max-width:min(440px,86vw);z-index:2}
+.v3d-copy h2{font-size:clamp(52px,7vw,118px);margin:18px 0 20px}
+.v3d-copy p{margin:0;color:var(--bone);opacity:.84;max-width:36ch}
+.v3d-ctl{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-top:28px}
+.v3d-wax{display:flex;gap:8px}
+.v3d-wax button{appearance:none;background:rgba(7,11,9,.4);border:1px solid var(--line);color:var(--bone);border-radius:999px;padding:11px 14px;font-size:12.5px;display:inline-flex;gap:9px;align-items:center;cursor:pointer;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);transition:border-color .4s,color .4s}
+.v3d-wax button i{width:13px;height:13px;border-radius:50%;box-shadow:inset 0 0 0 1px rgba(255,255,255,.25)}
+.v3d-wax button[aria-pressed="true"]{border-color:var(--gold-2);color:var(--gold-2)}
+.v3d [data-fire][aria-pressed="true"]{background:var(--gold)}
+.v3d-note{display:block;margin-top:22px;font-size:11.5px;letter-spacing:.04em;color:var(--bone-dim);opacity:.8;max-width:42ch}
+.v3d-hint{position:absolute;right:var(--gutter);bottom:clamp(40px,10vh,110px);z-index:2;font:500 10px/1 var(--sans);letter-spacing:.3em;text-transform:uppercase;color:var(--bone-dim);display:flex;gap:14px;align-items:center;transition:opacity .8s}
+.v3d-hint b{display:block;width:46px;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);animation:hint 2.4s var(--ease) infinite}
+@keyframes hint{0%,100%{transform:translateX(-10px)}50%{transform:translateX(10px)}}
+.v3d.moved .v3d-hint{opacity:0}
+.v3d-load{position:absolute;inset:0;display:grid;place-items:center;font:500 10px/1 var(--sans);letter-spacing:.3em;text-transform:uppercase;color:var(--bone-dim);transition:opacity 1s}
+.v3d.ready .v3d-load{opacity:0;pointer-events:none}
+@media (max-aspect-ratio:4/5){.v3d-stage::after{content:"";position:absolute;left:0;right:0;bottom:0;height:52%;background:linear-gradient(rgba(7,11,9,0),rgba(7,11,9,.86) 45%,var(--night));pointer-events:none;z-index:1}
+  .v3d-copy{bottom:calc(env(safe-area-inset-bottom,0px) + 30px);right:var(--gutter)}.v3d-copy h2{font-size:clamp(44px,12vw,64px);margin:12px 0 12px}
+  .v3d-ctl{margin-top:18px}.v3d-hint{top:calc(env(safe-area-inset-top,0px) + 92px);bottom:auto}}
 .inbosco{position:relative;margin-top:clamp(100px,16vh,180px);min-height:80svh;display:grid;align-items:center;overflow:hidden}
 .inbosco .bg{position:absolute;inset:-10% 0;z-index:-1}.inbosco .bg img{width:100%;height:100%;object-fit:cover;opacity:.75}
 .inbosco::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(var(--night),transparent 25%,transparent 70%,var(--night)),linear-gradient(90deg,rgba(7,11,9,.7),transparent 60%)}
@@ -119,6 +144,7 @@
     </div>
   </div>
 </section>
+
 <section class="inbosco"><div class="bg"><img src="t5.jpg" alt="" data-par=".1" style="object-position:50% 50%"></div><div class="txt">
   <span class="label up">Nel bosco · tappa V</span>
   <h2 class="display rvx"><span class="rv"><span>La radura</span></span></h2>
@@ -195,6 +221,17 @@ document.getElementById('main').innerHTML=`
     </div>
   </div>
 </section>
+${P.model?`<section class="v3d" id="v3d" data-model="${P.model}" aria-label="${P.name} in 3D">
+  <div class="v3d-stage"><canvas aria-hidden="true"></canvas>
+    <div class="v3d-load">Accendo la luce…</div>
+    <div class="v3d-copy"><span class="label">In 3D · girala tra le mani</span>
+      <h2 class="display">Da <em>vicino</em></h2>
+      <p>Scorri e la candela gira. Trascinala per guardarla da ogni lato, poi accendila.</p>
+      <div class="v3d-ctl"><button class="btn" type="button" data-fire aria-pressed="false">Accendila</button>
+        ${(P.options.find(o=>o[0]==='Colore della cera')||[0,[]])[1].length?`<div class="v3d-wax" role="group" aria-label="Colore della cera">${P.options.find(o=>o[0]==='Colore della cera')[1].map((c,i)=>`<button type="button" data-wax="${c}" aria-pressed="${i===0}"><i style="background:${SW[c]||'#999'}"></i>${c}</button>`).join('')}</div>`:''}</div>
+      <small class="v3d-note">Modello 3D ricostruito dalla foto del prodotto. Ogni vaso è fatto a mano: dal vero cambia di poco.</small></div>
+    <div class="v3d-hint"><span>Trascina</span><b></b></div>
+  </div></section>`:''}
 ${P.tappa?`<section class="inbosco"><div class="bg"><img src="t${P.tappa}.jpg" alt="" data-par=".1" style="object-position:${[0,21,72,20,68,50][P.tappa]}% 50%"></div><div class="txt">
   <span class="label up">Nel bosco · tappa ${['','I','II','III','IV','V'][P.tappa]}</span>
   <h2 class="display rvx"><span class="rv"><span>${tappe[P.tappa]}</span></span></h2>
@@ -220,7 +257,10 @@ function paintOpts(){
     `<button type="button" class="${sel[o.name]===c.description?'on':''}" data-v="${esc(c.description)}" aria-pressed="${sel[o.name]===c.description}"${c.inStock?'':' disabled'}>${SW[c.description]?`<i style="background:${SW[c.description]}"></i>`:''}${c.description}</button>`).join('')}</div></div>`).join('');
   const m=missing();buy.disabled=adding;buy.textContent=adding?'Aggiungo…':m.length?'Scegli: '+m[0].name.toLowerCase():'Aggiungi al carrello';barb.textContent=adding?'…':'Aggiungi'}
 box.addEventListener('click',e=>{const b=e.target.closest('button[data-v]');if(!b||!W)return;const o=b.closest('.opt').dataset.o;
-  sel[o]=b.dataset.v;paintOpts()});
+  sel[o]=b.dataset.v;paintOpts();if(o==='Colore della cera')syncWax(sel[o])});
+/* la cera della candela in 3D e l'opzione d'acquisto sono la stessa scelta */
+function syncWax(name){document.querySelectorAll('.v3d-wax button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.wax===name));if(window.yV3d)window.yV3d.setWax(name)}
+window.__pickWax=name=>{if(W&&W.productOptions.some(o=>o.name==='Colore della cera')){sel['Colore della cera']=name;paintOpts()}syncWax(name)};
 async function add(){if(!W||adding)return;const m=missing();
   if(m.length){paintOpts();const el=box.querySelector(`[data-o="${CSS.escape(m[0].name)}"]`);el.classList.add('need');el.scrollIntoView({behavior:'smooth',block:'center'});return}
   let options;if(W.productOptions.length){const v=W.manageVariants&&W.variants.find(v=>Object.entries(v.choices).every(([k,x])=>sel[k]===x));options=v?{variantId:v.id}:{options:{...sel}}}
@@ -249,6 +289,22 @@ new MutationObserver(()=>{const l=window.yLenis;if(l)lb.classList.contains('on')
 lb.querySelector('.pv').onclick=()=>show(k-1);lb.querySelector('.nx').onclick=()=>show(k+1);
 lb.addEventListener('click',e=>{if(e.target===lb)lb.classList.remove('on')});
 addEventListener('keydown',e=>{if(!lb.classList.contains('on'))return;if(e.key==='Escape')lb.classList.remove('on');if(e.key==='ArrowLeft')show(k-1);if(e.key==='ArrowRight')show(k+1)});
+</script>
+<script type="module">
+/* la stanza 3D: si prepara quando si avvicina, gira con lo scorrimento, si ferma quando esce dallo schermo */
+const sec=document.getElementById('v3d');
+if(sec){let v=null;
+  const load=async()=>{try{const {mount}=await import('./v3d.js');v=mount(sec,sec.dataset.model);window.yV3d=v;await v.ready;sec.classList.add('ready');
+    const first=sec.querySelector('.v3d-wax [aria-pressed="true"]');if(first)v.setWax(first.dataset.wax);upd();vis()}catch(e){sec.querySelector('.v3d-load').textContent='Il 3D non si apre su questo dispositivo'}};
+  new IntersectionObserver((es,o)=>{if(es[0].isIntersecting){o.disconnect();load()}},{rootMargin:'1200px 0px'}).observe(sec);
+  const upd=()=>{if(!v)return;const r=sec.getBoundingClientRect(),tot=sec.offsetHeight-innerHeight;v.setProgress(Math.min(1,Math.max(0,-r.top/tot)))};
+  addEventListener('scroll',()=>requestAnimationFrame(upd),{passive:true});
+  let on=false;const vis=()=>{if(v)v.setRunning(on)};
+  new IntersectionObserver(es=>{on=es[0].isIntersecting;vis()}).observe(sec);
+  sec.querySelector('[data-fire]').addEventListener('click',e=>{const b=e.currentTarget,l=b.getAttribute('aria-pressed')!=='true';b.setAttribute('aria-pressed',l);b.textContent=l?'Spegnila':'Accendila';if(v)v.setLit(l)});
+  sec.querySelectorAll('.v3d-wax button').forEach(b=>b.addEventListener('click',()=>window.__pickWax(b.dataset.wax)));
+  sec.querySelector('canvas').addEventListener('pointerdown',()=>sec.classList.add('moved'),{once:true});
+}
 </script>
 </body>
 </html>
