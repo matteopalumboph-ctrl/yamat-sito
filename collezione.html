@@ -13,14 +13,14 @@
 <meta property="og:locale" content="it_IT">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Collezione · Yamat Candle">
-<meta property="og:description" content="Otto candele Yamat fatte a mano a Brescia: vasi in cemento, cera di soia, stoppini in legno. Spedizione gratuita in Italia.">
+<meta property="og:description" content="Nove candele Yamat fatte a mano a Brescia: vasi in cemento, cera di soia, stoppini in legno. Spedizione gratuita in Italia.">
 <meta property="og:image" content="https://www.yamatcandle.com/og.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="canonical" href="https://www.yamatcandle.com/collezione.html">
 <meta property="og:url" content="https://www.yamatcandle.com/collezione.html">
-<meta name="description" content="Otto candele Yamat fatte a mano a Brescia: vasi in cemento, cera di soia, stoppini in legno. Spedizione gratuita in Italia.">
+<meta name="description" content="Nove candele Yamat fatte a mano a Brescia: vasi in cemento, cera di soia, stoppini in legno. Spedizione gratuita in Italia.">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,300..600,0..100,0..1;1,9..144,300..600,0..100,0..1&family=Figtree:wght@300;400;500&display=swap">
 <link rel="stylesheet" href="yamat.css">
@@ -51,7 +51,7 @@
     <div class="bg"><img src="t4.jpg" alt=""></div>
     <div>
       <span class="label">La collezione · Autunno inverno 2026</span>
-      <h1 class="display rvx"><span class="rv"><span>Otto <em>luci</em></span></span></h1>
+      <h1 class="display rvx"><span class="rv"><span>Nove <em>luci</em></span></span></h1>
       <p class="up">Vasi in cemento lavorati a mano, cera di soia, stoppini in legno che crepitano. Tutte in piccoli lotti, a Brescia. Spedizione gratuita in Italia.</p>
     </div>
   </section>
@@ -59,10 +59,10 @@
   <section class="wrap" style="padding-bottom:clamp(60px,10vh,120px)">
     <div class="filters">
       <div class="chips" role="group" aria-label="Filtra">
-        <button class="chip" type="button" data-f="tutte" aria-pressed="true">Tutte<sup>8</sup></button>
-        <button class="chip" type="button" data-f="cemento" aria-pressed="false">In cemento<sup>4</sup></button>
-        <button class="chip" type="button" data-f="senza" aria-pressed="false">Senza vaso<sup>2</sup></button>
-        <button class="chip" type="button" data-f="regalo" aria-pressed="false">Da regalare<sup>2</sup></button>
+        <button class="chip" type="button" data-f="tutte" aria-pressed="true">Tutte<sup></sup></button>
+        <button class="chip" type="button" data-f="cemento" aria-pressed="false">In cemento<sup></sup></button>
+        <button class="chip" type="button" data-f="senza" aria-pressed="false">Senza vaso<sup></sup></button>
+        <button class="chip" type="button" data-f="regalo" aria-pressed="false">Da regalare<sup></sup></button>
       </div>
       <div class="sort" role="group" aria-label="Ordina"><span>Ordina</span>
         <button type="button" data-s="scelta" aria-pressed="true">La nostra scelta</button>
@@ -99,12 +99,15 @@
 <script src="yamat.js"></script>
 <script>
 const Y=window.YAMAT, shop=document.getElementById('shop');
-shop.innerHTML=Y.products.map(yCard).join('');
+shop.innerHTML=Y.products.map(yCard).join('');shop.classList.add('feat');
 const cards=[...shop.children];
 cards.forEach((c,i)=>{c.dataset.kind=Y.products[i].kind;c.dataset.price=parseFloat(Y.products[i].price.replace(',','.'));c.dataset.ord=i});
+/* i numeri dei filtri si contano dal catalogo: non restano mai indietro */
+document.querySelectorAll('.chip').forEach(b=>{b.querySelector('sup').textContent=b.dataset.f==='tutte'?Y.products.length:Y.products.filter(p=>p.kind===b.dataset.f).length});
 let f='tutte',s='scelta';
 function apply(){
   const vis=cards.filter(c=>f==='tutte'||c.dataset.kind===f);
+  shop.classList.toggle('feat',f==='tutte'&&s==='scelta');
   vis.sort((a,b)=>s==='prezzo'?a.dataset.price-b.dataset.price:a.dataset.ord-b.dataset.ord);
   cards.forEach(c=>{c.classList.add('out')});
   vis.forEach((c,i)=>{shop.append(c);c.classList.remove('out');c.classList.remove('shown');c.style.transitionDelay=(i%4*.07)+'s';requestAnimationFrame(()=>requestAnimationFrame(()=>c.classList.add('shown')))});

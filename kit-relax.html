@@ -241,6 +241,8 @@ const lb=document.getElementById('lb'),li=lb.querySelector('img');let k=0;
 const show=i=>{k=(i+figs.length)%figs.length;li.src=figs[k].querySelector('img').src};
 figs.forEach((f,i)=>f.addEventListener('click',()=>{show(i);lb.classList.add('on')}));
 lb.querySelector('.x').onclick=()=>lb.classList.remove('on');
+/* con la foto aperta la pagina dietro resta ferma (scorrimento morbido) */
+new MutationObserver(()=>{const l=window.yLenis;if(l)lb.classList.contains('on')?l.stop():l.start()}).observe(lb,{attributes:true,attributeFilter:['class']});
 lb.querySelector('.pv').onclick=()=>show(k-1);lb.querySelector('.nx').onclick=()=>show(k+1);
 lb.addEventListener('click',e=>{if(e.target===lb)lb.classList.remove('on')});
 addEventListener('keydown',e=>{if(!lb.classList.contains('on'))return;if(e.key==='Escape')lb.classList.remove('on');if(e.key==='ArrowLeft')show(k-1);if(e.key==='ArrowRight')show(k+1)});

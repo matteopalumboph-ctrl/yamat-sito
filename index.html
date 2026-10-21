@@ -228,7 +228,7 @@ img{display:block;max-width:100%}
   <div class="after">
     <section id="collezione" class="sec wrap">
       <div class="head">
-        <div><span class="label">La collezione</span><h2 class="display" style="margin-top:22px"><span class="rv"><span>Otto <em>luci</em></span></span></h2></div>
+        <div><span class="label">La collezione</span><h2 class="display" style="margin-top:22px"><span class="rv"><span>Nove <em>luci</em></span></span></h2></div>
         <p>Vasi in cemento lavorati a mano, cera di soia, stoppini in legno. Spedizione gratuita in Italia.</p>
       </div>
       <div class="shop" id="shop"></div>
@@ -280,7 +280,7 @@ const VID={0:{id:1,n:121,fx:[.22,.22,.22,.21,.2],x0:0},1:{id:2,n:192,fx:[.75,.75
 const SIDE=[1,-1,1,-1,-1];
 
 /* ---------- collezione: nomi, prezzi e foto dal negozio ---------- */
-document.getElementById('shop').innerHTML=window.YAMAT.products.map(yCard).join('');
+document.getElementById('shop').innerHTML=window.YAMAT.products.map(yCard).join('');document.getElementById('shop').classList.add('feat');
 yReveal();
 
 /* ---------- scorrimento morbido ---------- */

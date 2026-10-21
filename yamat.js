@@ -34,6 +34,7 @@ if(ft){ft.className='wrap';ft.innerHTML=`<div class="foot">
   <div><h4>Yamat</h4><ul>${PAGES.map(([h,t])=>`<li><a href="${h}">${t}</a></li>`).join('')}${(Y.checkout==='whatsapp'||(()=>{try{return sessionStorage.getItem('ymt_wa')==='1'}catch(e){return false}})())?'':`<li><a href="${Y.shop}/gift-card" target="_blank" rel="noopener">Buono regalo ↗</a></li>`}</ul></div>
   <div><h4>Scrivici</h4><ul><li><a href="mailto:yamatcandle@gmail.com">yamatcandle@gmail.com</a></li><li>Via Costalunga 34, Brescia</li><li><a href="https://www.instagram.com/yamat_candle/" target="_blank" rel="noopener">Instagram @yamat_candle</a></li></ul></div>
 </div>
+<div class="firma" aria-hidden="true"><i></i></div>
 <div class="fine"><span>© 2026 Yamat Candle · Artigianato italiano, fatto a mano a Brescia · <a href="https://www.iubenda.com/privacy-policy/42851129" target="_blank" rel="noopener">Privacy</a> · <a href="https://www.iubenda.com/privacy-policy/42851129/cookie-policy" target="_blank" rel="noopener">Cookie</a></span><span>Le foto del bosco e delle stanze sono generate con l’IA dalle foto dei prodotti</span></div>`}
 
 /* schede prodotto riutilizzabili */
@@ -47,8 +48,8 @@ window.yReveal=()=>{const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.is
   document.querySelectorAll('.up:not(.shown),.mask:not(.shown),.head:not(.shown),.rvx:not(.shown)').forEach(el=>io.observe(el))};
 
 /* parallasse leggera sulle immagini con data-par */
-const pars=[];const par=()=>{const h=innerHeight;pars.forEach(el=>{const r=el.parentElement.getBoundingClientRect();if(r.bottom<0||r.top>h)return;const k=+el.dataset.par||.12;el.style.transform=`translate3d(0,${((r.top+r.height/2-h/2)*-k).toFixed(1)}px,0) scale(1.14)`})};
-window.yPar=()=>{document.querySelectorAll('[data-par]').forEach(el=>pars.push(el));par()};
+const pars=new Set();const par=()=>{const h=innerHeight;pars.forEach(el=>{const r=el.parentElement.getBoundingClientRect();if(r.bottom<0||r.top>h)return;const k=+el.dataset.par||.12;el.style.transform=`translate3d(0,${((r.top+r.height/2-h/2)*-k).toFixed(1)}px,0) scale(1.14)`})};
+window.yPar=()=>{document.querySelectorAll('[data-par]').forEach(el=>pars.add(el));par()};
 addEventListener('scroll',()=>requestAnimationFrame(par),{passive:true});
 
 /* velo fra le pagine */
@@ -122,7 +123,7 @@ const C={
   async qty(id,n){busy=true;paint();try{cart=(n>0?await wix('/ecom/v2/carts/current/update-line-items','POST',{lineItems:[{lineItemId:id,quantity:{newQuantity:n}}]})
       :await wix('/ecom/v2/carts/current/remove-line-items','POST',{lineItemIds:[id]})).cart}finally{busy=false;paint()}},
   async pay(){busy=true;paint();
-    try{const live=/yamatcandle\.com$/.test(location.hostname),home=live?location.origin:'https://negozio.yamatcandle.com';
+    try{const live=/yamatcandle\.com$/.test(location.hostname),home=live?location.origin:'https://www.yamatcandle.com';
       const {checkoutId}=await wix('/ecom/v1/carts/current/create-checkout','POST',{channelType:'WEB'});
       const s=await wix('/_api/redirects-api/v1/redirect-session','POST',{ecomCheckout:{checkoutId},callbacks:{postFlowUrl:home+'/',thankYouPageUrl:home+'/grazie.html',cartPageUrl:home+'/collezione.html?carrello=1'}});
       location.href=s.redirectSession.fullUrl}
@@ -135,7 +136,7 @@ window.yCart=C;
 const cb=document.createElement('button');cb.type='button';cb.className='pill cartb';cb.setAttribute('aria-controls','cart');
 cb.innerHTML='Carrello <span class="n num">0</span>';top.querySelector('.end').insertBefore(cb,burger);
 const pane=document.createElement('div');pane.className='cart';pane.id='cart';pane.setAttribute('role','dialog');pane.setAttribute('aria-modal','true');pane.setAttribute('aria-label','Carrello');pane.setAttribute('aria-hidden','true');
-pane.innerHTML=`<div class="cart-bg"></div><aside><header><span class="label">Il tuo carrello</span><button type="button" class="x">Chiudi</button></header>
+pane.innerHTML=`<div class="cart-bg"></div><aside data-lenis-prevent><header><span class="label">Il tuo carrello</span><button type="button" class="x">Chiudi</button></header>
 <div class="items"></div><p class="cmsg" role="status"></p>
 <footer><div class="tot"><span>Subtotale</span><b class="price num">0,00 €</b></div><p>Spedizione gratuita in Italia. Le spese per l’estero si calcolano alla cassa.</p>
 <button type="button" class="btn go">Vai alla cassa</button></footer></aside>`;
@@ -164,6 +165,57 @@ pane.addEventListener('click',e=>{const b=e.target.closest('[data-q]');if(!b||bu
 pane.querySelector('.go').addEventListener('click',()=>{if(!busy)C.pay()});
 C.load().then(()=>{if(new URLSearchParams(location.search).has('carrello'))open()});
 addEventListener('pageshow',e=>{if(e.persisted){busy=false;C.load()}});   // tornando indietro dalla cassa il carrello si riallinea
+
+/* ---------- LUME: il movimento del sito ----------
+   Un'idea sola: la candela. Dove passa il visitatore la luce si scalda, le foto respirano con lo scorrimento,
+   le schede si inclinano verso la mano, la firma Yamat si accende in fondo. Con «Riduci movimento» resta tutto fermo. */
+const RM=matchMedia('(prefers-reduced-motion: reduce)').matches,FINE=matchMedia('(hover:hover) and (pointer:fine)').matches,HOME=!!document.body.dataset.clear;
+const root=document.documentElement;
+
+/* filo d'oro in cima: quanto manca alla fine della pagina */
+const filo=document.createElement('div');filo.className='filo';filo.setAttribute('aria-hidden','true');document.body.append(filo);
+const filoUp=()=>{const h=root.scrollHeight-innerHeight;filo.style.transform=`scaleX(${h>0?Math.min(1,Math.max(0,scrollY/h)).toFixed(4):0})`};
+addEventListener('scroll',()=>requestAnimationFrame(filoUp),{passive:true});addEventListener('resize',filoUp);filoUp();
+
+/* le foto grandi respirano con lo scorrimento (dentro la loro cornice) */
+const autoPar=()=>{document.querySelectorAll('.split figure img,.big figure img,.feature .bg img,.inbosco .bg img,.phead .bg img').forEach(i=>{if(!i.dataset.par)i.dataset.par=i.closest('.phead')?'.06':'.08'});window.yPar()};
+if(!RM){autoPar();addEventListener('load',autoPar)}
+
+/* la firma in fondo si accende quando arriva */
+const firma=document.querySelector('.firma');
+if(firma){if(RM)firma.classList.add('shown');else new IntersectionObserver((es,o)=>es.forEach(e=>{if(e.isIntersecting){firma.classList.add('shown');o.disconnect()}}),{threshold:.35}).observe(firma)}
+
+/* il nastro delle parole accelera quando si scorre in fretta */
+const tick=[...document.querySelectorAll('.ticker div')];
+if(tick.length&&!RM){let ly=scrollY,v=0;addEventListener('scroll',()=>{v=Math.max(v,Math.abs(scrollY-ly));ly=scrollY},{passive:true});
+  (function tv(){v*=.92;const r=1+Math.min(5,v*.18);tick.forEach(d=>d.getAnimations().forEach(a=>a.playbackRate=r));requestAnimationFrame(tv)})()}
+
+if(FINE&&!RM){
+  /* scorrimento morbido (non nel bosco: lì la camera ha già il suo) */
+  if(!HOME){const sc=document.createElement('script');sc.src='https://cdn.jsdelivr.net/npm/lenis@1.3.27/dist/lenis.min.js';
+    sc.onload=()=>{try{const l=new window.Lenis({lerp:.09,wheelMultiplier:.95,anchors:true});window.yLenis=l;
+      (function r(t){l.raf(t);requestAnimationFrame(r)})(performance.now());
+      new MutationObserver(()=>{root.classList.contains('menu-open')||root.classList.contains('cart-open')?l.stop():l.start()}).observe(root,{attributes:true,attributeFilter:['class']});
+      }catch(e){}};document.head.append(sc)}
+
+  /* la luce della candela segue la mano */
+  const lume=document.createElement('div');lume.className='lume';lume.setAttribute('aria-hidden','true');document.body.append(lume);
+  let lx=innerWidth/2,ly2=innerHeight/2,tx=lx,ty=ly2,on=0,ton=0;
+  addEventListener('pointermove',e=>{tx=e.clientX;ty=e.clientY;ton=1},{passive:true});
+  document.addEventListener('pointerleave',()=>ton=0);addEventListener('blur',()=>ton=0);
+  (function lu(t){lx+=(tx-lx)*.1;ly2+=(ty-ly2)*.1;on+=(ton-on)*.04;
+    const fl=1+Math.sin(t*.0091)*.035+Math.sin(t*.0157+1.3)*.02;   // il respiro irregolare di una fiamma
+    lume.style.transform=`translate3d(${lx.toFixed(1)}px,${ly2.toFixed(1)}px,0) translate(-50%,-50%) scale(${fl.toFixed(3)})`;
+    lume.style.opacity=(on*(.86+Math.sin(t*.0113)*.07)).toFixed(3);requestAnimationFrame(lu)})(0);
+
+  /* le schede si inclinano verso la mano, con un riflesso caldo */
+  let tf=null;const free=f=>{if(!f)return;f.style.transform='';f.classList.remove('tilt')};
+  document.addEventListener('pointermove',e=>{const f=e.target.closest&&e.target.closest('.card figure');if(tf&&tf!==f)free(tf);tf=f;if(!f)return;
+    const r=f.getBoundingClientRect(),px=(e.clientX-r.left)/r.width,py=(e.clientY-r.top)/r.height;f.classList.add('tilt');
+    f.style.transform=`perspective(1000px) rotateY(${((px-.5)*5).toFixed(2)}deg) rotateX(${((.5-py)*5).toFixed(2)}deg)`;
+    f.style.setProperty('--gx',(px*100).toFixed(1)+'%');f.style.setProperty('--gy',(py*100).toFixed(1)+'%')},{passive:true});
+  document.addEventListener('pointerleave',()=>{free(tf);tf=null});
+}
 
 /* niente cursore finto: resta la freccia normale; solo i bottoni magnetici */
 if(matchMedia('(hover:hover)').matches){
