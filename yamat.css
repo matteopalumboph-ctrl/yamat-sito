@@ -269,3 +269,6 @@ html.lenis,html.lenis body{height:auto}
   transform:translateY(32%);opacity:0;transition:transform 2.2s var(--ease),opacity 1.6s var(--ease),background-position 3.4s var(--ease) .3s}
 .firma.shown i{transform:none;opacity:1;background-position:0 0}
 @media (prefers-reduced-motion:reduce){*{transition-duration:.01ms!important;animation:none!important}.rv > span,.up,.mask,.mask img{transform:none!important;opacity:1!important;clip-path:none!important;filter:none!important}.card figure{clip-path:none!important}.lume,.filo{display:none}}
+
+/* segno «In 3D» sulle schede che hanno il modello */
+.card .tag.t3d{left:auto;right:14px;color:var(--bone);border:1px solid rgba(233,201,143,.45)}
