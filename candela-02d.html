@@ -294,7 +294,7 @@ addEventListener('keydown',e=>{if(!lb.classList.contains('on'))return;if(e.key==
 /* la stanza 3D: si prepara quando si avvicina, gira con lo scorrimento, si ferma quando esce dallo schermo */
 const sec=document.getElementById('v3d');
 if(sec){let v=null;
-  const load=async()=>{try{const {mount}=await import('./v3d.js');v=mount(sec,sec.dataset.model);window.yV3d=v;await v.ready;sec.classList.add('ready');
+  const load=async()=>{try{const {mount}=await import('./v3d.js');v=mount(sec,sec.dataset.model);window.yV3d=v;await v.ready;sec.classList.add('ready');if(!v.hasFire())sec.querySelector('[data-fire]').hidden=true;
     const first=sec.querySelector('.v3d-wax [aria-pressed="true"]');if(first)v.setWax(first.dataset.wax);upd();vis()}catch(e){sec.querySelector('.v3d-load').textContent='Il 3D non si apre su questo dispositivo'}};
   new IntersectionObserver((es,o)=>{if(es[0].isIntersecting){o.disconnect();load()}},{rootMargin:'1200px 0px'}).observe(sec);
   const upd=()=>{if(!v)return;const r=sec.getBoundingClientRect(),tot=sec.offsetHeight-innerHeight;v.setProgress(Math.min(1,Math.max(0,-r.top/tot)))};
