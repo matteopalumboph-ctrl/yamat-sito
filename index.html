@@ -409,9 +409,9 @@ Object.keys(VID).forEach(k=>{const v=VID[k];
           /* l'alone: nella clip spenta è tolto anche il bagliore che la fiamma spandeva intorno; torna mentre la fiamma prende */
           float rh=length(vec2(d.x,(d.y-h*.6)*.85))/h,kh=(1.-smoothstep(3.,6.3,rh))*(1.-k);
           if(uok>.5&&kh>.001)c=mix(c,sl(texture2D(umap,vec2(ux.x+vUv.x*ux.y,vUv.y)).rgb),kh*(1.-smoothstep(.15,1.,L)));
-          float wx=d.x-sin((d.y+h*.5)*6./h)*h*.025;
-          float wk=(1.-smoothstep(h*.03,h*.06,abs(wx)))*smoothstep(-h*.56,-h*.5,d.y)*(1.-smoothstep(-h*.22,-h*.14,d.y));
-          c=mix(c,vec3(.012,.009,.007),wk*.85*uok*(1.-smoothstep(0.,.25,L)));
+          float wx=d.x-sin((d.y+h*.5)*8./h)*h*.01;   // lo stoppino spento: un filo sottile e corto, appena piegato
+          float wk=(1.-smoothstep(h*.012,h*.026,abs(wx)))*smoothstep(-h*.55,-h*.51,d.y)*(1.-smoothstep(-h*.4,-h*.34,d.y));
+          c=mix(c,vec3(.03,.024,.02),wk*.7*uok*(1.-smoothstep(0.,.25,L)));
           float kf=smoothstep(1.,.35,length(vec2(d.x/(h*.55),(d.y-h*.3)/(h*1.4))));c+=vec3(1.,.6,.28)*fx[i]*(kf*1.5+g*.5);
           c*=1.+L*g*(sin(tm*9.3+float(i)*1.7)*.04+sin(tm*14.7+float(i)*2.3)*.03);}
         c*=1.-.06*amb*uok;
