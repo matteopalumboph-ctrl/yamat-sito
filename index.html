@@ -385,7 +385,7 @@ function fitVideo(v,f){if(!v.kind)return;if(f!==undefined)v.f=f;const K=v.K,t=(v
   let W2=w,H2=w/va;if(H2<h){H2=h;W2=h*va}
   /* sul telefono il prodotto sale nella metà alta: sotto c'è il testo */
   const port=cam.aspect<1,ps=v.ps||1.2;if(port){W2*=ps;H2*=ps}
-  const maxS=(W2-w)/2;v.mesh.scale.set(W2,H2,1);v.mesh.position.x=THREE.MathUtils.clamp((.5-fx)*W2,-maxS,maxS);v.mesh.position.y=port?(v.py!==undefined?v.py:.2)*h:0;}
+  const maxS=(W2-w)/2;v.bw=W2;v.bh=H2;v.mesh.scale.set(W2,H2,1);v.mesh.position.x=THREE.MathUtils.clamp((.5-fx)*W2,-maxS,maxS);v.mesh.position.y=port?(v.py!==undefined?v.py:.2)*h:0;}
 
 /* raggi di luce tra gli alberi */
 const shaftTex=(()=>{const c=document.createElement('canvas');c.width=64;c.height=256;const g=c.getContext('2d');const gr=g.createLinearGradient(0,0,0,256);gr.addColorStop(0,'rgba(255,236,200,.55)');gr.addColorStop(1,'rgba(255,236,200,0)');g.fillStyle=gr;g.fillRect(0,0,64,256);const gx=g.createLinearGradient(0,0,64,0);gx.addColorStop(0,'rgba(0,0,0,1)');gx.addColorStop(.5,'rgba(0,0,0,0)');gx.addColorStop(1,'rgba(0,0,0,1)');g.globalCompositeOperation='destination-out';g.fillStyle=gx;g.fillRect(0,0,64,256);return new THREE.CanvasTexture(c)})();
@@ -486,10 +486,14 @@ function frame(){
     // la clip copre la tappa da quando la vediamo (d=80) a quando la superiamo (d=24)
     if(!v.kind&&d<104)pick(v);   // la clip si scarica quando la tappa si avvicina: la prima arriva subito, le altre non si rubano la banda
     const f=THREE.MathUtils.clamp((52-d)/(52-30),0,1);seekTo(v,Math.round(f*(v.n-1)));if(cam.aspect<1)fitVideo(v,f);
-    v.mesh.material.opacity=THREE.MathUtils.smoothstep(d,24,32)*(+k===0?1-THREE.MathUtils.smoothstep(d,95,110):1-THREE.MathUtils.smoothstep(d,24+GAP,32+GAP));v.mesh.material.uniforms.opacity.value=v.mesh.material.opacity;v.mesh.visible=v.mesh.material.opacity>.003&&v.shown;if(v.mesh.visible)vidMax=Math.max(vidMax,v.mesh.material.opacity);});
+    /* passaggio tra le tappe: la clip che finisce avanza verso chi guarda e si spegne nel buio del bosco,
+       SOLO DOPO entra la candela successiva: mai due clip una sopra l'altra (prima sembrava un errore) */
+    const out=THREE.MathUtils.smoothstep(d,27,33),inn=+k===0?1-THREE.MathUtils.smoothstep(d,95,110):1-THREE.MathUtils.smoothstep(d,GAP+23,GAP+27);
+    v.mesh.material.opacity=out*inn;
+    if(v.bw){const z=1+(1-out)*.2-(1-inn)*.05*(+k>0?1:0);v.mesh.scale.set(v.bw*z,v.bh*z,1)}v.mesh.material.uniforms.opacity.value=v.mesh.material.opacity;v.mesh.visible=v.mesh.material.opacity>.003&&v.shown;if(v.mesh.visible)vidMax=Math.max(vidMax,v.mesh.material.opacity);});
   stations.forEach((s,i)=>{const d=cam.position.z-s.z;s.u.time.value=t;
     s.u.op.value=THREE.MathUtils.smoothstep(d,24,32)*(1-THREE.MathUtils.smoothstep(d,95,130))*(1-vidMax);
-    s.mesh.visible=(!s.video||!(vids[i]&&vids[i].shown))&&s.u.op.value>.003;
+    s.mesh.visible=(!s.video||!(vids[i]&&vids[i].shown))&&s.u.op.value>.003&&(!s.video||d<60);   // la foto di riserva solo per la tappa vicina: da lontano sembrava un riquadro appeso nel buio
     if(d>31&&d<50&&d<best){best=d;near=i}});
   const inHero=sp<.03;
   hero.classList.toggle('off',!inHero);
