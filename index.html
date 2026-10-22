@@ -80,6 +80,22 @@ img{display:block;max-width:100%}
 /* il bosco è lungo fin dall'inizio: le foto della collezione, più in basso, non rubano banda alla prima tappa */
 @media (hover:none){#volo{min-height:1010vh}}
 #volo .stage{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden}
+#conta{position:absolute;left:var(--gutter);top:calc(env(safe-area-inset-top,0px) + 132px);display:flex;align-items:baseline;gap:8px;font:500 10px/1 var(--sans);letter-spacing:.26em;text-transform:uppercase;color:var(--bone-dim);opacity:0;transform:translateY(-6px);transition:opacity .8s var(--ease),transform .8s var(--ease);pointer-events:none;z-index:3}
+#conta.on{opacity:1;transform:none}
+#conta i{align-self:center;width:6px;height:15px;border-radius:50% 50% 45% 45%/60% 60% 40% 40%;background:radial-gradient(circle at 50% 70%,#fff4d6 0%,#ffc166 42%,rgba(255,140,40,0) 74%);filter:drop-shadow(0 0 6px rgba(255,170,80,.7));animation:fiam 1.6s ease-in-out infinite}
+#conta b{font:300 22px/1 var(--display);letter-spacing:0;color:var(--bone)}#conta span{letter-spacing:.1em}#conta em{font-style:normal;margin-left:4px}
+#conta.pieno b{color:var(--gold-2)}
+@keyframes fiam{0%,100%{transform:scaleY(1)}50%{transform:scaleY(.86) translateY(1px)}}
+.svela{margin:18px 0 0!important;font:500 10px/1.5 var(--sans)!important;letter-spacing:.3em;text-transform:uppercase;color:var(--gold-2);opacity:0!important;transform:translateY(8px);transition:opacity 1.4s var(--ease) .3s,transform 1.4s var(--ease) .3s;max-width:none!important}
+.svela span{color:var(--bone-dim);margin-right:10px}
+.chap.acceso .svela{opacity:1!important;transform:none}
+.chap.acceso h2{text-shadow:0 0 60px rgba(255,180,100,.22)}
+.path button.acc i{background:#f6c27c;border-color:#f6c27c;box-shadow:0 0 14px 3px rgba(255,165,80,.55)}
+#finale{position:absolute;left:50%;bottom:clamp(40px,10vh,110px);transform:translate(-50%,20px);width:min(520px,calc(100vw - 2*var(--gutter)));padding:34px 34px 30px;text-align:center;background:rgba(7,11,9,.62);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid rgba(233,201,143,.28);border-radius:4px;opacity:0;visibility:hidden;transition:opacity 1.4s var(--ease),transform 1.4s var(--ease),visibility 1.4s;z-index:5}
+#finale.on{opacity:1;visibility:visible;transform:translate(-50%,0)}
+#finale h3{font-size:clamp(34px,4vw,52px);margin:14px 0 12px;font-weight:300}
+#finale p{margin:0 auto 24px;max-width:36ch;color:var(--bone-dim);font-size:15px}
+#finale .x{position:absolute;top:10px;right:14px;background:none;border:0;color:var(--bone-dim);font-size:22px;cursor:pointer}
 #fhint{position:fixed;left:0;top:0;z-index:60;pointer-events:none;opacity:0;font:500 10px/1 var(--sans,Figtree,sans-serif);letter-spacing:.22em;text-transform:uppercase;color:#f3e3c4;text-shadow:0 0 12px rgba(0,0,0,.8);white-space:nowrap;transition:opacity .4s}
 .fcur,.fcur body,.fcur #volo *{cursor:none}
 #gl{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:pan-y;pointer-events:none}
@@ -180,7 +196,7 @@ img{display:block;max-width:100%}
         <div>
           <span class="label">Call of Wood · Brescia</span>
           <h1 class="display">Entra nel <em>bosco.</em></h1>
-          <p>All'imbrunire, lungo il sentiero, qualcuno ha acceso cinque candele. Seguile fino alla radura.</p>
+          <p>All'imbrunire, lungo il sentiero, le candele aspettano una fiamma. Accendile una a una, fino alla radura.</p>
           <div class="go"><span class="label" style="color:var(--bone-dim)">Scorri</span><i></i></div>
         </div>
       </div>
@@ -285,6 +301,8 @@ const FOC=[[.21,.47],[.72,.49],[.2,.5],[.68,.5],[.5,.52]];
 const PW=1080/2560;
 const VID={0:{id:1,n:121,fx:[.22,.22,.22,.21,.2],x0:0},1:{id:2,n:192,fx:[.75,.75,.74,.73,.73],x0:1356/2560},2:{id:3,n:192,fx:[.22,.23,.24,.28,.3],ps:1.1,py:.15,x0:128/2560},3:{id:4,n:192,fx:[.64,.64,.63,.63,.62],ps:1,py:.12,x0:1076/2560},4:{id:5,n:84,fx:[.5,.5,.5,.5,.5],ps:1,py:.02,x0:740/2560}};
 const SIDE=[1,-1,1,-1,-1];
+/* il gioco delle candele (sotto): tappe con la clip «spente» u1/u2/u4/u5.mp4 */
+const FIA=!reduce,SPEGNI=true,UCLIP={0:1,1:1,3:1,4:1};
 
 /* ---------- collezione: nomi, prezzi e foto dal negozio ---------- */
 document.getElementById('shop').innerHTML=window.YAMAT.products.map(yCard).join('');document.getElementById('shop').classList.add('feat');
@@ -354,13 +372,18 @@ Object.keys(VID).forEach(k=>{const v=VID[k];
   const vd=document.createElement('video');vd.muted=true;vd.defaultMuted=true;vd.setAttribute('muted','');vd.setAttribute('playsinline','');vd.setAttribute('webkit-playsinline','');vd.playsInline=true;vd.preload='auto';
   v.vd=vd;v.ready=false;v.seeking=false;v.want=0;v.kind='';
   vd.addEventListener('loadeddata',()=>{v.n=Math.round(vd.duration*24);v.ts.value.set(vd.videoWidth,vd.videoHeight);v.ready=true;v.seeking=true;v.cur=0;vd.currentTime=.02});
-  vd.addEventListener('seeked',()=>{v.sf=v.cur;v.seeking=false;v.tex.needsUpdate=true;v.shown=true;if(v.want!==v.cur)seekTo(v,v.want)});
+  vd.addEventListener('seeked',()=>{v.mdone=true;sinc(v)});
+  /* la stessa clip con le candele spente: si sposta allo stesso fotogramma e si mostra solo quando lo sono tutte e due */
+  v.uready=false;v.usf=-1;
+  if(FIA&&SPEGNI&&UCLIP[k]){const ud=document.createElement('video');ud.muted=true;ud.defaultMuted=true;ud.setAttribute('muted','');ud.setAttribute('playsinline','');ud.playsInline=true;ud.preload='auto';
+    v.ud=ud;ud.addEventListener('loadeddata',()=>{v.uready=true});ud.addEventListener('seeked',()=>{v.udone=true;sinc(v)});
+    v.utex=new THREE.Texture(ud);v.utex.encoding=THREE.sRGBEncoding;v.utex.minFilter=THREE.LinearFilter;v.utex.generateMipmaps=false}
   const t=new THREE.Texture(vd);t.encoding=THREE.sRGBEncoding;t.minFilter=THREE.LinearFilter;t.generateMipmaps=false;
   v.ts={value:new THREE.Vector2(1920,1080)};
-  const m=new THREE.Mesh(new THREE.PlaneGeometry(1,1),new THREE.ShaderMaterial({uniforms:{map:{value:t},ts:v.ts,opacity:{value:1},tint:{value:new THREE.Vector3(1.22,1.2,1.16)},fl:{value:[...Array(16)].map(()=>new THREE.Vector4())},fx:{value:new Array(16).fill(0)},rs:{value:new Array(16).fill(1)},va:{value:16/9},tm:{value:0},amb:{value:0}},transparent:true,depthTest:false,depthWrite:false,
+  const m=new THREE.Mesh(new THREE.PlaneGeometry(1,1),new THREE.ShaderMaterial({uniforms:{map:{value:t},ts:v.ts,opacity:{value:1},tint:{value:new THREE.Vector3(1.22,1.2,1.16)},fl:{value:[...Array(16)].map(()=>new THREE.Vector4())},fx:{value:new Array(16).fill(0)},wd:{value:new Array(16).fill(0)},va:{value:16/9},tm:{value:0},amb:{value:0},umap:{value:v.utex||blank},uok:{value:0},ux:{value:new THREE.Vector2(0,1)}},transparent:true,depthTest:false,depthWrite:false,
     vertexShader:`varying vec2 vUv;void main(){vUv=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}`,
-    fragmentShader:`uniform sampler2D map;uniform vec2 ts;uniform float opacity;uniform vec3 tint;uniform vec4 fl[16];uniform float fx[16],rs[16];uniform float va,tm,amb;varying vec2 vUv;
-      vec3 lin(vec2 uv){vec3 c=texture2D(map,uv).rgb;return mix(pow(c*.9478672986+.0521327014,vec3(2.4)),c*.0773993808,vec3(lessThanEqual(c,vec3(.04045))));}
+    fragmentShader:`uniform sampler2D map;uniform vec2 ts;uniform float opacity;uniform vec3 tint;uniform vec4 fl[16];uniform float fx[16],wd[16];uniform float va,tm,amb,uok;uniform sampler2D umap;uniform vec2 ux;varying vec2 vUv;
+      vec3 sl(vec3 c){return mix(pow(c*.9478672986+.0521327014,vec3(2.4)),c*.0773993808,vec3(lessThanEqual(c,vec3(.04045))));}
       vec3 bic(vec2 uv){vec2 sp=uv*ts,tc=floor(sp-.5)+.5,f=sp-tc;
         vec2 w0=f*(-.5+f*(1.-.5*f)),w1=1.+f*f*(-2.5+1.5*f),w2=f*(.5+f*(2.-1.5*f)),w3=f*f*(-.5+.5*f),w12=w1+w2;
         vec2 a=(tc-1.)/ts,b=(tc+w2/w12)/ts,c=(tc+2.)/ts;
@@ -370,28 +393,42 @@ Object.keys(VID).forEach(k=>{const v=VID[k];
         return clamp(r,0.,1.);}
       void main(){vec3 c=bic(vUv);
         c=mix(pow(c*.9478672986+.0521327014,vec3(2.4)),c*.0773993808,vec3(lessThanEqual(c,vec3(.04045))));
-        /* candele spente: la fiamma si copre col bosco che ha accanto, la luce sul vaso e intorno cala; accese: lampo e respiro */
-        c*=1.-.14*amb;
+        /* il gioco: dentro la sagoma di ogni fiamma si passa dalla clip spenta (umap) a quella accesa; la fiamma sale dallo stoppino,
+           si piega al vento della fiammella; sulla candela spenta c'è lo stoppino scuro e la luce intorno cala */
+        float dim=0.;
         for(int i=0;i<16;i++){vec4 F=fl[i];if(F.z<=0.)continue;
-          float h=F.z;vec2 d=vec2((vUv.x-F.x)*va,vUv.y-F.y);
-          float R=rs[i];float k=smoothstep(1.,.3,length(vec2(d.x/(h*1.05*R),(d.y-h*.35*R)/(h*1.9*R))))*smoothstep(-h*.85,-h*.42,d.y);
-          float g=exp(-dot(d,d)/(h*h*10.));if(k>.001){float o=h*1.25*R/va,q=h*.9*R/va,cy=F.y+h*.35*R;vec3 bg=(lin(vec2(F.x-o,cy))+lin(vec2(F.x+o,cy))+lin(vec2(F.x-q,cy+h*1.7))+lin(vec2(F.x+q,cy+h*1.7))+lin(vec2(F.x,cy+h*2.2*R))+lin(vec2(F.x-o,cy+h*.6*R))+lin(vec2(F.x+o,cy+h*.6*R)))/7.;
-          c=mix(c,min(c,bg*1.05),k*F.w);}   // si toglie solo la luce in più della fiamma: dove non c'è fiamma non cambia nullac*=1.-.6*g*F.w;
-          float kf=smoothstep(1.,.4,length(vec2(d.x/(h*.5),(d.y-h*.3)/(h*1.3))));c+=vec3(1.,.6,.28)*fx[i]*(kf*1.6+g*.45);
-          c*=1.+(1.-F.w)*g*(sin(tm*9.3+float(i)*1.7)*.05+sin(tm*14.7+float(i)*2.3)*.04);}
+          float h=F.z,L=F.w;vec2 d=vec2((vUv.x-F.x)*va,vUv.y-F.y);
+          if(abs(d.x)>h*6.||d.y<-h*6.||d.y>h*8.)continue;
+          float g=exp(-dot(d,d)/(h*h*12.));dim+=g*(1.-L);
+          float k=smoothstep(1.,.72,length(vec2(d.x/(h*1.02),(d.y-h*.45)/(h*2.15))))*smoothstep(-h*.62,-h*.48,d.y);
+          if(k>.001){
+            float yy=clamp((d.y+h*.5)/(h*3.2),0.,1.),b=wd[i]*L;
+            if(abs(b)>.003)c=mix(c,sl(bic(vUv-vec2(b*h*yy*yy*.9/va,0.))),k);
+            float top=-h*.6+smoothstep(0.,1.,L)*h*4.4,on=L>=1.?1.:(1.-smoothstep(top-h*.6,top,d.y))*(.72+.28*sin(tm*29.+float(i)*3.))*step(.001,L);
+            if(uok>.5)c=mix(c,sl(texture2D(umap,vec2(ux.x+vUv.x*ux.y,vUv.y)).rgb),k*(1.-on));}
+          float wx=d.x-sin((d.y+h*.5)*6./h)*h*.025;
+          float wk=(1.-smoothstep(h*.03,h*.06,abs(wx)))*smoothstep(-h*.56,-h*.5,d.y)*(1.-smoothstep(-h*.22,-h*.14,d.y));
+          c=mix(c,vec3(.012,.009,.007),wk*.85*uok*(1.-smoothstep(0.,.25,L)));
+          float kf=smoothstep(1.,.35,length(vec2(d.x/(h*.55),(d.y-h*.3)/(h*1.4))));c+=vec3(1.,.6,.28)*fx[i]*(kf*1.5+g*.5);
+          c*=1.+L*g*(sin(tm*9.3+float(i)*1.7)*.04+sin(tm*14.7+float(i)*2.3)*.03);}
+        c*=(1.-min(.35,dim*.3*uok))*(1.-.1*amb*uok);
         gl_FragColor=vec4(c*tint,opacity);}`}));
   m.material.opacity=1;
   m.renderOrder=-100;m.position.z=-60;cam.add(m);v.mesh=m;v.tex=t;v.cur=-1;v.shown=false;vids[k]=v;
   stations[+k].mesh.visible=false;stations[+k].video=true;});
 /* iPhone: Safari prepara i fotogrammi del video solo dopo un play(). Lo si avvia muto, una volta, e si ferma subito;
    finché il video non ha un fotogramma pronto resta visibile la foto della tappa (mai un buco nel bosco) */
-const sblocca=()=>Object.values(vids).forEach(v=>{if(!v.kind||v.unlocked||v.trying)return;v.trying=true;const p=v.vd.play();
+const sblocca=()=>Object.values(vids).forEach(v=>{if(v.ud&&v.kind&&!v.uunl&&!v.utry){v.utry=true;const q=v.ud.play();if(q&&q.then)q.then(()=>{v.uunl=true;v.ud.pause();if(!v.uready&&v.ud.readyState>=2)v.uready=true}).catch(()=>{}).finally(()=>{v.utry=false});else v.utry=false}
+  if(!v.kind||v.unlocked||v.trying)return;v.trying=true;const p=v.vd.play();
   if(p&&p.then)p.then(()=>{v.unlocked=true;v.vd.pause();if(!v.ready&&v.vd.readyState>=2)v.vd.dispatchEvent(new Event('loadeddata'))}).catch(()=>{}).finally(()=>{v.trying=false});else v.trying=false});
 if(location.search.includes('dbg'))window.__dbg={vids,stations,cam,R};sblocca();['touchstart','touchend','scroll','click'].forEach(e=>addEventListener(e,sblocca,{passive:true}));
 function pick(v){const kind=cam.aspect<.66?'p':'w';if(v.kind===kind)return;v.kind=kind;
   v.va=kind==='p'?.75:16/9;v.K=kind==='p'?v.fx.map(x=>(x-v.x0)/PW):v.fx;
-  v.ready=false;v.shown=false;v.seeking=false;v.cur=-1;v.unlocked=false;v.vd.src=kind+v.id+'.mp4';v.vd.load();sblocca();fitVideo(v);}
-function seekTo(v,j){if(!v.ready)return;v.want=j;if(v.seeking||j===v.cur)return;v.seeking=true;v.cur=j;v.vd.currentTime=Math.min(v.vd.duration-.02,(j+.5)/24);}
+  v.ready=false;v.shown=false;v.seeking=false;v.cur=-1;v.unlocked=false;v.vd.src=kind+v.id+'.mp4';v.vd.load();if(v.ud&&!v.ud.getAttribute('src')){v.ud.src='u'+v.id+'.mp4';v.ud.load()}sblocca();fitVideo(v);}
+function seekTo(v,j){if(!v.ready)return;v.want=j;if(v.seeking||j===v.cur)return;v.seeking=true;v.cur=j;const tt=Math.min(v.vd.duration-.02,(j+.5)/24);
+  v.mdone=false;v.udone=false;v.uwait=!!(v.ud&&v.uready);v.st=performance.now();v.vd.currentTime=tt;if(v.uwait)v.ud.currentTime=Math.min(v.ud.duration-.02,tt);}
+function sinc(v){if(!v.mdone||(v.uwait&&!v.udone))return;v.mdone=v.udone=false;const both=v.uwait;v.uwait=false;
+  v.sf=v.cur;v.seeking=false;v.tex.needsUpdate=true;if(both){v.utex.needsUpdate=true;v.usf=v.cur}v.shown=true;if(v.want!==v.cur)seekTo(v,v.want)}
 function fitVideo(v,f){if(!v.kind)return;if(f!==undefined)v.f=f;const K=v.K,t=(v.f||0)*(K.length-1),i=Math.min(K.length-2,Math.floor(t)),fx=K[i]+(K[i+1]-K[i])*(t-i);
   const D=60,h=2*D*Math.tan(cam.fov*Math.PI/360),w=h*cam.aspect,va=v.va;
   let W2=w,H2=w/va;if(H2<h){H2=h;W2=h*va}
@@ -432,13 +469,14 @@ function points(n,spread,size,col,kind){
   const p=new THREE.Points(g,m);S.add(p);return m;}
 const pm=[points(touch?260:520,18,6,0xffc877,0),points(touch?700:1500,20,1.6,0xe8ecd8,1)];
 
-/* la fiammella: segue il mouse volando, e le candele del bosco si accendono quando ci passa sopra.
-   Le posizioni delle fiamme vere sono state seguite fotogramma per fotogramma in ogni clip (fiamme.json: u,v,altezza x1000).
-   Solo con il mouse: sul telefono e con «riduci movimento» le candele restano accese come sempre. */
-const FIA=!reduce;let FL=null;const lit={},fxv={};
-const fi={on:false,x:innerWidth/2,y:innerHeight*.6,tx:innerWidth/2,ty:innerHeight*.6,vx:0,a:0,ui:false,first:true,dw:{}};
-const SPEGNI=false;   // candele spente: in pausa finché non ci sono le clip «spente» vere
-if(FIA&&SPEGNI)fetch('fiamme.json').then(r=>r.json()).then(j=>{FL=j;Object.keys(j).forEach(k=>{lit[k]=j[k].map(()=>0);fxv[k]=j[k].map(()=>0)})}).catch(()=>{});
+/* il gioco del bosco: le candele delle clip sono spente e la fiammella le accende.
+   fiamme.json: le fiamme vere seguite fotogramma per fotogramma in ogni clip (u,v,altezza x1000).
+   u1/u2/u4/u5.mp4: le stesse clip con le candele spente, ripulite fotogramma per fotogramma con LaMa (nere fuori dalle fiamme);
+   lo shader passa dalla clip spenta a quella accesa solo dentro la sagoma della fiamma, e la fiamma sale dallo stoppino.
+   Il ruscello (tappa 3) resta acceso: la clip ha una dissolvenza tra due riprese, con due giri di fiamme. */
+let FL=null;const lit={},fxv={},wnd={},fatte={};let totC=0,accC=0,finito=false;
+const fi={on:false,x:innerWidth/2,y:innerHeight*.6,tx:innerWidth/2,ty:innerHeight*.6,vx:0,a:0,ui:false,first:true};
+if(FIA&&SPEGNI)fetch('fiamme.json').then(r=>r.json()).then(j=>{FL=j;Object.keys(UCLIP).forEach(k=>{if(!j[k])return;lit[k]=j[k].map(()=>0);fxv[k]=j[k].map(()=>0);wnd[k]=j[k].map(()=>({b:0,v:0}));totC+=j[k].length});contaUpd()}).catch(()=>{});
 const fMat=new THREE.ShaderMaterial({transparent:true,depthTest:false,depthWrite:false,blending:THREE.AdditiveBlending,uniforms:{t:{value:0},lean:{value:0},a:{value:0}},
   vertexShader:`varying vec2 vUv;void main(){vUv=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}`,
   fragmentShader:`uniform float t,lean,a;varying vec2 vUv;
@@ -457,21 +495,30 @@ const fMat=new THREE.ShaderMaterial({transparent:true,depthTest:false,depthWrite
       float fl=.92+.08*sin(t*13.)+.05*sin(t*21.+1.);
       gl_FragColor=vec4((col*body*1.7+vec3(1.,.55,.22)*halo)*a*fl,1.);}`});
 const fMesh=new THREE.Mesh(new THREE.PlaneGeometry(1,1),fMat);fMesh.renderOrder=999;fMesh.frustumCulled=false;cam.add(fMesh);fMesh.visible=false;
-/* scintille: la scia della fiammella e lo sbuffo quando una candela prende fuoco */
-const EN=120,eP=new Float32Array(EN*3),eA=new Float32Array(EN),eS=new Float32Array(EN),eV=[];for(let i=0;i<EN;i++){eV.push({x:0,y:0,vx:0,vy:0,l:0,m:1});eP[i*3+2]=-8}
-const eG=new THREE.BufferGeometry();eG.setAttribute('position',new THREE.BufferAttribute(eP,3));eG.setAttribute('al',new THREE.BufferAttribute(eA,1));eG.setAttribute('sz',new THREE.BufferAttribute(eS,1));
-const eMat=new THREE.ShaderMaterial({transparent:true,depthTest:false,depthWrite:false,blending:THREE.AdditiveBlending,uniforms:{px:{value:R.getPixelRatio()}},
-  vertexShader:`attribute float al,sz;uniform float px;varying float vA;void main(){vA=al;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);gl_PointSize=sz*px;}`,
-  fragmentShader:`varying float vA;void main(){float d=length(gl_PointCoord-.5);float a=smoothstep(.5,0.,d);a*=a;gl_FragColor=vec4(vec3(1.,.62,.25)*a*vA*2.,1.);}`});
-const embers=new THREE.Points(eG,eMat);embers.frustumCulled=false;embers.renderOrder=998;cam.add(embers);embers.visible=false;let eI=0;
-function spark(x,y,n,f){for(let j=0;j<n;j++){const e=eV[eI=(eI+1)%EN],an=Math.random()*Math.PI*2,s=(Math.random()*.7+.3)*f;
-  e.x=x+(Math.random()-.5)*6;e.y=y+(Math.random()-.5)*6;e.vx=Math.cos(an)*s;e.vy=Math.sin(an)*s*.6-f*.8;e.l=1;e.m=.5+Math.random()*.9}}
+/* particelle in pixel di schermo: scintille (si sommano alla luce) e fumo (grigio, quando una fiamma si spegne) */
+function sciame(n,add,col,alpha){const P=new Float32Array(n*3),A=new Float32Array(n),Z=new Float32Array(n),V=[];for(let i=0;i<n;i++){V.push({x:0,y:0,vx:0,vy:0,l:0,m:1,g:1,s:1});P[i*3+2]=-8}
+  const G=new THREE.BufferGeometry();G.setAttribute('position',new THREE.BufferAttribute(P,3));G.setAttribute('al',new THREE.BufferAttribute(A,1));G.setAttribute('sz',new THREE.BufferAttribute(Z,1));
+  const M=new THREE.ShaderMaterial({transparent:true,depthTest:false,depthWrite:false,blending:add?THREE.AdditiveBlending:THREE.NormalBlending,uniforms:{px:{value:R.getPixelRatio()},col:{value:new THREE.Color(...col)}},
+    vertexShader:`attribute float al,sz;uniform float px;varying float vA;void main(){vA=al;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);gl_PointSize=sz*px;}`,
+    fragmentShader:add?`uniform vec3 col;varying float vA;void main(){float d=length(gl_PointCoord-.5);float a=smoothstep(.5,0.,d);a*=a;gl_FragColor=vec4(col*a*vA*2.,1.);}`
+                      :`uniform vec3 col;varying float vA;void main(){float d=length(gl_PointCoord-.5);float a=smoothstep(.5,.05,d);gl_FragColor=vec4(col,a*a*vA*${alpha});}`});
+  const pts=new THREE.Points(G,M);pts.frustumCulled=false;pts.renderOrder=add?998:997;cam.add(pts);let I=0;
+  return {V,pts,emit(o){const e=V[I=(I+1)%n];Object.assign(e,{l:1,m:1,g:1,s:1},o);return e},
+    step(dt,U,sizeF){let any=false;for(let i=0;i<n;i++){const e=V[i];if(e.l>0){any=true;e.l-=dt/1000*(.9/e.m);e.vy-=dt*.004*e.g;e.x+=e.vx*dt/16;e.y+=e.vy*dt/16;e.vx*=.97;e.vy*=.985}
+      P[i*3]=(e.x-innerWidth/2)*U;P[i*3+1]=-(e.y-innerHeight/2)*U;A[i]=Math.max(0,e.l);Z[i]=sizeF(e)}
+      G.attributes.position.needsUpdate=G.attributes.al.needsUpdate=G.attributes.sz.needsUpdate=true;pts.visible=any;return any}}}
+const scin=sciame(220,true,[1,.62,.25]),fumo=sciame(90,false,[.62,.6,.58],.32);
+function spark(x,y,n,f){for(let j=0;j<n;j++){const an=Math.random()*Math.PI*2,s=(Math.random()*.7+.3)*f;
+  scin.emit({x:x+(Math.random()-.5)*6,y:y+(Math.random()-.5)*6,vx:Math.cos(an)*s,vy:Math.sin(an)*s*.6-f*.8,m:.5+Math.random()*.9})}}
+/* il profumo che si libera: scintille lente che salgono ondeggiando */
+function profumo(x,y,n){for(let j=0;j<n;j++)scin.emit({x:x+(Math.random()-.5)*30,y:y+(Math.random()-.5)*10,vx:(Math.random()-.5)*.6,vy:-.4-Math.random()*.6,g:-.05,m:2.2+Math.random()*1.6,s:.7})}
+function fumata(x,y){for(let j=0;j<16;j++)fumo.emit({x:x+(Math.random()-.5)*4,y:y-j*1.5,vx:(Math.random()-.5)*.35,vy:-.5-Math.random()*.5,g:-.02,m:1.3+Math.random()*.9,s:1})}
 const DF=8;const upx=()=>2*DF*Math.tan(cam.fov*Math.PI/360)/innerHeight;   // unità per pixel alla distanza della fiammella
 addEventListener('pointermove',e=>{if(e.pointerType!=='mouse')return;fi.tx=e.clientX;fi.ty=e.clientY;fi.on=true;
-  fi.ui=!!(e.target.closest&&e.target.closest('a,button,input,select,textarea,label,[role=button],.chap p'))});
+  fi.ui=!!(e.target.closest&&e.target.closest('a,button,input,select,textarea,label,[role=button],.chap p,#finale'))});
 document.documentElement.addEventListener('mouseleave',()=>fi.on=false);
-/* sul telefono la fiammella è sotto il dito: si accendono sfiorandole mentre si scorre */
-const tPos=e=>{const t=e.touches[0];if(!t)return;if(!fi.on){fi.x=t.clientX;fi.y=t.clientY}fi.tx=t.clientX;fi.ty=t.clientY;fi.on=true;fi.ui=!!(e.target.closest&&e.target.closest('a,button,input,select,textarea,label,[role=button]'))};
+/* sul telefono la fiammella è sopra il dito: si accendono sfiorandole mentre si scorre */
+const tPos=e=>{const t=e.touches[0];if(!t)return;if(!fi.on){fi.x=t.clientX;fi.y=t.clientY}fi.tx=t.clientX;fi.ty=t.clientY;fi.on=true;fi.ui=!!(e.target.closest&&e.target.closest('a,button,input,select,textarea,label,[role=button],#finale'))};
 addEventListener('touchstart',tPos,{passive:true});addEventListener('touchmove',tPos,{passive:true});
 addEventListener('touchend',e=>{if(!e.touches.length)fi.on=false},{passive:true});addEventListener('touchcancel',()=>fi.on=false,{passive:true});
 /* dove sta sullo schermo la fiamma c della clip k, adesso (in pixel) */
@@ -480,41 +527,64 @@ function flamePx(v,F){const m=v.mesh,tn=Math.tan(cam.fov*Math.PI/360),hh=60*tn,w
   const lx=m.position.x+(u-.5)*m.scale.x,ly=m.position.y+(vv+h*.3-.5)*m.scale.y;
   const wy=m.position.y+(vv-h*.45-.5)*m.scale.y;
   return {x:(lx/ww*.5+.5)*innerWidth,y:(1-(ly/hh*.5+.5))*innerHeight,wy:(1-(wy/hh*.5+.5))*innerHeight,h:h*m.scale.y/(2*hh)*innerHeight,u,v:vv,hu:h}}
-function accendi(k,c,x,y){if(lit[k][c]>0)return;lit[k][c]=.001;fxv[k][c]=1;spark(x,y,22,2.2);fi.first=false;document.documentElement.classList.add('fiacc');
-  if(ac&&master&&master.gain.value>.01){const o=ac.createBufferSource(),bb=ac.createBuffer(1,ac.sampleRate*.5,ac.sampleRate),dd=bb.getChannelData(0);
-    for(let i=0;i<dd.length;i++)dd[i]=(Math.random()*2-1)*Math.pow(1-i/dd.length,2.5)*Math.min(1,i/400);
-    o.buffer=bb;const lp2=ac.createBiquadFilter();lp2.type='lowpass';lp2.frequency.value=900;const g=ac.createGain();g.gain.value=.35;o.connect(lp2);lp2.connect(g);g.connect(master);o.start()}}
-if(window.__dbg)Object.assign(window.__dbg,{fi,lit,flamePx,FL:()=>FL,fMat,fMesh});
-const hint=FIA?document.body.appendChild(Object.assign(document.createElement('div'),{id:'fhint',textContent:touch?'Sfiora le candele per accenderle':'Avvicinala alle candele'})):null;
+/* suoni, solo se il suono del bosco è acceso: il fuoco che prende, il fruscio dello spegnersi, una nota quando una tappa è tutta accesa */
+function suono(tipo){if(!ac||!master||master.gain.value<.01)return;const now=ac.currentTime;
+  if(tipo==='nota'){[523.25,659.25,783.99,1046.5].forEach((f,i)=>{const o=ac.createOscillator(),g=ac.createGain();o.type='sine';o.frequency.value=f;g.gain.setValueAtTime(0,now+i*.09);g.gain.linearRampToValueAtTime(.05,now+i*.09+.02);g.gain.exponentialRampToValueAtTime(.0001,now+i*.09+2.4);o.connect(g);g.connect(master);o.start(now+i*.09);o.stop(now+i*.09+2.5)});return}
+  const dur=tipo==='spegni'?.35:.5,o=ac.createBufferSource(),bb=ac.createBuffer(1,ac.sampleRate*dur,ac.sampleRate),dd=bb.getChannelData(0);
+  for(let i=0;i<dd.length;i++)dd[i]=(Math.random()*2-1)*Math.pow(1-i/dd.length,2.5)*Math.min(1,i/400);
+  o.buffer=bb;const f=ac.createBiquadFilter();f.type=tipo==='spegni'?'highpass':'lowpass';f.frequency.value=tipo==='spegni'?1400:900;const g=ac.createGain();g.gain.value=tipo==='spegni'?.18:.35;o.connect(f);f.connect(g);g.connect(master);o.start()}
+/* contatore, profumi svelati e finale */
+const stage=document.querySelector('#volo .stage');
+const conta=FIA&&SPEGNI?stage.appendChild(Object.assign(document.createElement('div'),{id:'conta',innerHTML:'<i aria-hidden="true"></i><b>0</b><span>/ 0</span><em>candele accese</em>'})):null;
+function contaUpd(){if(!conta)return;conta.querySelector('b').textContent=accC;conta.querySelector('span').textContent='/ '+totC;conta.classList.toggle('pieno',totC>0&&accC===totC)}
+const PRODT={0:'kora',1:'c02d',3:'fioritura',4:'ovale'};
+function nelLaria(k){const Y=window.YAMAT||{},id=PRODT[k],fam=(Y.accords||[]).find(f=>(f.in||[]).includes(id)),p=(Y.products||[]).find(p=>p.id===id);
+  return (fam?fam.words:(p&&p.notes||[]).join(' · ')).toLowerCase()}
+Object.keys(UCLIP).forEach(k=>{const ch=document.querySelector(`.chap[data-c="${k}"]`);if(!ch||!(FIA&&SPEGNI))return;
+  const s=document.createElement('p');s.className='svela';s.innerHTML=`<span>Nell’aria</span> ${nelLaria(k)}`;ch.insertBefore(s,ch.querySelector('.row'))});
+const finale=FIA&&SPEGNI?stage.appendChild(Object.assign(document.createElement('div'),{id:'finale',innerHTML:'<span class="label">La radura</span><h3 class="display">Hai acceso <em>il bosco.</em></h3><p>Ogni candela Yamat è fatta per questo momento. Scegli la luce da portare a casa.</p><a class="btn" href="#collezione">Scegli la tua candela</a><button type="button" class="x" aria-label="Chiudi">×</button>'})):null;
+if(finale)finale.querySelector('.x').addEventListener('click',()=>finale.classList.remove('on'));
+function tappaAccesa(k,v){fatte[k]=true;suono('nota');
+  const ch=document.querySelector(`.chap[data-c="${k}"]`);if(ch)ch.classList.add('acceso');
+  const b=document.querySelector(`.path button[data-g="${k}"]`);if(b)b.classList.add('acc');
+  FL[k].forEach(T=>{const F=T[Math.min(T.length-1,Math.max(0,v.sf||0))];if(F[2]>0){const P=flamePx(v,F);profumo(P.x,P.y,10)}});
+  if(Object.keys(UCLIP).every(q=>!FL[q]||fatte[q])&&!finito){finito=true;setTimeout(()=>{if(finale)finale.classList.add('on');for(let j=0;j<60;j++)profumo(Math.random()*innerWidth,innerHeight*(.4+Math.random()*.5),1)},1400)}}
+function accendi(k,c,x,y){if(lit[k][c]>0)return;lit[k][c]=.001;fxv[k][c]=1;spark(x,y,22,2.2);fi.first=false;suono('accendi');accC++;contaUpd();document.documentElement.classList.add('fiacc')}
+function spegni(k,c,x,y){lit[k][c]=0;fumata(x,y);suono('spegni');accC--;contaUpd()}
+if(window.__dbg)Object.assign(window.__dbg,{fi,lit,flamePx,FL:()=>FL,fMat,fMesh,accendi});
+const hint=FIA&&SPEGNI?document.body.appendChild(Object.assign(document.createElement('div'),{id:'fhint',textContent:touch?'Sfiora le candele per accenderle':'Avvicinala alle candele'})):null;
 function fiammaUpdate(t,dt){
   const ok=FIA&&FL;
   /* la fiammella vola dietro al mouse con un ritardo morbido e si piega nella direzione opposta al movimento */
   const k2=1-Math.pow(.0009,dt/1000);const px=fi.x;fi.x+=(fi.tx-fi.x)*k2;fi.y+=(fi.ty-fi.y)*k2;const FY=fi.y-(touch?60:0);   // sul telefono la fiammella sta sopra il dito, non sotto
   const vx=(fi.x-px)/Math.max(dt,1)*16;fi.vx+=(vx-fi.vx)*.15;
   const inBosco=sec.getBoundingClientRect().bottom>innerHeight*.6;
-  const want=ok&&fi.on&&!fi.ui&&inBosco?1:0;fi.a+=(want-fi.a)*.12;
-  document.documentElement.classList.toggle('fcur',ok&&fi.on&&!fi.ui&&inBosco);
-  fMesh.visible=embers.visible=fi.a>.01||eV.some(e=>e.l>0);
+  const want=FIA&&fi.on&&!fi.ui&&inBosco?1:0;fi.a+=(want-fi.a)*.12;
+  document.documentElement.classList.toggle('fcur',FIA&&fi.on&&!fi.ui&&inBosco&&!touch);
+  fMesh.visible=fi.a>.01;
   const U=upx(),sz=86*U;
   fMesh.scale.set(sz*1.25,sz*1.25,1);fMesh.position.set((fi.x-innerWidth/2)*U,-(FY-innerHeight/2)*U+sz*.2,-DF);
-  if(hint){if(touch){hint.style.transform=`translate(calc(50vw - 50%),${innerHeight*.17}px)`;hint.style.opacity=fi.first&&inBosco&&FL?.85:0}else{hint.style.transform=`translate(${fi.x+26}px,${fi.y-10}px)`;hint.style.opacity=fi.first&&FL?fi.a*.9:0}}
+  if(hint){if(touch){hint.style.transform=`translate(var(--gutter),${(parseFloat(getComputedStyle(conta).top)||132)+30}px)`;hint.style.opacity=fi.first&&inBosco&&FL?.85:0}else{hint.style.transform=`translate(${fi.x+26}px,${fi.y-10}px)`;hint.style.opacity=fi.first&&FL?fi.a*.9:0}}
+  if(conta)conta.classList.toggle('on',!!FL&&inBosco&&sp>.02&&sp<.995);
   fMat.uniforms.t.value=t;fMat.uniforms.lean.value=THREE.MathUtils.clamp(-fi.vx*.05,-1.2,1.2);fMat.uniforms.a.value=fi.a;
   if(fi.a>.5&&Math.abs(fi.vx)+Math.random()*2>2.2)spark(fi.x,FY-12,1,.6);
-  for(let i=0;i<EN;i++){const e=eV[i];if(e.l>0){e.l-=dt/1000*(.9/e.m);e.vy-=dt*.004;e.x+=e.vx*dt/16;e.y+=e.vy*dt/16;e.vx*=.97;e.vy*=.985}
-    eP[i*3]=(e.x-innerWidth/2)*U;eP[i*3+1]=-(e.y-innerHeight/2)*U;eA[i]=Math.max(0,e.l);eS[i]=(2+e.m*3)*Math.max(0,e.l)+.01}
-  eG.attributes.position.needsUpdate=eG.attributes.al.needsUpdate=eG.attributes.sz.needsUpdate=true;
-  /* le candele: spente finché la fiammella non le sfiora e si accendono solo quando la base della fiammella tocca lo stoppino */
+  scin.step(dt,U,e=>(2+e.m*(e.s<1?1.2:3))*Math.max(0,e.l)+.01);fumo.step(dt,U,e=>(10+(1-e.l)*46)*e.s);
+  /* le candele: si accendono quando la base della fiammella tocca lo stoppino; la fiamma accesa si piega all'aria che le passa accanto,
+     e se la fiammella le sfreccia sopra velocissima si spegne con un filo di fumo (solo col mouse) */
   Object.keys(vids).forEach(k=>{const v=vids[k],m=v.mesh.material.uniforms;m.tm.value=t;m.va.value=v.va||16/9;
-    const T=ok&&+k!==2&&FL[k];   // il ruscello resta acceso: nella clip c'è una dissolvenza tra due riprese, con due giri di fiamme
-    let un=0,n=0;
+    m.uok.value=v.uready&&v.usf===v.sf?1:0;m.ux.value.set(v.kind==='p'?v.x0:0,v.kind==='p'?PW:1);
+    const T=ok&&UCLIP[k]&&FL[k];let un=0,n=0,acc=0;
     for(let c=0;c<16;c++){const F=T&&T[c]&&T[c][Math.min(T[c].length-1,Math.max(0,v.sf||0))];
-      if(!F){m.fl.value[c].set(0,0,0,0);m.fx.value[c]=0;continue}
-      const P=flamePx(v,F);
-      if(lit[k][c]===0&&fi.a>.5&&v.mesh.material.opacity>.6&&Math.hypot(P.x-fi.x,(P.wy-FY)*.8)<(touch?Math.max(18,P.h*.75):Math.max(9,P.h*.55)))accendi(k,c,P.x,P.wy);
-      if(lit[k][c]>0)lit[k][c]=Math.min(1,lit[k][c]+dt/550);fxv[k][c]*=Math.pow(.12,dt/1000);
-      const L=lit[k][c],cat=L>0&&L<1?(Math.sin(L*28)>.2?1:.55):1;   // prende fuoco con un paio di guizzi
-      m.fl.value[c].set(P.u,P.v,P.hu,1-L*cat);m.fx.value[c]=fxv[k][c];un+=1-L;n++}
+      if(!F||F[2]<=0){m.fl.value[c].set(0,0,0,0);m.fx.value[c]=0;m.wd.value[c]=0;continue}
+      const P=flamePx(v,F),vis=v.mesh.material.opacity>.6,qy=Math.min(P.wy,Math.max(P.y-P.h*.9,FY)),dist=Math.hypot(P.x-fi.x,qy-FY);   // distanza dalla fiamma, dallo stoppino alla punta
+      if(lit[k][c]===0&&fi.a>.5&&vis&&dist<(touch?Math.max(18,P.h*.7):Math.max(10,P.h*.45)))accendi(k,c,P.x,P.wy);
+      else if(!touch&&lit[k][c]>=1&&fi.a>.5&&vis&&Math.abs(fi.vx)>40&&Math.hypot(P.x-fi.x,P.y-FY)<Math.max(14,P.h*1.2))spegni(k,c,P.x,P.wy);
+      if(lit[k][c]>0)lit[k][c]=Math.min(1,lit[k][c]+dt/900);fxv[k][c]*=Math.pow(.12,dt/1000);
+      const w=wnd[k][c],infl=fi.a*Math.exp(-Math.pow(Math.hypot(P.x-fi.x,P.y-FY)/(P.h*4+40),2));
+      w.v+=(THREE.MathUtils.clamp(fi.vx*.05*infl,-1.3,1.3)-w.b)*.16;w.v*=.8;w.b+=w.v;   // molla: si piega e torna oscillando
+      const L=lit[k][c];m.fl.value[c].set(P.u,P.v,P.hu,L);m.fx.value[c]=fxv[k][c];m.wd.value[c]=w.b;un+=1-L;n++;if(L>=1)acc++}
     m.amb.value=n?un/n:0;
+    if(T&&n&&acc===n&&!fatte[k])tappaAccesa(k,v);
   });
 }
 
@@ -583,6 +653,8 @@ function frame(){
   Object.keys(vids).forEach(k=>{const v=vids[k],st=stations[+k];const d=cam.position.z-st.z;
     // la clip copre la tappa da quando la vediamo (d=80) a quando la superiamo (d=24)
     if(!v.kind&&d<104)pick(v);   // la clip si scarica quando la tappa si avvicina: la prima arriva subito, le altre non si rubano la banda
+    if(v.seeking&&v.mdone&&v.uwait&&performance.now()-v.st>500){v.uwait=false;sinc(v)}
+    if(v.uready&&!v.seeking&&v.ready&&v.usf!==v.sf){v.cur=-1}
     const f=THREE.MathUtils.clamp((52-d)/(52-30),0,1);seekTo(v,Math.round(f*(v.n-1)));if(cam.aspect<1)fitVideo(v,f);
     /* passaggio tra le tappe: la clip che finisce avanza verso chi guarda e si spegne nel buio del bosco,
        SOLO DOPO entra la candela successiva: mai due clip una sopra l'altra (prima sembrava un errore) */
@@ -590,7 +662,7 @@ function frame(){
     v.mesh.material.opacity=out*inn;
     if(v.bw){const z=1+(1-out)*.2-(1-inn)*.05*(+k>0?1:0);v.mesh.scale.set(v.bw*z,v.bh*z,1)}v.mesh.material.uniforms.opacity.value=v.mesh.material.opacity;v.mesh.visible=v.mesh.material.opacity>.003&&v.shown;if(v.mesh.visible)vidMax=Math.max(vidMax,v.mesh.material.opacity);});
   /* il bosco si mostra solo quando il primo fotogramma della clip è pronto: prima si vedeva per un attimo la foto di riserva, inquadrata diversa */
-  if(!ready0&&((vids[0]&&vids[0].shown)||t>6)){ready0=true;document.getElementById('load').classList.add('done')}
+  if(!ready0&&((vids[0]&&vids[0].shown&&(!vids[0].ud||vids[0].usf===vids[0].sf))||t>7)){ready0=true;document.getElementById('load').classList.add('done')}
   stations.forEach((s,i)=>{const d=cam.position.z-s.z;s.u.time.value=t;
     s.u.op.value=THREE.MathUtils.smoothstep(d,24,32)*(1-THREE.MathUtils.smoothstep(d,95,130))*(1-vidMax);
     s.mesh.visible=(!s.video||!(vids[i]&&vids[i].shown))&&s.u.op.value>.003&&(!s.video||d<60)&&(i>0||ready0);   // la foto di riserva solo per la tappa vicina: da lontano sembrava un riquadro appeso nel buio
