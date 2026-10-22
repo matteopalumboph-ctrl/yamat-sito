@@ -24,6 +24,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="yamat.css">
+<link rel="preload" as="image" href="t1m.jpg" media="(hover: none)" crossorigin="anonymous">
+<link rel="preload" as="image" href="t1.jpg" media="(hover: hover)" crossorigin="anonymous">
+<link rel="preload" as="image" href="t1s.jpg" crossorigin="anonymous">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,300..600,0..100,0..1;1,9..144,300..600,0..100,0..1&family=Figtree:wght@300;400;500&display=swap">
 <style>
 :root{
@@ -73,7 +76,9 @@ img{display:block;max-width:100%}
 #load .n{font:300 12px/1 var(--sans);letter-spacing:.3em;color:var(--bone-dim);margin-top:20px}
 
 /* il volo nel bosco */
-#volo{position:relative}
+#volo{position:relative;min-height:1310vh}
+/* il bosco è lungo fin dall'inizio: le foto della collezione, più in basso, non rubano banda alla prima tappa */
+@media (hover:none){#volo{min-height:1010vh}}
 #volo .stage{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden}
 #gl{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:pan-y;pointer-events:none}
 .hero{position:absolute;inset:0;display:grid;place-items:center;text-align:center;padding-inline:var(--gutter);pointer-events:none;transition:opacity 1.2s var(--ease),transform 1.6s var(--ease)}
@@ -289,10 +294,15 @@ let lenis=null;
 document.querySelectorAll('a[href^="#"]').forEach(a=>a.addEventListener('click',e=>{const id=a.getAttribute('href').slice(1);const el=id==='inizio'?document.body:document.getElementById(id);if(!el)return;e.preventDefault();lenis?lenis.scrollTo(id==='inizio'?0:el,{duration:2.2}):el.scrollIntoView({behavior:'smooth'})}));
 
 /* ---------- 3D ---------- */
-const files=[];for(let i=1;i<=N;i++)files.push(`t${i}.jpg`,`t${i}s.jpg`);
+/* il bosco parte appena c'è la prima tappa (Kora) e le mappe di profondità, leggere; le altre foto arrivano mentre si guarda.
+   Sul telefono si scaricano le versioni da 1920 px (t1m…t5m.jpg): stessa resa sullo schermo piccolo, un terzo del peso. */
 const tex={};let done=0;
 const L=new THREE.TextureLoader();
-Promise.all(files.map(f=>new Promise(r=>L.load(f,t=>{const col=!f.endsWith('s.jpg');if(touch&&col&&t.image.width>2560){const c=document.createElement('canvas');c.width=2560;c.height=Math.round(t.image.height*2560/t.image.width);c.getContext('2d').drawImage(t.image,0,0,c.width,c.height);t.image=c}t.minFilter=col?THREE.LinearMipmapLinearFilter:THREE.LinearFilter;t.generateMipmaps=col;t.encoding=f.endsWith('s.jpg')?THREE.LinearEncoding:THREE.sRGBEncoding;tex[f]=t;done++;document.getElementById('loadN').textContent=Math.round(done/files.length*100)+'%';r()},undefined,()=>{done++;r()})))).then(init);
+const pick=f=>touch&&!f.endsWith('s.jpg')?f.replace('.jpg','m.jpg'):f;
+const loadOne=f=>new Promise(r=>L.load(pick(f),t=>{const col=!f.endsWith('s.jpg');if(touch&&col&&t.image.width>2560){const c=document.createElement('canvas');c.width=2560;c.height=Math.round(t.image.height*2560/t.image.width);c.getContext('2d').drawImage(t.image,0,0,c.width,c.height);t.image=c}t.minFilter=col?THREE.LinearMipmapLinearFilter:THREE.LinearFilter;t.generateMipmaps=col;t.encoding=col?THREE.sRGBEncoding:THREE.LinearEncoding;tex[f]=t;r(t)},undefined,()=>r(null)));
+const first=['t1.jpg'];for(let i=1;i<=N;i++)first.push(`t${i}s.jpg`);
+Promise.all(first.map(f=>loadOne(f).then(()=>{done++;document.getElementById('loadN').textContent=Math.round(done/first.length*100)+'%'}))).then(()=>{init();
+  (async()=>{for(let i=2;i<=N;i++){const t=await loadOne(`t${i}.jpg`);if(t&&window.__setTex)window.__setTex(i-1,t)}})()});
 
 function init(){
 const cv=document.getElementById('gl');
@@ -300,6 +310,9 @@ const R=new THREE.WebGLRenderer({canvas:cv,antialias:false,powerPreference:'high
 /* nitidezza piena dello schermo (fino a 3x sul telefono, 2x sul computer); se il dispositivo non regge si scala da solo, vedi loop */
 let pr=Math.min(devicePixelRatio||1,touch?3:2);R.setPixelRatio(pr);
 const AN=Math.min(8,R.capabilities.getMaxAnisotropy());Object.keys(tex).forEach(f=>{if(!f.endsWith('s.jpg')){tex[f].anisotropy=AN;tex[f].needsUpdate=true}});
+/* finché la foto di una tappa non è arrivata, la tappa ha il colore della nebbia */
+const blank=new THREE.DataTexture(new Uint8Array([13,23,20,255]),1,1);blank.needsUpdate=true;
+window.__setTex=(i,t)=>{t.anisotropy=AN;t.needsUpdate=true;if(stations[i])stations[i].u.map.value=t};
 R.outputEncoding=THREE.sRGBEncoding;R.toneMapping=THREE.ACESFilmicToneMapping;R.toneMappingExposure=1.05;
 const S=new THREE.Scene();S.background=new THREE.Color(0x070b09);
 const FOG=new THREE.Color(0x0d1714);
@@ -311,7 +324,7 @@ const stations=[];
 const segs=touch?[160,90]:[260,146];
 for(let i=0;i<N;i++){
   const g=new THREE.PlaneGeometry(W,H,segs[0],segs[1]);
-  const u={map:{value:tex[`t${i+1}.jpg`]},dep:{value:tex[`t${i+1}s.jpg`]},disp:{value:i===4?0:5},op:{value:1},time:{value:0},fogc:{value:FOG},camz:{value:0},glow:{value:1}};
+  const u={map:{value:tex[`t${i+1}.jpg`]||blank},dep:{value:tex[`t${i+1}s.jpg`]},disp:{value:i===4?0:5},op:{value:1},time:{value:0},fogc:{value:FOG},camz:{value:0},glow:{value:1}};
   const m=new THREE.ShaderMaterial({uniforms:u,transparent:true,depthWrite:false,
     vertexShader:`uniform sampler2D dep;uniform float disp,time;varying vec2 vUv;varying float vD;varying vec3 vW;
       void main(){vUv=uv;float d=texture2D(dep,uv).r;vD=d;vec3 p=position;p.z+=pow(d,1.25)*disp;
