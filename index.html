@@ -398,7 +398,7 @@ Object.keys(VID).forEach(k=>{const v=VID[k];
         float dim=0.;
         for(int i=0;i<16;i++){vec4 F=fl[i];if(F.z<=0.)continue;
           float h=F.z,L=F.w;vec2 d=vec2((vUv.x-F.x)*va,vUv.y-F.y);
-          if(abs(d.x)>h*6.||d.y<-h*6.||d.y>h*8.)continue;
+          if(abs(d.x)>h*7.5||d.y<-h*7.||d.y>h*8.5)continue;
           float g=exp(-dot(d,d)/(h*h*12.));dim+=g*(1.-L);
           float k=smoothstep(1.,.72,length(vec2(d.x/(h*1.02),(d.y-h*.45)/(h*2.15))))*smoothstep(-h*.62,-h*.48,d.y);
           if(k>.001){
@@ -406,12 +406,15 @@ Object.keys(VID).forEach(k=>{const v=VID[k];
             if(abs(b)>.003)c=mix(c,sl(bic(vUv-vec2(b*h*yy*yy*.9/va,0.))),k);
             float top=-h*.6+smoothstep(0.,1.,L)*h*4.4,on=L>=1.?1.:(1.-smoothstep(top-h*.6,top,d.y))*(.72+.28*sin(tm*29.+float(i)*3.))*step(.001,L);
             if(uok>.5)c=mix(c,sl(texture2D(umap,vec2(ux.x+vUv.x*ux.y,vUv.y)).rgb),k*(1.-on));}
+          /* l'alone: nella clip spenta è tolto anche il bagliore che la fiamma spandeva intorno; torna mentre la fiamma prende */
+          float rh=length(vec2(d.x,(d.y-h*.6)*.85))/h,kh=(1.-smoothstep(3.,6.3,rh))*(1.-k);
+          if(uok>.5&&kh>.001)c=mix(c,sl(texture2D(umap,vec2(ux.x+vUv.x*ux.y,vUv.y)).rgb),kh*(1.-smoothstep(.15,1.,L)));
           float wx=d.x-sin((d.y+h*.5)*6./h)*h*.025;
           float wk=(1.-smoothstep(h*.03,h*.06,abs(wx)))*smoothstep(-h*.56,-h*.5,d.y)*(1.-smoothstep(-h*.22,-h*.14,d.y));
           c=mix(c,vec3(.012,.009,.007),wk*.85*uok*(1.-smoothstep(0.,.25,L)));
           float kf=smoothstep(1.,.35,length(vec2(d.x/(h*.55),(d.y-h*.3)/(h*1.4))));c+=vec3(1.,.6,.28)*fx[i]*(kf*1.5+g*.5);
           c*=1.+L*g*(sin(tm*9.3+float(i)*1.7)*.04+sin(tm*14.7+float(i)*2.3)*.03);}
-        c*=(1.-min(.35,dim*.3*uok))*(1.-.1*amb*uok);
+        c*=1.-.06*amb*uok;
         gl_FragColor=vec4(c*tint,opacity);}`}));
   m.material.opacity=1;
   m.renderOrder=-100;m.position.z=-60;cam.add(m);v.mesh=m;v.tex=t;v.cur=-1;v.shown=false;vids[k]=v;
@@ -653,7 +656,7 @@ function frame(){
   Object.keys(vids).forEach(k=>{const v=vids[k],st=stations[+k];const d=cam.position.z-st.z;
     // la clip copre la tappa da quando la vediamo (d=80) a quando la superiamo (d=24)
     if(!v.kind&&d<104)pick(v);   // la clip si scarica quando la tappa si avvicina: la prima arriva subito, le altre non si rubano la banda
-    if(v.seeking&&v.mdone&&v.uwait&&performance.now()-v.st>500){v.uwait=false;sinc(v)}
+    if(v.seeking&&v.mdone&&v.uwait&&performance.now()-v.st>1500){v.uwait=false;sinc(v)}
     if(v.uready&&!v.seeking&&v.ready&&v.usf!==v.sf){v.cur=-1}
     const f=THREE.MathUtils.clamp((52-d)/(52-30),0,1);seekTo(v,Math.round(f*(v.n-1)));if(cam.aspect<1)fitVideo(v,f);
     /* passaggio tra le tappe: la clip che finisce avanza verso chi guarda e si spegne nel buio del bosco,
