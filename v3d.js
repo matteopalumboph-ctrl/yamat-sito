@@ -59,6 +59,21 @@ export function mount(root, id, opts = {}) {
     for (let i = 0; i < n * n; i++) { const v = 128 + (Math.random() - 0.5) * 70; d.data[i * 4] = v; d.data[i * 4 + 1] = v; d.data[i * 4 + 2] = 255; d.data[i * 4 + 3] = 255 }
     g.putImageData(d, 0, 0); const t = new THREE.CanvasTexture(c); t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(6, 6); return t })();
 
+  /* la proiezione del sigillo scorre ogni triangolo del modello: le si danno solo quelli vicini (molto più veloce,
+     niente blocco mentre si scorre la pagina) */
+  const vicino = (mesh, p, r) => {
+    const g = mesh.geometry, pos = g.attributes.position, uv = g.attributes.uv, nr = g.attributes.normal, ix = g.index;
+    const c = new THREE.Vector3(...p).applyMatrix4(new THREE.Matrix4().copy(mesh.matrixWorld).invert()), v = new THREE.Vector3(), keep = [];
+    const n = ix ? ix.count : pos.count, r2 = r * r;
+    for (let i = 0; i < n; i += 3) {
+      let near = false;
+      for (let k = 0; k < 3 && !near; k++) { v.fromBufferAttribute(pos, ix ? ix.getX(i + k) : i + k); if (v.distanceToSquared(c) < r2) near = true }
+      if (near) keep.push(i)
+    }
+    const out = new THREE.BufferGeometry(), cp = (a, sz) => { const arr = new Float32Array(keep.length * 3 * sz); keep.forEach((i, t) => { for (let k = 0; k < 3; k++) { const j = ix ? ix.getX(i + k) : i + k; for (let q = 0; q < sz; q++) arr[(t * 3 + k) * sz + q] = a.getComponent(j, q) } }); return new THREE.BufferAttribute(arr, sz) };
+    out.setAttribute('position', cp(pos, 3)); if (nr) out.setAttribute('normal', cp(nr, 3)); if (uv) out.setAttribute('uv', cp(uv, 2)); if (!nr) out.computeVertexNormals();
+    const m = new THREE.Mesh(out); mesh.matrixWorld.decompose(m.position, m.quaternion, m.scale); m.updateMatrixWorld(true); return m;
+  };
   const group = new THREE.Group(); S.add(group);
   let waxMat, flameMat, haloMat, bodyMat, lit = false, litK = 0; const flames = [], halos = [];
 
@@ -116,9 +131,9 @@ export function mount(root, id, opts = {}) {
       (M.decal || []).forEach(D => new THREE.TextureLoader().load(D.img, tx => { tx.colorSpace = THREE.SRGBColorSpace; tx.anisotropy = 8;
         const dm = new THREE.MeshStandardMaterial({ map: tx, transparent: true, roughness: D.lucido ? 0.38 : 0.8, metalness: 0, depthWrite: false, polygonOffset: true, polygonOffsetFactor: -4 });
         const sz = Array.isArray(D.size) ? new THREE.Vector3(...D.size) : new THREE.Vector3(D.size, D.size, 0.22);
-        const dg = new DecalGeometry(mesh, new THREE.Vector3(...D.pos), new THREE.Euler(0, 0, D.rot || 0), sz);
+        const dg = new DecalGeometry(vicino(mesh, D.pos, sz.length()), new THREE.Vector3(...D.pos), new THREE.Euler(0, 0, D.rot || 0), sz);
         const d = new THREE.Mesh(dg, dm); d.receiveShadow = true; group.add(d); draw() }));
-      res(); draw();
+      (R.compileAsync ? R.compileAsync(S, cam).catch(() => {}) : Promise.resolve()).then(() => { res(); draw() });
     }, undefined, rej);
   });
 

@@ -276,3 +276,6 @@ html.lenis,html.lenis body{height:auto}
 /* carrello: ordine minimo */
 .cart footer .minimo{margin:0 0 10px;color:var(--gold-2);font-size:13px}.cart footer .minimo:empty{display:none}
 .cart footer .go:disabled{opacity:.4;cursor:not-allowed}
+
+/* fragranze: l’elenco arriva da data.js; finché è vuoto tiene il posto, così la pagina non salta */
+.lib:empty{min-height:110vh}

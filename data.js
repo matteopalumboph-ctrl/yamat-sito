@@ -8,7 +8,7 @@ window.YAMAT = {
   shop: 'https://www.yamatcandle.com',
   products: [
     {
-      id: 'kora', page: 'kora.html', model: 'kora', wid: '930f4fd8-b8b5-bc59-b994-eb10d7e88ad8', name: 'Kora', price: '79,99', wix: 'yamat-candle-kora', kind: 'cemento', tappa: 1,
+      id: 'kora', page: 'kora.html', wid: '930f4fd8-b8b5-bc59-b994-eb10d7e88ad8', name: 'Kora', price: '79,99', wix: 'yamat-candle-kora', kind: 'cemento', tappa: 1,
       line: 'Il ceppo di muschio', short: 'Resina, muschio, pino',
       lead: 'La candela del bosco d’inverno.',
       body: 'Note di resina, muschio e pino, calde e profonde, che riempiono la stanza come l’aria di una baita dopo la neve. Il vaso è modellato a mano, il coperchio è sigillato con la ceralacca, lo stoppino è in legno e crepita piano mentre brucia, come un piccolo camino.',
@@ -121,3 +121,9 @@ window.YAMAT = {
     { name: 'I frutti rossi', words: 'Melograno · uva nera · fragola', text: 'Nel Kit Relax e nella candela rosa antico di Trilogy.', in: ['kitrelax', 'trilogy'] }
   ]
 };
+
+/* foto leggere: per ogni JPG del sito ci sono le WebP in v/ a 800, 1600 e (tappe) 2560 px, create da responsive.py.
+   Il browser scarica solo la misura che serve allo schermo; il JPG resta come riserva se una WebP manca. */
+window.ySet=(s,sizes='100vw')=>{const m=/^(\/?)(t[1-5]|(?:g|r|shop)\/[\w.-]+)\.jpg$/.exec(s||'');if(!m)return '';
+  const b=m[1]+'v/'+m[2],ws=/^t\d$/.test(m[2])?[800,1600,2560]:[800,1600];
+  return ` srcset="${ws.map(w=>`${b}-${w}.webp ${w}w`).join(', ')}" sizes="${sizes}" decoding="async" onerror="this.onerror=null;this.removeAttribute('srcset')"`};
