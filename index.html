@@ -550,7 +550,7 @@ function contaUpd(){if(!conta)return;conta.querySelector('b').textContent=accC;c
 const PRODT={0:'kora',1:'c02d',2:'trilogy',3:'fioritura',4:'ovale'};
 function nelLaria(k){const Y=window.YAMAT||{},id=PRODT[k],fam=(Y.accords||[]).find(f=>(f.in||[]).includes(id)),p=(Y.products||[]).find(p=>p.id===id);
   return (fam?fam.words:(p&&p.notes||[]).join(' · ')).toLowerCase()}
-Object.keys(FLK).forEach(k=>{const ch=document.querySelector(`.chap[data-c="${k}"]`);if(!ch||!(FIA&&(SPEGNI||touch)))return;
+Object.keys(FLK).forEach(k=>{const ch=document.querySelector(`.chap[data-c="${k}"]`);if(!ch||!FIA)return;
   const s=document.createElement('p');s.className='svela';s.innerHTML=`<span>Nell’aria</span> ${nelLaria(k)}`;ch.insertBefore(s,ch.querySelector('.row'))});
 const finale=FIA&&SPEGNI?stage.appendChild(Object.assign(document.createElement('div'),{id:'finale',innerHTML:'<span class="label">La radura</span><h3 class="display">Hai acceso <em>il bosco.</em></h3><p>Ogni candela Yamat è fatta per questo momento. Scegli la luce da portare a casa.</p><a class="btn" href="#collezione">Scegli la tua candela</a><button type="button" class="x" aria-label="Chiudi">×</button>'})):null;
 if(finale)finale.querySelector('.x').addEventListener('click',()=>finale.classList.remove('on'));
@@ -565,9 +565,9 @@ if(window.__dbg)Object.assign(window.__dbg,{fi,lit,flamePx,FL:()=>FL,fMat,fMesh,
 const hint=FIA?document.body.appendChild(Object.assign(document.createElement('div'),{id:'fhint',textContent:SPEGNI?(touch?'Sfiora le candele per accenderle':'Avvicinala alle candele'):(touch?'Tocca una fiamma':'Avvicina la fiamma a una candela')})):null;
 /* il biglietto: nome, profumo, prezzo e «Scopri» accanto alla candela che si sta guardando */
 const BIG={0:'kora',1:'c02d',2:'trilogy',3:'fioritura',4:'ovale'};
-const big=FIA&&!SPEGNI&&!touch?stage.appendChild(Object.assign(document.createElement('div'),{id:'biglietto'})):null;let bigK=-1,bigT=0,bigOver=false;
+const big=false&&FIA&&!SPEGNI&&!touch?stage.appendChild(Object.assign(document.createElement('div'),{id:'biglietto'})):null;let bigK=-1,bigT=0,bigOver=false;
 if(big){big.addEventListener('pointerenter',()=>bigOver=true);big.addEventListener('pointerleave',()=>bigOver=false)}
-function biglietto(k,P){fi.first=false;if(touch){const ch=document.querySelector(`.chap[data-c="${k}"]`);if(ch)ch.classList.add('acceso');return}if(!big)return;const Y=window.YAMAT||{},p=(Y.products||[]).find(q=>q.id===BIG[k]);if(!p)return;
+function biglietto(k,P){fi.first=false;if(true){const ch=document.querySelector(`.chap[data-c="${k}"]`);if(ch)ch.classList.add('acceso');return}if(!big)return;const Y=window.YAMAT||{},p=(Y.products||[]).find(q=>q.id===BIG[k]);if(!p)return;
   if(bigK!==k){bigK=k;const fam=(Y.accords||[]).find(f=>(f.in||[]).includes(p.id)),odore=(fam?fam.words:(p.notes||[]).join(' · '));
     big.innerHTML=`<span class="label">Nell’aria</span><p class="od">${odore}</p><h4 class="display">${p.name}</h4><div class="r"><span class="price num">${p.price} €</span><a class="btn" href="${p.page}">Scopri</a></div>`}
   const r=stage.getBoundingClientRect(),w=big.offsetWidth||230,hh=big.offsetHeight||150;

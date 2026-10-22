@@ -272,3 +272,7 @@ html.lenis,html.lenis body{height:auto}
 
 /* segno «In 3D» sulle schede che hanno il modello */
 .card .tag.t3d{left:auto;right:14px;color:var(--bone);border:1px solid rgba(233,201,143,.45)}
+
+/* carrello: ordine minimo */
+.cart footer .minimo{margin:0 0 10px;color:var(--gold-2);font-size:13px}.cart footer .minimo:empty{display:none}
+.cart footer .go:disabled{opacity:.4;cursor:not-allowed}

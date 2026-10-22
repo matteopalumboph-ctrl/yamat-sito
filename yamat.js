@@ -85,6 +85,7 @@ const WAP=new URLSearchParams(location.search);
 if(WAP.has('wa')){try{sessionStorage.setItem('ymt_wa',WAP.get('wa'))}catch(e){}}
 let WAON=Y.checkout==='whatsapp';try{const f=sessionStorage.getItem('ymt_wa');if(f==='1')WAON=true;if(f==='0')WAON=false}catch(e){}
 const WA_NUM=Y.whatsapp||'393933325473';
+const MINIMO=20;   // ordine minimo in euro (22/10: sopra i 20 € la spedizione in Italia è gratuita)
 const WK='ymt_wa_cart';
 const waLines=()=>{try{return JSON.parse(localStorage.getItem(WK))||[]}catch(e){return[]}};
 const waSave=L=>{try{localStorage.setItem(WK,JSON.stringify(L))}catch(e){}};
@@ -138,10 +139,10 @@ cb.innerHTML='Carrello <span class="n num">0</span>';top.querySelector('.end').i
 const pane=document.createElement('div');pane.className='cart';pane.id='cart';pane.setAttribute('role','dialog');pane.setAttribute('aria-modal','true');pane.setAttribute('aria-label','Carrello');pane.setAttribute('aria-hidden','true');
 pane.innerHTML=`<div class="cart-bg"></div><aside data-lenis-prevent><header><span class="label">Il tuo carrello</span><button type="button" class="x">Chiudi</button></header>
 <div class="items"></div><p class="cmsg" role="status"></p>
-<footer><div class="tot"><span>Subtotale</span><b class="price num">0,00 €</b></div><p>Spedizione gratuita in Italia. Le spese per l’estero si calcolano alla cassa.</p>
+<footer><div class="tot"><span>Subtotale</span><b class="price num">0,00 €</b></div><p class="minimo"></p><p>Ordine minimo 20 €, spedizione gratuita in Italia. Le spese per l’estero si calcolano alla cassa.</p>
 <button type="button" class="btn go">Vai alla cassa</button></footer></aside>`;
 document.body.append(pane);
-if(WAON){const f=pane.querySelector('footer');f.querySelector('p').textContent='Spedizione gratuita in Italia. Ti si apre WhatsApp con l’ordine già scritto: ci rispondiamo per conferma, pagamento e spedizione.';f.querySelector('.go').textContent='Ordina su WhatsApp'}
+if(WAON){const f=pane.querySelector('footer');f.querySelector('p:not(.minimo)').textContent='Ordine minimo 20 €, spedizione gratuita in Italia. Ti si apre WhatsApp con l’ordine già scritto: ci rispondiamo per conferma, pagamento e spedizione.';f.querySelector('.go').textContent='Ordina su WhatsApp'}
 const open=()=>{setMenu(false);pane.setAttribute('aria-hidden','false');document.documentElement.classList.add('cart-open');pane.querySelector('.x').focus({preventScroll:true})};
 const shut=()=>{pane.setAttribute('aria-hidden','true');document.documentElement.classList.remove('cart-open')};
 const note=t=>{const m=pane.querySelector('.cmsg');m.textContent=t;clearTimeout(note.t);note.t=setTimeout(()=>m.textContent='',6000)};
@@ -155,14 +156,18 @@ function paint(){const L=(cart&&cart.lineItems)||[],n=L.reduce((a,l)=>a+(l.quant
     const opts=(l.attributes.descriptionLines||[]).map(d=>`<small>${d.name.original}: ${d.plainText?d.plainText.original:''}</small>`).join('');
     return `<div class="it"><a href="${p?p.page:'collezione.html'}"><img src="${p?p.img:l.attributes.image.url}" alt=""></a>
       <div><a class="nm" href="${p?p.page:'collezione.html'}">${l.name.original}</a>${opts}
-      <div class="q"><button type="button" data-q="${l.id}" data-n="${q-1}" aria-label="Uno in meno">−</button><span class="num">${q}</span><button type="button" data-q="${l.id}" data-n="${q+1}" aria-label="Uno in più">+</button>
-      <button type="button" class="rm" data-q="${l.id}" data-n="0">Togli</button></div></div>
+      <div class="q"><button type="button" data-q="${encodeURIComponent(l.id)}" data-n="${q-1}" aria-label="Uno in meno">−</button><span class="num">${q}</span><button type="button" data-q="${encodeURIComponent(l.id)}" data-n="${q+1}" aria-label="Uno in più">+</button>
+      <button type="button" class="rm" data-q="${encodeURIComponent(l.id)}" data-n="0">Togli</button></div></div>
       <b class="price num">${eur(l.pricing.totalPrice.amount)}</b></div>`}).join('')
     :`<div class="empty"><p>Il carrello è vuoto.</p><a class="lnk" href="collezione.html">Scopri la collezione</a></div>`;
   pane.querySelector('.tot b').textContent=eur(cart&&cart.subtotal?cart.subtotal.amount:0);
+  /* ordine minimo 20 €: sotto, il pulsante si spegne e si dice quanto manca */
+  const sub=cart&&cart.subtotal?+cart.subtotal.amount:0,manca=Math.max(0,MINIMO-sub);
+  pane.querySelector('.minimo').textContent=manca>0?'Ordine minimo 20 €: aggiungi ancora '+eur(manca)+'.':'';
+  pane.querySelector('.go').disabled=manca>0||busy;
   pane.querySelector('footer').style.display=L.length?'':'none'}
-pane.addEventListener('click',e=>{const b=e.target.closest('[data-q]');if(!b||busy)return;C.qty(b.dataset.q,+b.dataset.n).catch(()=>note('Non sono riuscito a cambiare il carrello. Riprova.'))});
-pane.querySelector('.go').addEventListener('click',()=>{if(!busy)C.pay()});
+pane.addEventListener('click',e=>{const b=e.target.closest('[data-q]');if(!b||busy)return;C.qty(decodeURIComponent(b.dataset.q),+b.dataset.n).catch(()=>note('Non sono riuscito a cambiare il carrello. Riprova.'))});
+pane.querySelector('.go').addEventListener('click',()=>{const sub=cart&&cart.subtotal?+cart.subtotal.amount:0;if(sub<MINIMO){note('L’ordine minimo è di 20 €.');return}if(!busy)C.pay()});
 C.load().then(()=>{if(new URLSearchParams(location.search).has('carrello'))open()});
 addEventListener('pageshow',e=>{if(e.persisted){busy=false;C.load()}});   // tornando indietro dalla cassa il carrello si riallinea
 
