@@ -39,7 +39,7 @@ if(ft){ft.className='wrap';ft.innerHTML=`<div class="foot">
 
 /* schede prodotto riutilizzabili */
 window.yCard=(p,i=0)=>`<a class="card up" href="${p.page}" data-cursor="Vedi" style="transition-delay:${(i%4)*.08}s">
- <figure>${p.tag?`<span class="tag">${p.tag}</span>`:''}<img src="${p.img}" alt="${p.name}" loading="lazy"><img class="alt" src="${p.gallery[1]||p.img}" alt="" loading="lazy"></figure>
+ <figure>${p.tag?`<span class="tag">${p.tag}</span>`:''}${p.model?`<span class="tag t3d">In 3D</span>`:''}<img src="${p.img}" alt="${p.name}" loading="lazy"><img class="alt" src="${p.gallery[1]||p.img}" alt="" loading="lazy"></figure>
  <div class="row"><h3>${p.name}</h3><span class="price num">${p.price} €</span></div>
  <div class="row" style="border:0;padding:0;margin-top:-4px"><small>${p.short}</small><span class="buy">Scopri →</span></div></a>`;
 
