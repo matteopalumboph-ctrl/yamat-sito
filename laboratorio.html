@@ -40,6 +40,8 @@
 .steps{position:relative}
 .step{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:clamp(24px,5vw,80px);padding-block:clamp(40px,7vh,80px);border-top:1px solid var(--line);align-items:center}
 .step .k{font:italic 300 clamp(90px,13vw,210px)/.8 var(--display);font-variation-settings:"SOFT" 100,"WONK" 1,"opsz" 144;color:transparent;-webkit-text-stroke:1px rgba(233,201,143,.5)}
+/* il numero si riempie d'oro, come la cera che sale nel vaso, mentre il gesto passa sotto gli occhi */
+.step .k{background:linear-gradient(to top,var(--gold) 0%,var(--gold-2) calc(var(--f,0)*100%),transparent calc(var(--f,0)*100% + .5%));-webkit-background-clip:text;background-clip:text}
 .step h3{font:300 clamp(34px,3.6vw,58px)/1 var(--display);font-variation-settings:"SOFT" 100,"opsz" 96;margin:0 0 16px}
 .step p{margin:0;color:var(--bone);opacity:.84;max-width:44ch}
 @media (max-width:800px){.step{grid-template-columns:1fr}}
@@ -134,6 +136,12 @@ addEventListener('mouseup',()=>{down=false;rm.classList.remove('drag')});
 rm.addEventListener('mousemove',e=>{if(down){e.preventDefault();rm.scrollLeft=sl-(e.pageX-sx)*1.4}});
 rm.querySelectorAll('figure').forEach(f=>f.dataset.cursor='Trascina');
 yReveal();
+</script>
+<script>
+(()=>{const st=[...document.querySelectorAll('.step')];if(!st.length)return;
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches){st.forEach(e=>e.style.setProperty('--f',1));return}
+  const up=()=>{const h=innerHeight;st.forEach(e=>{const r=e.getBoundingClientRect();const f=Math.min(1,Math.max(0,(h*.88-r.top)/(h*.55)));e.style.setProperty('--f',f.toFixed(3))})};
+  addEventListener('scroll',()=>requestAnimationFrame(up),{passive:true});addEventListener('resize',up);up()})();
 </script>
 </body>
 </html>
