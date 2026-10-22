@@ -398,7 +398,7 @@ Object.keys(VID).forEach(k=>{const v=VID[k];
         float dim=0.;
         for(int i=0;i<16;i++){vec4 F=fl[i];if(F.z<=0.)continue;
           float h=F.z,L=F.w;vec2 d=vec2((vUv.x-F.x)*va,vUv.y-F.y);
-          if(abs(d.x)>h*7.5||d.y<-h*7.||d.y>h*8.5)continue;
+          if(abs(d.x)>h*4.5||d.y<-h*4.5||d.y>h*5.5)continue;
           float g=exp(-dot(d,d)/(h*h*12.));dim+=g*(1.-L);
           float k=smoothstep(1.,.72,length(vec2(d.x/(h*1.02),(d.y-h*.45)/(h*2.15))))*smoothstep(-h*.62,-h*.48,d.y);
           if(k>.001){
@@ -407,7 +407,7 @@ Object.keys(VID).forEach(k=>{const v=VID[k];
             float top=-h*.6+smoothstep(0.,1.,L)*h*4.4,on=L>=1.?1.:(1.-smoothstep(top-h*.6,top,d.y))*(.72+.28*sin(tm*29.+float(i)*3.))*step(.001,L);
             if(uok>.5)c=mix(c,sl(texture2D(umap,vec2(ux.x+vUv.x*ux.y,vUv.y)).rgb),k*(1.-on));}
           /* l'alone: nella clip spenta è tolto anche il bagliore che la fiamma spandeva intorno; torna mentre la fiamma prende */
-          float rh=length(vec2(d.x,d.y-h*.6))/h,kh=(1.-smoothstep(3.,5.8,rh))*(1.-k);   // resta dentro la zona ripulita della clip spenta (7 h): fuori è nera
+          float rh=length(vec2(d.x,d.y-h*.6))/h,kh=(1.-smoothstep(2.3,3.6,rh))*(1.-k);   // solo il bagliore vicino allo stoppino; resta dentro la zona ripulita (4,2 h)
           if(uok>.5&&kh>.001)c=mix(c,sl(texture2D(umap,vec2(ux.x+vUv.x*ux.y,vUv.y)).rgb),kh*(1.-smoothstep(.15,1.,L)));
           float wx=d.x-sin((d.y+h*.5)*8./h)*h*.01;   // lo stoppino spento: un filo sottile e corto, appena piegato
           float wk=(1.-smoothstep(h*.012,h*.026,abs(wx)))*smoothstep(-h*.55,-h*.51,d.y)*(1.-smoothstep(-h*.4,-h*.34,d.y));
