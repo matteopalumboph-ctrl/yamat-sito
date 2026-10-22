@@ -563,7 +563,7 @@ function camAt(p){
     if(m>0){const b=target(cur+1,z-stations[cur+1].z);x=x+(b.x-x)*m;y=y+(b.y-y)*m}}
   return {x,y,z};
 }
-let fN=0,fT=0,fL=performance.now();
+let fN=0,fT=0,fL=performance.now(),ready0=false;
 function frame(){
   const t=clock.getElapsedTime();
   /* se il dispositivo non tiene il passo (sotto ~28 fotogrammi al secondo) si abbassa la risoluzione di mezzo punto, fino a 1.25 */
@@ -588,9 +588,11 @@ function frame(){
     const out=THREE.MathUtils.smoothstep(d,27,33),inn=+k===0?1-THREE.MathUtils.smoothstep(d,95,110):1-THREE.MathUtils.smoothstep(d,GAP+23,GAP+27);
     v.mesh.material.opacity=out*inn;
     if(v.bw){const z=1+(1-out)*.2-(1-inn)*.05*(+k>0?1:0);v.mesh.scale.set(v.bw*z,v.bh*z,1)}v.mesh.material.uniforms.opacity.value=v.mesh.material.opacity;v.mesh.visible=v.mesh.material.opacity>.003&&v.shown;if(v.mesh.visible)vidMax=Math.max(vidMax,v.mesh.material.opacity);});
+  /* il bosco si mostra solo quando il primo fotogramma della clip è pronto: prima si vedeva per un attimo la foto di riserva, inquadrata diversa */
+  if(!ready0&&((vids[0]&&vids[0].shown)||t>6)){ready0=true;document.getElementById('load').classList.add('done')}
   stations.forEach((s,i)=>{const d=cam.position.z-s.z;s.u.time.value=t;
     s.u.op.value=THREE.MathUtils.smoothstep(d,24,32)*(1-THREE.MathUtils.smoothstep(d,95,130))*(1-vidMax);
-    s.mesh.visible=(!s.video||!(vids[i]&&vids[i].shown))&&s.u.op.value>.003&&(!s.video||d<60);   // la foto di riserva solo per la tappa vicina: da lontano sembrava un riquadro appeso nel buio
+    s.mesh.visible=(!s.video||!(vids[i]&&vids[i].shown))&&s.u.op.value>.003&&(!s.video||d<60)&&(i>0||ready0);   // la foto di riserva solo per la tappa vicina: da lontano sembrava un riquadro appeso nel buio
     if(d>31&&d<50&&d<best){best=d;near=i}});
   const inHero=sp<.03;
   hero.classList.toggle('off',!inHero);
@@ -605,7 +607,6 @@ function frame(){
 (function loop(){frame();requestAnimationFrame(loop)})();if(window.__dbg)window.__dbg.frame=frame;
 pathBtns.forEach(b=>b.addEventListener('click',()=>{const k=+b.dataset.g;const z=stations[k].z+42;const p=(z-Z0)/(Z1-Z0);
   const top=sec.offsetTop+(sec.offsetHeight-innerHeight)*p;lenis?lenis.scrollTo(top,{duration:2.6}):scrollTo({top,behavior:'smooth'})}));
-document.getElementById('load').classList.add('done');
 }
 setTimeout(()=>document.getElementById('load').classList.add('done'),12000);
 
