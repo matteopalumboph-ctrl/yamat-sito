@@ -36,6 +36,32 @@
 .acd .in a:hover{background:var(--bone);color:var(--night);border-color:var(--bone)}
 .acd:hover h2{transform:translateX(18px);color:var(--gold-2)}
 @media (max-width:900px){.acd{grid-template-columns:1fr;gap:14px}.acd .in{justify-content:flex-start;max-width:none}.acd:hover h2{transform:none}}
+/* materie (30/10, rifatto dopo GIANNI): al computer la foto sta in un pannello fisso a destra e i testi a sinistra, mai sopra la foto;
+   al telefono la foto è il fondale, velato forte. L'accordo al centro dello schermo si accende in oro. */
+.sala{position:relative;isolation:isolate}
+.mat{pointer-events:none;opacity:0;transition:opacity 1.2s var(--ease)}
+.sala.vista .mat{opacity:1}
+.mat .in{position:relative;height:100%;overflow:hidden;border-radius:2px;background:var(--forest)}
+.mat img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transform:scale(1.07);transition:opacity 1.6s var(--ease),transform 7s cubic-bezier(.2,.6,.2,1)}
+.mat img.on{opacity:1;transform:scale(1)}
+.mat .in::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(7,11,9,.25) 0%,rgba(7,11,9,0) 30%,rgba(7,11,9,0) 70%,rgba(7,11,9,.35) 100%)}
+.acd h2,.acd .w,.acd p{transition:transform 1s var(--ease),color .8s,opacity .8s}
+.sala.vista .acd:not(.on) h2{opacity:.38}
+.sala.vista .acd:not(.on) p,.sala.vista .acd:not(.on) .w{opacity:.45}
+.acd.on h2{color:var(--gold-2)}
+.acd .in a{background:rgba(7,11,9,.55);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+@media (min-width:901px){
+  .sala{display:grid;grid-template-columns:minmax(0,58fr) minmax(0,42fr)}
+  .sala>.wrap{grid-column:1;grid-row:1;padding-right:clamp(24px,3vw,56px)}
+  .mat{position:fixed;top:0;right:0;width:42vw;height:100vh;height:100svh;z-index:1;padding:clamp(88px,11vh,110px) var(--gutter) clamp(28px,5vh,48px) 0}
+  .sala .acd{grid-template-columns:44px minmax(0,1fr) minmax(0,1fr);row-gap:16px}
+  .sala .acd h2{font-size:clamp(40px,3.8vw,72px);white-space:nowrap}
+  .sala .acd .in{grid-column:2/4;justify-content:flex-start;max-width:none}}
+@media (max-width:900px){
+  .mat{position:sticky;top:0;height:100vh;height:100lvh;margin-bottom:-100vh;margin-bottom:-100lvh;z-index:-1}
+  .mat .in{border-radius:0}
+  .mat img.on{opacity:.4}
+  .mat .in::after{background:linear-gradient(180deg,var(--night) 0%,rgba(7,11,9,.62) 16%,rgba(7,11,9,.62) 84%,var(--night) 100%)}}
 .how{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(20px,3vw,48px)}
 .how div{border-top:1px solid var(--gold);padding-top:26px}
 .how b{font:300 clamp(28px,2.6vw,40px)/1.05 var(--display);font-variation-settings:"SOFT" 100,"opsz" 60;display:block;margin-bottom:14px}
@@ -54,8 +80,11 @@
     </div>
   </section>
 
-  <section class="wrap" style="padding-bottom:clamp(90px,14vh,160px)">
-    <div class="lib" id="lib"></div>
+  <section class="sala" id="sala">
+    <div class="mat" id="mat" aria-hidden="true"></div>
+    <div class="wrap" style="padding-bottom:clamp(90px,14vh,160px)">
+      <div class="lib" id="lib"></div>
+    </div>
   </section>
 
   <div class="ticker" aria-hidden="true"><div id="tk"></div><div id="tk2"></div></div>
@@ -77,10 +106,24 @@
 const Y=window.YAMAT,byId=Object.fromEntries(Y.products.map(p=>[p.id,p]));
 document.getElementById('lib').innerHTML=Y.accords.map(a=>`<article class="acd up" data-img="${byId[a.in[0]].img}">
   <h2 class="display">${a.name.replace(/^(Il|La|I) /,'$1 <em>')}</em></h2>
-  <div><p class="w">${a.words}</p><p>${a.text}</p></div>
+  <div><p class="w">${a.words.replace(/(\S+-\S+)/g,'<span style="white-space:nowrap">$1</span>')}</p><p>${a.text}</p></div>
   <div class="in">${a.in.map(id=>`<a href="${byId[id].page}">${byId[id].name}</a>`).join('')}</div></article>`).join('');
 const w=Y.accords.map(a=>`<span>${a.words} <b>·</b></span>`).join('');document.getElementById('tk').innerHTML=w;document.getElementById('tk2').innerHTML=w;
 yReveal();
+/* materie: si accende quella dell'accordo al centro dello schermo */
+const mat=document.getElementById('mat'),sala=document.getElementById('sala'),rows=[...document.querySelectorAll('.acd')];
+mat.innerHTML='<div class="in">'+Y.accords.map((a,i)=>`<img src="f/acc${i+1}-1080.webp" srcset="f/acc${i+1}-720.webp 720w, f/acc${i+1}-1080.webp 1080w, f/acc${i+1}-1536.webp 1536w" sizes="(min-width:901px) 42vw, 100vw" alt="" decoding="async" loading="${i?'lazy':'eager'}">`).join('')+'</div>';
+const ims=[...mat.querySelectorAll('img')];let cur=-1;
+const accendi=i=>{if(i===cur)return;cur=i;ims.forEach((m,k)=>m.classList.toggle('on',k===i));rows.forEach((r,k)=>r.classList.toggle('on',k===i))};
+new IntersectionObserver(es=>es.forEach(e=>sala.classList.toggle('vista',e.isIntersecting)),{rootMargin:'-30% 0px -30% 0px'}).observe(sala);
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)accendi(rows.indexOf(e.target))}),{rootMargin:'-48% 0px -48% 0px'});
+rows.forEach(r=>io.observe(r));accendi(0);
+/* computer: il pannello è fisso e intero dal primo accordo; alla fine della sezione sale insieme all'ultimo accordo */
+const desk=matchMedia('(min-width:901px)');let tk=0;
+const segui=()=>{tk=0;if(!desk.matches){mat.style.transform='';return}const off=Math.min(0,sala.getBoundingClientRect().bottom-innerHeight);mat.style.transform=off?`translate3d(0,${off.toFixed(1)}px,0)`:''};
+addEventListener('scroll',()=>{if(!tk)tk=requestAnimationFrame(segui)},{passive:true});addEventListener('resize',segui);segui();
+/* le altre materie si scaricano appena si arriva alla sezione */
+new IntersectionObserver((es,o)=>{if(es[0].isIntersecting){ims.forEach(m=>m.loading='eager');o.disconnect()}},{rootMargin:'600px'}).observe(sala);
 </script>
 </body>
 </html>

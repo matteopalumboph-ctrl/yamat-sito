@@ -279,3 +279,21 @@ html.lenis,html.lenis body{height:auto}
 
 /* fragranze: l’elenco arriva da data.js; finché è vuoto tiene il posto, così la pagina non salta */
 .lib:empty{min-height:110vh}
+
+/* passaggio tra le pagine (30/10): dissolvenza morbida, la testata resta ferma,
+   la foto della card cliccata diventa la foto grande del prodotto. Chrome e Safari 18.2+, gli altri cambiano pagina come prima. */
+@media (prefers-reduced-motion:no-preference){@view-transition{navigation:auto}}
+.top{view-transition-name:top}
+.gal>figure:first-child{view-transition-name:prod}
+::view-transition-old(root){animation:.42s cubic-bezier(.4,0,1,1) both vtOut}
+::view-transition-new(root){animation:.62s cubic-bezier(.2,.7,.1,1) .08s both vtIn}
+::view-transition-group(prod){animation-duration:.82s;animation-timing-function:cubic-bezier(.2,.75,.1,1);z-index:50}
+::view-transition-old(prod),::view-transition-new(prod){height:100%;object-fit:cover;overflow:clip}
+::view-transition-old(prod){animation:.5s ease both vtFade}
+::view-transition-new(prod){animation:.6s ease .12s both vtIn2}
+::view-transition-group(top){z-index:60}
+@keyframes vtOut{to{opacity:0;transform:translateY(-14px);filter:blur(3px)}}
+@keyframes vtIn{from{opacity:0;transform:translateY(22px)}}
+@keyframes vtFade{to{opacity:0}}
+@keyframes vtIn2{from{opacity:0}}
+@media (hover:none){.card.vivo figure img.alt{opacity:1}.card.vivo figure img{transform:scale(1.06)}}
