@@ -45,6 +45,11 @@
 .step h3{font:300 clamp(34px,3.6vw,58px)/1 var(--display);font-variation-settings:"SOFT" 100,"opsz" 96;margin:0 0 16px}
 .step p{margin:0;color:var(--bone);opacity:.84;max-width:44ch}
 @media (max-width:800px){.step{grid-template-columns:1fr}}
+.step .clip{margin:0;aspect-ratio:4/5;overflow:hidden;border-radius:2px;position:relative;background:#0c120e}
+.step .clip video{width:100%;height:100%;object-fit:cover;display:block;transform:scale(1.06);transition:transform 2.4s var(--ease)}
+.step.vivo .clip video{transform:scale(1)}
+@media (min-width:801px){.step{grid-template-columns:minmax(0,.7fr) minmax(0,1fr) minmax(0,.62fr)}}
+@media (max-width:800px){.step .clip{aspect-ratio:4/5;max-height:72svh;width:100%}}
 .rooms{display:flex;gap:18px;overflow-x:auto;scroll-snap-type:x mandatory;padding:0 var(--gutter) 30px;scrollbar-width:thin;scrollbar-color:var(--gold) transparent;cursor:grab}
 .rooms.drag{cursor:grabbing;scroll-snap-type:none}
 .rooms figure{flex:0 0 clamp(260px,30vw,460px);margin:0;scroll-snap-align:start}
@@ -85,11 +90,11 @@
 
   <section class="wrap steps">
     <div class="head"><div><span class="label">Il metodo</span><h2 class="display rvx" style="margin-top:22px"><span class="rv"><span>Cinque <em>gesti</em></span></span></h2></div></div>
-    <div class="step up"><span class="k">01</span><div><h3>Il cemento</h3><p>Il vaso si lavora a mano, uno alla volta. Le imperfezioni restano: sono la firma del pezzo.</p></div></div>
-    <div class="step up"><span class="k">02</span><div><h3>La cera</h3><p>Cera di soia pura, nei colori della collezione: panna, verde, verde acqua, celeste, azzurro, rosa antico, caffè, grigio blu notte.</p></div></div>
-    <div class="step up"><span class="k">03</span><div><h3>Lo stoppino</h3><p>In legno per le candele in cemento, doppio nell’Ovale. In stoffa per Trilogy Flames.</p></div></div>
-    <div class="step up"><span class="k">04</span><div><h3>La chiusura</h3><p>Il coperchio di cemento, come il vaso, sulla .01; in legno massello sulla .02D. Il sigillo di ceralacca sul coperchio di Kora e sul nastro dello Scrigno.</p></div></div>
-    <div class="step up"><span class="k">05</span><div><h3>Piccoli lotti</h3><p>Kora, Trilogy Flames e le candele numerate sono edizioni limitate, fatte in piccoli lotti per tenere alta la qualità.</p></div></div>
+    <div class="step up"><span class="k">01</span><div><h3>Il cemento</h3><p>Il vaso si lavora a mano, uno alla volta. Le imperfezioni restano: sono la firma del pezzo.</p></div><figure class="clip"><video muted playsinline preload="none" poster="lab/01_cemento.webp" data-src="lab/01_cemento.mp4" aria-label="Le mani tolgono lo stampo dal vaso di cemento appena colato"></video></figure></div>
+    <div class="step up"><span class="k">02</span><div><h3>Lo stoppino</h3><p>In legno per le candele in cemento, doppio nell’Ovale. In stoffa per Trilogy Flames.</p></div><figure class="clip"><video muted playsinline preload="none" poster="lab/02_stoppino.webp" data-src="lab/02_stoppino.mp4" aria-label="Lo stoppino di legno scende al centro del vaso"></video></figure></div>
+    <div class="step up"><span class="k">03</span><div><h3>La cera</h3><p>Cera di soia pura, nei colori della collezione: panna, verde, verde acqua, celeste, azzurro, rosa antico, caffè, grigio blu notte.</p></div><figure class="clip"><video muted playsinline preload="none" poster="lab/03_cera.webp" data-src="lab/03_cera.mp4" aria-label="La cera di soia scende nel vaso di cemento"></video></figure></div>
+    <div class="step up"><span class="k">04</span><div><h3>La chiusura</h3><p>Il coperchio di cemento, come il vaso, sulla .01; in legno massello sulla .02D. Il sigillo di ceralacca sul coperchio di Kora e sul nastro dello Scrigno.</p></div><figure class="clip"><video muted playsinline preload="none" poster="lab/04_ceralacca.webp" data-src="lab/04_ceralacca.mp4" aria-label="La ceralacca scura cade sul coperchio di cemento"></video></figure></div>
+    <div class="step up"><span class="k">05</span><div><h3>Piccoli lotti</h3><p>Kora, Trilogy Flames e le candele numerate sono edizioni limitate, fatte in piccoli lotti per tenere alta la qualità.</p></div><figure class="clip"><video muted playsinline preload="none" poster="lab/05_lotti.webp" data-src="lab/05_lotti.mp4" aria-label="L'ultima candela del lotto posata e allineata con le altre sul tavolo"></video></figure></div>
   </section>
 
   <section class="sec" style="padding-bottom:clamp(60px,10vh,120px)">
@@ -142,6 +147,14 @@ yReveal();
   if(matchMedia('(prefers-reduced-motion: reduce)').matches){st.forEach(e=>e.style.setProperty('--f',1));return}
   const up=()=>{const h=innerHeight;st.forEach(e=>{const r=e.getBoundingClientRect();const f=Math.min(1,Math.max(0,(h*.88-r.top)/(h*.55)));e.style.setProperty('--f',f.toFixed(3))})};
   addEventListener('scroll',()=>requestAnimationFrame(up),{passive:true});addEventListener('resize',up);up()})();
+</script>
+<script>
+/* i cinque gesti: la clip parte quando il gesto è sotto gli occhi, una volta sola, e resta sull'ultimo fotogramma; si riparte rientrando */
+(()=>{const vs=[...document.querySelectorAll('.step .clip video')];if(!vs.length||!('IntersectionObserver' in window))return;
+  const ferma=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const io=new IntersectionObserver(es=>es.forEach(e=>{const v=e.target,st=v.closest('.step');
+    if(e.isIntersecting){if(!v.src)v.src=v.dataset.src;st.classList.add('vivo');if(!ferma){if(v.ended)v.currentTime=0;v.play().catch(()=>{})}}else{v.pause()}}),{threshold:.35});
+  vs.forEach(v=>io.observe(v))})();
 </script>
 </body>
 </html>
