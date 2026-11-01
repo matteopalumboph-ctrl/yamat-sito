@@ -26,14 +26,10 @@
 <link rel="stylesheet" href="yamat.css">
 <style>
 .filters{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between;margin-bottom:clamp(36px,6vh,64px);border-bottom:1px solid var(--line);padding-bottom:22px}
-.chips{display:flex;gap:8px;flex-wrap:wrap}
-.chip{appearance:none;cursor:pointer;background:none;border:1px solid var(--line);border-radius:999px;padding:12px 18px;font:500 10px/1 var(--sans);letter-spacing:.24em;text-transform:uppercase;color:var(--bone-dim);transition:all .5s var(--ease)}
-.chip:hover{color:var(--bone);border-color:var(--bone-dim)}
-.chip[aria-pressed="true"]{background:var(--bone);color:var(--night);border-color:var(--bone)}
-.chip sup{font-size:8px;margin-left:4px;opacity:.6}
-.sort{display:flex;gap:18px;align-items:center;font-size:13px;color:var(--bone-dim)}
-.sort button{appearance:none;background:none;border:0;cursor:pointer;color:var(--bone-dim);font:400 13px/1 var(--sans);padding:6px 0;border-bottom:1px solid transparent;transition:all .4s}
-.sort button[aria-pressed="true"]{color:var(--bone);border-color:var(--gold)}
+.chips{display:flex;gap:clamp(18px,3vw,40px);flex-wrap:wrap}
+.chip{appearance:none;cursor:pointer;background:none;border:0;border-bottom:1px solid transparent;padding:6px 0;font:italic 300 clamp(18px,1.6vw,22px)/1 var(--display);font-variation-settings:"SOFT" 100,"opsz" 60;color:var(--bone-dim);transition:color .5s,border-color .5s}
+.chip:hover{color:var(--bone)}
+.chip[aria-pressed="true"]{color:var(--bone);border-color:var(--gold)}
 .shop .card{transition:opacity .7s var(--ease),transform .9s var(--ease)}
 .shop .card.out{display:none}
 .feature{position:relative;min-height:78svh;display:grid;align-items:end;overflow:hidden;margin-top:clamp(80px,12vh,140px)}
@@ -52,27 +48,22 @@
     <div>
       <span class="label">La collezione · Autunno inverno 2026</span>
       <h1 class="display rvx"><span class="rv"><span>Nove <em>luci</em></span></span></h1>
-      <p class="up">Vasi in cemento lavorati a mano, cera di soia, stoppini in legno che crepitano. Tutte in piccoli lotti, a Brescia. Spedizione gratuita in Italia.</p>
+      <p class="up">Vasi in cemento lavorati a mano, cera di soia, stoppini in legno che crepitano. Tutte in piccoli lotti, a Brescia.</p>
     </div>
   </section>
 
   <section class="wrap" style="padding-bottom:clamp(60px,10vh,120px)">
     <div class="filters">
       <div class="chips" role="group" aria-label="Filtra">
-        <button class="chip" type="button" data-f="tutte" aria-pressed="true">Tutte<sup></sup></button>
-        <button class="chip" type="button" data-f="cemento" aria-pressed="false">In cemento<sup></sup></button>
-        <button class="chip" type="button" data-f="senza" aria-pressed="false">Senza vaso<sup></sup></button>
-        <button class="chip" type="button" data-f="regalo" aria-pressed="false">Da regalare<sup></sup></button>
-      </div>
-      <div class="sort" role="group" aria-label="Ordina"><span>Ordina</span>
-        <button type="button" data-s="scelta" aria-pressed="true">La nostra scelta</button>
-        <button type="button" data-s="prezzo" aria-pressed="false">Prezzo</button>
+        <button class="chip" type="button" data-f="tutte" aria-pressed="true">Tutte</button>
+        <button class="chip" type="button" data-f="cemento" aria-pressed="false">In cemento</button>
+        <button class="chip" type="button" data-f="senza" aria-pressed="false">Senza vaso</button>
+        <button class="chip" type="button" data-f="regalo" aria-pressed="false">Da regalare</button>
       </div>
     </div>
     <div class="shop" id="shop"></div>
   </section>
 
-  <div class="ticker" aria-hidden="true"><div id="tick"></div></div>
 
   <section class="feature">
     <div class="bg"><img loading="lazy" src="g/fioritura_1.jpg" srcset="v/g/fioritura_1-800.webp 800w, v/g/fioritura_1-1600.webp 1600w" sizes="(max-width:800px) 100vw, 50vw" decoding="async" onerror="this.onerror=null;this.removeAttribute('srcset')" alt="" data-par=".1"></div>
@@ -80,18 +71,10 @@
       <span class="label up">Il regalo della stagione</span>
       <h2 class="display rvx" style="margin-top:22px"><span class="rv"><span>Fioritura</span></span><span class="rv"><span><em>Eterna</em></span></span></h2>
       <p class="up">Diciotto rose e margherite di cera, scolpite a mano, avvolte in organza dentro la scatola Yamat. Un bouquet che non appassisce.</p>
-      <div class="up" style="display:flex;gap:14px;flex-wrap:wrap"><a class="btn" href="fioritura-eterna.html">Scopri · 119,99 €</a><a class="btn ghost" href="regali.html">Tutti i regali</a></div>
+      <div class="up" style="display:flex;gap:14px;flex-wrap:wrap"><a class="btn" href="fioritura-eterna.html">Il bouquet</a><a class="btn ghost" href="regali.html">Tutti i regali</a></div>
     </div>
   </section>
 
-  <section class="wrap sec">
-    <div class="band up">
-      <div><b>A mano</b><span>Ogni vaso lavorato e rifinito</span></div>
-      <div><b>Soia</b><span>Cera vegetale, biodegradabile</span></div>
-      <div><b>Legno</b><span>Lo stoppino che crepita</span></div>
-      <div><b>Gratis</b><span>La spedizione in Italia</span></div>
-    </div>
-  </section>
 </main>
 <footer data-auto></footer>
 
@@ -102,8 +85,6 @@ const Y=window.YAMAT, shop=document.getElementById('shop');
 shop.innerHTML=Y.products.map(yCard).join('');shop.classList.add('feat');
 const cards=[...shop.children];
 cards.forEach((c,i)=>{c.dataset.kind=Y.products[i].kind;c.dataset.price=parseFloat(Y.products[i].price.replace(',','.'));c.dataset.ord=i});
-/* i numeri dei filtri si contano dal catalogo: non restano mai indietro */
-document.querySelectorAll('.chip').forEach(b=>{b.querySelector('sup').textContent=b.dataset.f==='tutte'?Y.products.length:Y.products.filter(p=>p.kind===b.dataset.f).length});
 let f='tutte',s='scelta';
 function apply(){
   const vis=cards.filter(c=>f==='tutte'||c.dataset.kind===f);
@@ -113,9 +94,6 @@ function apply(){
   vis.forEach((c,i)=>{shop.append(c);c.classList.remove('out');c.classList.remove('shown');c.style.transitionDelay=(i%4*.07)+'s';requestAnimationFrame(()=>requestAnimationFrame(()=>c.classList.add('shown')))});
 }
 document.querySelectorAll('.chip').forEach(b=>b.addEventListener('click',()=>{f=b.dataset.f;document.querySelectorAll('.chip').forEach(x=>x.setAttribute('aria-pressed',x===b));apply()}));
-document.querySelectorAll('.sort button').forEach(b=>b.addEventListener('click',()=>{s=b.dataset.s;document.querySelectorAll('.sort button').forEach(x=>x.setAttribute('aria-pressed',x===b));apply()}));
-const w=Y.accords.map(a=>`<span>${a.name} <b>·</b></span>`).join('');document.getElementById('tick').innerHTML=w+w;
-document.getElementById('tick').parentElement.innerHTML+=`<div>${w}${w}</div>`;
 yReveal();yPar();
 </script>
 </body>

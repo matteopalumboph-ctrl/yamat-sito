@@ -32,8 +32,9 @@
 .acd .w{font:italic 300 clamp(17px,1.4vw,22px)/1.3 var(--display);font-variation-settings:"SOFT" 100,"WONK" 1,"opsz" 40;color:var(--gold-2);margin:0 0 10px}
 .acd p{margin:0;color:var(--bone-dim);max-width:40ch;font-size:15px}
 .acd .in{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end;max-width:260px}
-.acd .in a{font:500 10px/1 var(--sans);letter-spacing:.2em;text-transform:uppercase;border:1px solid var(--line);border-radius:999px;padding:11px 14px;transition:all .5s var(--ease);white-space:nowrap}
-.acd .in a:hover{background:var(--bone);color:var(--night);border-color:var(--bone)}
+.acd .in{gap:4px 18px}
+.acd .in a{font:italic 300 18px/1.2 var(--display);font-variation-settings:"SOFT" 100,"opsz" 40;color:var(--bone);border-bottom:1px solid var(--line);padding:4px 0;transition:color .5s var(--ease),border-color .5s var(--ease);white-space:nowrap}
+.acd .in a:hover{color:var(--gold-2);border-color:var(--gold)}
 .acd:hover h2{transform:translateX(18px);color:var(--gold-2)}
 @media (max-width:900px){.acd{grid-template-columns:1fr;gap:14px}.acd .in{justify-content:flex-start;max-width:none}.acd:hover h2{transform:none}}
 /* materie (30/10, rifatto dopo GIANNI): al computer la foto sta in un pannello fisso a destra e i testi a sinistra, mai sopra la foto;
@@ -49,7 +50,7 @@
 .sala.vista .acd:not(.on) h2{opacity:.38}
 .sala.vista .acd:not(.on) p,.sala.vista .acd:not(.on) .w{opacity:.45}
 .acd.on h2{color:var(--gold-2)}
-.acd .in a{background:rgba(7,11,9,.55);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+.acd .in a{background:none}
 @media (min-width:901px){
   .sala{display:grid;grid-template-columns:minmax(0,58fr) minmax(0,42fr)}
   .sala>.wrap{grid-column:1;grid-row:1;padding-right:clamp(24px,3vw,56px)}
@@ -87,7 +88,6 @@
     </div>
   </section>
 
-  <div class="ticker" aria-hidden="true"><div id="tk"></div><div id="tk2"></div></div>
 
   <section class="wrap sec">
     <div class="head"><div><span class="label">Come scegliere</span><h2 class="display rvx" style="margin-top:22px"><span class="rv"><span>Tre <em>domande</em></span></span></h2></div></div>
@@ -108,7 +108,6 @@ document.getElementById('lib').innerHTML=Y.accords.map(a=>`<article class="acd u
   <h2 class="display">${a.name.replace(/^(Il|La|I) /,'$1 <em>')}</em></h2>
   <div><p class="w">${a.words.replace(/(\S+-\S+)/g,'<span style="white-space:nowrap">$1</span>')}</p><p>${a.text}</p></div>
   <div class="in">${a.in.map(id=>`<a href="${byId[id].page}">${byId[id].name}</a>`).join('')}</div></article>`).join('');
-const w=Y.accords.map(a=>`<span>${a.words} <b>·</b></span>`).join('');document.getElementById('tk').innerHTML=w;document.getElementById('tk2').innerHTML=w;
 yReveal();
 /* materie: si accende quella dell'accordo al centro dello schermo */
 const mat=document.getElementById('mat'),sala=document.getElementById('sala'),rows=[...document.querySelectorAll('.acd')];

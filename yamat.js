@@ -8,7 +8,7 @@ const cur=p=>here===p||(p==='collezione.html'&&(here==='prodotto.html'||Y.produc
 const top=document.createElement('header');top.className='top';
 top.innerHTML=`<a class="logo" href="index.html" aria-label="Yamat, il bosco"><img src="logo_yamat_light.png" alt="YAMÂT"></a>
 <nav aria-label="Menu">${PAGES.map(([h,t])=>`<a href="${h}"${cur(h)}>${t}</a>`).join('')}</nav>
-<div class="end"><a class="pill" href="collezione.html">Negozio</a>
+<div class="end">
 <button class="burger" type="button" aria-label="Apri il menu" aria-expanded="false" aria-controls="sheet"><i></i><i></i></button></div>`;
 document.body.prepend(top);
 const sheet=document.createElement('div');sheet.className='sheet';sheet.id='sheet';sheet.setAttribute('aria-hidden','true');
@@ -39,9 +39,10 @@ if(ft){ft.className='wrap';ft.innerHTML=`<div class="foot">
 
 /* schede prodotto riutilizzabili */
 window.yCard=(p,i=0)=>`<a class="card up" href="${p.page}" data-cursor="Vedi" style="transition-delay:${(i%4)*.08}s">
- <figure>${p.tag?`<span class="tag">${p.tag}</span>`:''}${p.model?`<span class="tag t3d">In 3D</span>`:''}<img src="${p.img}" alt="${p.name}" loading="lazy"${ySet(p.img,'(max-width:700px) 50vw, 30vw')}><img class="alt" src="${p.gallery[1]||p.img}" alt="" loading="lazy"${ySet(p.gallery[1]||p.img,'(max-width:700px) 50vw, 30vw')}></figure>
+ <figure><img src="${p.card||p.img}" alt="${p.name}" loading="lazy"${ySet(p.card||p.img,'(max-width:700px) 50vw, 30vw')}><img class="alt" src="${p.card?p.img:(p.gallery[1]||p.img)}" alt="" loading="lazy"${ySet(p.card?p.img:(p.gallery[1]||p.img),'(max-width:700px) 50vw, 30vw')}></figure>
+ <div class="row"><span class="no num">N° ${String(window.YAMAT.products.findIndex(x=>x.id===p.id)+1).padStart(2,'0')}</span>${p.tag?`<em class="nota">${p.tag}</em>`:''}</div>
  <div class="row"><h3>${p.name}</h3><span class="price num">${p.price} €</span></div>
- <div class="row" style="border:0;padding:0;margin-top:-4px"><small>${p.short}</small><span class="buy">Scopri →</span></div></a>`;
+ <div class="row"><small>${p.short}</small></div></a>`;
 
 /* comparse */
 window.yReveal=()=>{const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('shown');io.unobserve(e.target)}}),{threshold:.14,rootMargin:'0px 0px -6% 0px'});

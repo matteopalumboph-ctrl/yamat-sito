@@ -27,8 +27,8 @@
 <style>
 .tabs{position:sticky;top:0;z-index:20;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding:calc(env(safe-area-inset-top,0px) + 86px) var(--gutter) 16px;background:linear-gradient(var(--night) 80%,transparent);margin-bottom:10px}
 .tabs::-webkit-scrollbar{display:none}
-.tabs a{flex:none;font:500 10px/1 var(--sans);letter-spacing:.24em;text-transform:uppercase;border:1px solid var(--line);border-radius:999px;padding:13px 18px;color:var(--bone-dim);transition:all .5s var(--ease)}
-.tabs a.on,.tabs a:hover{background:var(--bone);color:var(--night);border-color:var(--bone)}
+.tabs a{flex:none;font:italic 300 clamp(17px,1.5vw,21px)/1 var(--display);font-variation-settings:"SOFT" 100,"opsz" 60;border-bottom:1px solid transparent;padding:8px 0;margin-right:clamp(14px,2.4vw,34px);color:var(--bone-dim);transition:color .5s var(--ease),border-color .5s var(--ease)}
+.tabs a.on,.tabs a:hover{color:var(--bone);border-color:var(--gold)}
 .tier{padding-block:clamp(60px,10vh,120px);scroll-margin-top:150px}
 .tier .head h2 .n{font-variant-numeric:lining-nums}
 .big{display:grid;grid-template-columns:1.2fr 1fr;gap:clamp(30px,5vw,90px);align-items:center}
@@ -37,7 +37,7 @@
 .big h3{font-size:clamp(54px,7vw,120px)}
 .big p{max-width:40ch;opacity:.86}
 .big .row{display:flex;gap:20px;align-items:center;flex-wrap:wrap;margin-top:30px}
-.big .price{font-size:30px;color:var(--gold-2)}
+.big .price{font:400 15px/1 var(--sans);letter-spacing:.06em;color:var(--bone-dim)}
 @media (max-width:800px){.big{grid-template-columns:1fr}}
 .gift{position:relative;overflow:hidden;border:1px solid var(--line);border-radius:2px;display:grid;grid-template-columns:1fr 1fr;min-height:420px}
 .gift .card-g{display:grid;place-items:center;background:radial-gradient(120% 90% at 30% 20%,#1b2a22,var(--night));padding:40px}
@@ -70,19 +70,19 @@
   </section>
 
   <nav class="tabs" id="tabs" aria-label="Cifre">
-    <a href="#t40">Fino a 40 €</a><a href="#t60">Fino a 60 €</a><a href="#t90">Fino a 90 €</a><a href="#tbig">Il grande regalo</a><a href="#tgc">Buono regalo</a><a href="#tcal">Le date</a>
+    <a href="#t40">Il pensiero</a><a href="#t60">Il gesto</a><a href="#t90">L’oggetto</a><a href="#tbig">Il grande regalo</a><a href="#tgc">Il buono</a><a href="#tcal">Le date</a>
   </nav>
 
   <section class="wrap tier" id="t40">
-    <div class="head"><div><span class="label">Il pensiero</span><h2 class="display rvx" style="margin-top:22px"><span class="rv"><span>Fino a <em class="n">40 €</em></span></span></h2></div><p>Tre candele di soia con un solo accordo, o due peonie di cera da scegliere per colore. Il regalo che non ha bisogno di biglietto.</p></div>
+    <div class="head"><div><span class="label">Fino a 40 €</span><h2 class="display rvx" style="margin-top:22px"><span class="rv"><span>Il <em>pensiero</em></span></span></h2></div><p>Tre candele di soia con un solo accordo, o due peonie di cera da scegliere per colore. Il regalo che non ha bisogno di biglietto.</p></div>
     <div class="shop" data-ids="kitrelax,bloom"></div>
   </section>
   <section class="wrap tier" id="t60">
-    <div class="head"><div><span class="label">Il gesto</span><h2 class="display rvx" style="margin-top:22px"><span class="rv"><span>Fino a <em class="n">60 €</em></span></span></h2></div><p>Il cemento lavorato a mano, lo scrigno sigillato a ceralacca, le tre fiamme di Trilogy.</p></div>
+    <div class="head"><div><span class="label">Fino a 60 €</span><h2 class="display rvx" style="margin-top:22px"><span class="rv"><span>Il <em>gesto</em></span></span></h2></div><p>Il cemento lavorato a mano, lo scrigno sigillato a ceralacca, le tre fiamme di Trilogy.</p></div>
     <div class="shop" data-ids="scrigno,c01,c02d,trilogy"></div>
   </section>
   <section class="wrap tier" id="t90">
-    <div class="head"><div><span class="label">L’oggetto</span><h2 class="display rvx" style="margin-top:22px"><span class="rv"><span>Fino a <em class="n">90 €</em></span></span></h2></div><p>Kora, il bosco d’inverno in edizione limitata. L’Ovale, con le sue due fiamme, per le stanze grandi.</p></div>
+    <div class="head"><div><span class="label">Fino a 90 €</span><h2 class="display rvx" style="margin-top:22px"><span class="rv"><span>L’<em>oggetto</em></span></span></h2></div><p>Kora, il bosco d’inverno in edizione limitata. L’Ovale, con le sue due fiamme, per le stanze grandi.</p></div>
     <div class="shop" data-ids="kora,ovale"></div>
   </section>
 

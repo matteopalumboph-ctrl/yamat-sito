@@ -8,7 +8,7 @@ window.YAMAT = {
   shop: 'https://www.yamatcandle.com',
   products: [
     {
-      id: 'kora', page: 'kora.html', wid: '930f4fd8-b8b5-bc59-b994-eb10d7e88ad8', name: 'Kora', price: '79,99', wix: 'yamat-candle-kora', kind: 'cemento', tappa: 1,
+      id: 'kora', card: 'r/s01-X_kora_v1.jpg', page: 'kora.html', wid: '930f4fd8-b8b5-bc59-b994-eb10d7e88ad8', name: 'Kora', price: '79,99', wix: 'yamat-candle-kora', kind: 'cemento', tappa: 1,
       line: 'Il ceppo di muschio', short: 'Resina, muschio, pino',
       lead: 'La candela del bosco d’inverno.',
       body: 'Note di resina, muschio e pino, calde e profonde, che riempiono la stanza come l’aria di una baita dopo la neve. Il vaso è modellato a mano, il coperchio è sigillato con la ceralacca, lo stoppino è in legno e crepita piano mentre brucia, come un piccolo camino.',
@@ -20,7 +20,7 @@ window.YAMAT = {
       gallery: ['r/s01-X_kora_v1.jpg', 'r/s01-A_kora_v2.jpg', 'g/kora_1.jpg', 'g/kora_3.jpg', 'r/s01-B_kora_v1.jpg', 'g/kora_5.jpg']
     },
     {
-      id: 'ovale', page: 'ovale-double-04.html', wid: '79591adb-b83f-52b6-77b3-28298d15a030', name: 'Ovale Double .04', price: '89,99', wix: 'yamat-double-04', kind: 'cemento', tappa: 5,
+      id: 'ovale', card: 't5.jpg', page: 'ovale-double-04.html', wid: '79591adb-b83f-52b6-77b3-28298d15a030', name: 'Ovale Double .04', price: '89,99', wix: 'yamat-double-04', kind: 'cemento', tappa: 5,
       line: 'La radura', short: 'Due stoppini in legno',
       lead: 'Due fiamme in un solo vaso.',
       body: 'Un vaso ovale in cemento modellato a mano, con due stoppini in legno che bruciano e crepitano insieme. Pensata per le stanze grandi, dove una fiamma sola non basta.',
@@ -32,7 +32,7 @@ window.YAMAT = {
       gallery: ['g/ovale_0.jpg', 't5.jpg', 'g/ovale_1.jpg']
     },
     {
-      id: 'c01', page: 'candela-01.html', wid: 'c8539b66-7a44-fe18-affc-afec4be8562a', name: 'Candela .01', price: '49,99', wix: 'yamat-candle-03', kind: 'cemento', tappa: 2,
+      id: 'c01', card: 'r/c01_lotto.jpg', page: 'candela-01.html', wid: 'c8539b66-7a44-fe18-affc-afec4be8562a', name: 'Candela .01', price: '49,99', wix: 'yamat-candle-03', kind: 'cemento', tappa: 2,
       line: 'Tra le radici del faggio', short: 'Cemento, soia, legno',
       lead: 'La forma più essenziale di Yamat.',
       body: 'Un vaso in cemento modellato a mano, cera di soia e uno stoppino in legno che crepita piano mentre brucia. Il coperchio è di cemento, come il vaso: stessa materia, stessa mano.',
@@ -43,7 +43,7 @@ window.YAMAT = {
       gallery: ['g/c01_0.jpg', 'r/s02-A_01-02D_v2.jpg', 'g/c01_1.jpg', 't2.jpg']
     },
     {
-      id: 'c02d', page: 'candela-02d.html', wid: 'df19c1f7-07d8-a265-42f8-e8dfa824cc6e', name: 'Candela .02D', price: '49,99', wix: 'yamat-candle-01', kind: 'cemento', tappa: 2,
+      id: 'c02d', card: 'r/s02-B_02D_v2.jpg', page: 'candela-02d.html', wid: 'df19c1f7-07d8-a265-42f8-e8dfa824cc6e', name: 'Candela .02D', price: '49,99', wix: 'yamat-candle-01', kind: 'cemento', tappa: 2,
       line: 'Tra le radici del faggio', short: 'Cemento, soia, legno',
       lead: 'Il quadrato scuro, col suo coperchio di legno.',
       body: 'Un vaso quadrato in cemento resistente al calore, modellato a mano, con cera di soia e uno stoppino in legno che crepita piano mentre brucia.',

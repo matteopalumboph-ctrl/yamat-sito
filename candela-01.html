@@ -27,6 +27,7 @@
 <link rel="stylesheet" href="yamat.css">
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/"}}</script>
 <style>
+#buy{background:none;color:var(--bone);border:1px solid rgba(241,233,216,.55)}#buy:hover:not(:disabled){color:var(--night)}
 .pdp{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:clamp(30px,5vw,90px);padding:calc(env(safe-area-inset-top,0px) + 110px) var(--gutter) 0;align-items:start}
 .gal{display:grid;gap:14px}
 .gal figure{margin:0;overflow:hidden;border-radius:2px;background:var(--forest);cursor:zoom-in;position:relative}
@@ -41,16 +42,17 @@
 .crumb a:hover{color:var(--gold-2)}
 .info h1{font-size:clamp(52px,6.2vw,104px);margin-top:18px}
 .info .pr{display:flex;align-items:baseline;gap:18px;margin-top:26px}
-.info .pr .price{font-size:30px;color:var(--gold-2)}
+.info .pr .price{font-size:22px;letter-spacing:.02em;color:var(--bone)}
 .info .pr small{color:var(--bone-dim);font-size:13px}
 .lead{font:italic 300 clamp(20px,1.7vw,25px)/1.35 var(--display);font-variation-settings:"SOFT" 100,"WONK" 1,"opsz" 40;margin:30px 0 14px;color:var(--bone)}
 .body{color:var(--bone);opacity:.84;max-width:48ch;margin:0}
 .notes{display:flex;gap:10px;flex-wrap:wrap;margin-top:26px}
-.notes span{font:italic 300 17px/1 var(--display);border:1px solid var(--line);border-radius:999px;padding:11px 16px;color:var(--gold-2)}
+.notes span{font:italic 300 19px/1 var(--display);padding:6px 0;color:var(--gold-2)}
+.notes span + span::before{content:"·";margin-right:14px;color:var(--bone-dim);font-style:normal}
 .opts{margin-top:34px;display:grid;gap:22px}
 .opt h4{font:500 10px/1 var(--sans);letter-spacing:.28em;text-transform:uppercase;color:var(--bone-dim);margin:0 0 12px}
 .opt .ch{display:flex;gap:8px;flex-wrap:wrap}
-.opt .ch span,.opt .ch button{display:inline-flex;align-items:center;gap:10px;border:1px solid var(--line);border-radius:999px;padding:10px 15px;font-size:13px;background:none;color:var(--bone);line-height:1.2}
+.opt .ch span,.opt .ch button{display:inline-flex;align-items:center;gap:10px;border:1px solid var(--line);border-radius:2px;padding:10px 15px;font-size:13px;background:none;color:var(--bone);line-height:1.2}
 .opt .ch button{cursor:pointer;transition:border-color .4s,background .4s,color .4s}
 .opt .ch button:hover{border-color:var(--gold)}
 .opt .ch button.on{border-color:var(--gold-2);background:rgba(233,201,143,.12);color:var(--gold-2)}
@@ -85,7 +87,7 @@
 .v3d-copy p{margin:0;color:var(--bone);opacity:.84;max-width:36ch}
 .v3d-ctl{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-top:28px}
 .v3d-wax{display:flex;gap:8px}
-.v3d-wax button{appearance:none;background:rgba(7,11,9,.4);border:1px solid var(--line);color:var(--bone);border-radius:999px;padding:11px 14px;font-size:12.5px;display:inline-flex;gap:9px;align-items:center;cursor:pointer;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);transition:border-color .4s,color .4s}
+.v3d-wax button{appearance:none;background:rgba(7,11,9,.4);border:1px solid var(--line);color:var(--bone);border-radius:2px;padding:11px 14px;font-size:12.5px;display:inline-flex;gap:9px;align-items:center;cursor:pointer;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);transition:border-color .4s,color .4s}
 .v3d-wax button i{width:13px;height:13px;border-radius:50%;box-shadow:inset 0 0 0 1px rgba(255,255,255,.25)}
 .v3d-wax button[aria-pressed="true"]{border-color:var(--gold-2);color:var(--gold-2)}
 .v3d [data-fire][aria-pressed="true"]{background:var(--gold)}
@@ -114,7 +116,7 @@
 .inbosco h2{font-size:clamp(46px,6vw,100px);margin:20px 0 26px}
 @media (max-width:800px){.inbosco{align-items:end;min-height:92svh;padding-bottom:56px}.inbosco::after{background:linear-gradient(var(--night),transparent 22%,transparent 52%,rgba(7,11,9,.82) 78%,var(--night))}}
 
-.bar{position:fixed;left:10px;right:10px;bottom:calc(10px + env(safe-area-inset-bottom,0px));z-index:50;display:none;align-items:center;justify-content:space-between;gap:12px;background:rgba(12,20,17,.86);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid var(--line);border-radius:999px;padding:8px 8px 8px 22px;transform:translateY(140%);transition:transform .8s var(--ease)}
+.bar{position:fixed;left:10px;right:10px;bottom:calc(10px + env(safe-area-inset-bottom,0px));z-index:50;display:none;align-items:center;justify-content:space-between;gap:12px;background:rgba(12,20,17,.86);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid var(--line);border-radius:2px;padding:8px 8px 8px 22px;transform:translateY(140%);transition:transform .8s var(--ease)}
 .bar.on{transform:none}
 .bar b{font:300 18px/1.1 var(--display);font-variation-settings:"SOFT" 100,"opsz" 40;font-weight:300}
 .bar small{display:block;color:var(--gold-2);font-size:12px}
@@ -125,7 +127,7 @@
 .lb.on{opacity:1;visibility:visible}
 .lb img{max-width:92vw;max-height:86vh;object-fit:contain;transform:scale(.96);transition:transform .8s var(--ease)}
 .lb.on img{transform:none}
-.lb button{position:absolute;appearance:none;background:rgba(7,11,9,.4);border:1px solid var(--line);color:var(--bone);border-radius:999px;cursor:pointer;font:500 10px/1 var(--sans);letter-spacing:.24em;text-transform:uppercase;padding:14px 18px}
+.lb button{position:absolute;appearance:none;background:rgba(7,11,9,.4);border:1px solid var(--line);color:var(--bone);border-radius:2px;cursor:pointer;font:500 10px/1 var(--sans);letter-spacing:.24em;text-transform:uppercase;padding:14px 18px}
 .lb .x{top:calc(env(safe-area-inset-top,0px) + 20px);right:var(--gutter)}
 .lb .pv{left:var(--gutter);top:50%}.lb .nx{right:var(--gutter);top:50%}
 </style>
@@ -138,13 +140,13 @@
     <div class="crumb"><a href="collezione.html">Collezione</a><span>/</span><span>Candela .01</span></div>
     <span class="label">Tra le radici del faggio</span>
     <h1 class="display">Candela <em>.01</em></h1>
-    <div class="pr"><span class="price num">49,99 €</span><small>Spedizione gratuita in Italia</small></div>
+    <div class="pr"><span class="price num">49,99 €</span></div>
     <p class="lead">La forma più essenziale di Yamat.</p>
     <p class="body">Un vaso in cemento modellato a mano, cera di soia e uno stoppino in legno che crepita piano mentre brucia. Il coperchio è di cemento, come il vaso: stessa materia, stessa mano.</p>
     
     <div class="opts" id="opts"><div class="opt"><h4>Vaso</h4><div class="ch"><span><i style="background:#8f8f8a"></i>Grigio</span><span><i style="background:#9aa593"></i>Grigio salvia</span></div></div><div class="opt"><h4>Colore della cera</h4><div class="ch"><span><i style="background:#bcd9e4"></i>Celeste</span><span><i style="background:#efe6d2"></i>Panna</span><span><i style="background:#9fd3c7"></i>Verde acqua</span></div></div><div class="opt"><h4>Profumo</h4><div class="ch"><span>Melograno, pesca rossa, ylang-ylang</span><span>Pesca bianca, uva bianca</span><span>Mosto d’uva, orchidea</span></div></div></div>
     <div class="buybox"><button class="btn" id="buy" type="button" disabled>Aggiungi al carrello</button>
-      <p id="bmsg" role="status">Consegna in 2–4 giorni in Italia.</p></div>
+      <p id="bmsg" role="status">Consegna in 2–4 giorni, gratuita in Italia.</p></div>
     <div class="acc">
       <details open><summary>Materiali<i></i></summary><div class="in"><dl class="facts"><dt>Vaso</dt><dd>Cemento resistente al calore</dd><dt>Coperchio</dt><dd>Cemento, come il vaso</dd><dt>Cera</dt><dd>Soia</dd><dt>Stoppino</dt><dd>Legno a croce</dd></dl></div></details>
       <details><summary>Come si accende<i></i></summary><div class="in"><p>La prima volta lascia che la cera si sciolga fino ai bordi. Prima di ogni accensione accorcia lo stoppino. Mai più di quattro ore di fila, mai incustodita.</p><p><a class="lnk" href="cura.html">La guida alla cura</a></p></div></details>
@@ -161,18 +163,22 @@
   <div class="head"><div><span class="label">Nella stessa luce</span><h2 class="display rvx" style="margin-top:22px"><span class="rv"><span>Anche <em>queste</em></span></span></h2></div>
   <a class="lnk" href="collezione.html">Tutta la collezione</a></div>
   <div class="shop"><a class="card up" href="kora.html" data-cursor="Vedi" style="transition-delay:0s">
- <figure><span class="tag">Edizione limitata</span><img src="shop/kora.jpg" alt="Kora" loading="lazy" srcset="v/shop/kora-800.webp 800w, v/shop/kora-1600.webp 1600w" sizes="(max-width:700px) 50vw, 30vw" decoding="async" onerror="this.onerror=null;this.removeAttribute('srcset')"><img class="alt" src="r/s01-A_kora_v2.jpg" alt="" loading="lazy" srcset="v/r/s01-A_kora_v2-800.webp 800w, v/r/s01-A_kora_v2-1600.webp 1600w" sizes="(max-width:700px) 50vw, 30vw" decoding="async" onerror="this.onerror=null;this.removeAttribute('srcset')"></figure>
+ <figure><img src="r/s01-X_kora_v1.jpg" alt="Kora" loading="lazy" srcset="v/r/s01-X_kora_v1-800.webp 800w, v/r/s01-X_kora_v1-1600.webp 1600w" sizes="(max-width:700px) 50vw, 30vw" decoding="async" onerror="this.onerror=null;this.removeAttribute('srcset')"><img class="alt" src="shop/kora.jpg" alt="" loading="lazy" srcset="v/shop/kora-800.webp 800w, v/shop/kora-1600.webp 1600w" sizes="(max-width:700px) 50vw, 30vw" decoding="async" onerror="this.onerror=null;this.removeAttribute('srcset')"></figure>
+ <div class="row"><span class="no num">N° 01</span><em class="nota">Edizione limitata</em></div>
  <div class="row"><h3>Kora</h3><span class="price num">79,99 €</span></div>
- <div class="row" style="border:0;padding:0;margin-top:-4px"><small>Resina, muschio, pino</small><span class="buy">Scopri →</span></div></a><a class="card up" href="ovale-double-04.html" data-cursor="Vedi" style="transition-delay:0.08s">
- <figure><span class="tag">Pochi pezzi</span><img src="shop/ovale.jpg" alt="Ovale Double .04" loading="lazy" srcset="v/shop/ovale-800.webp 800w, v/shop/ovale-1600.webp 1600w" sizes="(max-width:700px) 50vw, 30vw" decoding="async" onerror="this.onerror=null;this.removeAttribute('srcset')"><img class="alt" src="t5.jpg" alt="" loading="lazy" srcset="v/t5-800.webp 800w, v/t5-1600.webp 1600w, v/t5-2560.webp 2560w" sizes="(max-width:700px) 50vw, 30vw" decoding="async" onerror="this.onerror=null;this.removeAttribute('srcset')"></figure>
+ <div class="row"><small>Resina, muschio, pino</small></div></a><a class="card up" href="ovale-double-04.html" data-cursor="Vedi" style="transition-delay:0.08s">
+ <figure><img src="t5.jpg" alt="Ovale Double .04" loading="lazy" srcset="v/t5-800.webp 800w, v/t5-1600.webp 1600w, v/t5-2560.webp 2560w" sizes="(max-width:700px) 50vw, 30vw" decoding="async" onerror="this.onerror=null;this.removeAttribute('srcset')"><img class="alt" src="shop/ovale.jpg" alt="" loading="lazy" srcset="v/shop/ovale-800.webp 800w, v/shop/ovale-1600.webp 1600w" sizes="(max-width:700px) 50vw, 30vw" decoding="async" onerror="this.onerror=null;this.removeAttribute('srcset')"></figure>
+ <div class="row"><span class="no num">N° 02</span><em class="nota">Pochi pezzi</em></div>
  <div class="row"><h3>Ovale Double .04</h3><span class="price num">89,99 €</span></div>
- <div class="row" style="border:0;padding:0;margin-top:-4px"><small>Due stoppini in legno</small><span class="buy">Scopri →</span></div></a><a class="card up" href="candela-02d.html" data-cursor="Vedi" style="transition-delay:0.16s">
- <figure><img src="shop/c02d.jpg" alt="Candela .02D" loading="lazy" srcset="v/shop/c02d-800.webp 800w, v/shop/c02d-1600.webp 1600w" sizes="(max-width:700px) 50vw, 30vw" decoding="async" onerror="this.onerror=null;this.removeAttribute('srcset')"><img class="alt" src="r/s02-B_02D_v2.jpg" alt="" loading="lazy" srcset="v/r/s02-B_02D_v2-800.webp 800w, v/r/s02-B_02D_v2-1600.webp 1600w" sizes="(max-width:700px) 50vw, 30vw" decoding="async" onerror="this.onerror=null;this.removeAttribute('srcset')"></figure>
+ <div class="row"><small>Due stoppini in legno</small></div></a><a class="card up" href="candela-02d.html" data-cursor="Vedi" style="transition-delay:0.16s">
+ <figure><img src="r/s02-B_02D_v2.jpg" alt="Candela .02D" loading="lazy" srcset="v/r/s02-B_02D_v2-800.webp 800w, v/r/s02-B_02D_v2-1600.webp 1600w" sizes="(max-width:700px) 50vw, 30vw" decoding="async" onerror="this.onerror=null;this.removeAttribute('srcset')"><img class="alt" src="shop/c02d.jpg" alt="" loading="lazy" srcset="v/shop/c02d-800.webp 800w, v/shop/c02d-1600.webp 1600w" sizes="(max-width:700px) 50vw, 30vw" decoding="async" onerror="this.onerror=null;this.removeAttribute('srcset')"></figure>
+ <div class="row"><span class="no num">N° 04</span></div>
  <div class="row"><h3>Candela .02D</h3><span class="price num">49,99 €</span></div>
- <div class="row" style="border:0;padding:0;margin-top:-4px"><small>Cemento, soia, legno</small><span class="buy">Scopri →</span></div></a><a class="card up" href="trilogy-flames.html" data-cursor="Vedi" style="transition-delay:0.24s">
+ <div class="row"><small>Cemento, soia, legno</small></div></a><a class="card up" href="trilogy-flames.html" data-cursor="Vedi" style="transition-delay:0.24s">
  <figure><img src="shop/trilogy.jpg" alt="Trilogy Flames" loading="lazy" srcset="v/shop/trilogy-800.webp 800w, v/shop/trilogy-1600.webp 1600w" sizes="(max-width:700px) 50vw, 30vw" decoding="async" onerror="this.onerror=null;this.removeAttribute('srcset')"><img class="alt" src="r/s03-A_trilogy_v2.jpg" alt="" loading="lazy" srcset="v/r/s03-A_trilogy_v2-800.webp 800w, v/r/s03-A_trilogy_v2-1600.webp 1600w" sizes="(max-width:700px) 50vw, 30vw" decoding="async" onerror="this.onerror=null;this.removeAttribute('srcset')"></figure>
+ <div class="row"><span class="no num">N° 05</span></div>
  <div class="row"><h3>Trilogy Flames</h3><span class="price num">59,99 €</span></div>
- <div class="row" style="border:0;padding:0;margin-top:-4px"><small>Tre candele senza vaso</small><span class="buy">Scopri →</span></div></a></div>
+ <div class="row"><small>Tre candele senza vaso</small></div></a></div>
 </section>
 <div class="bar" id="bar"><div><b>Candela .01</b><small class="num">49,99 €</small></div><button class="btn" id="barbuy" type="button">Aggiungi</button></div></main>
 <footer data-auto></footer>
@@ -216,13 +222,13 @@ document.getElementById('main').innerHTML=`
     <div class="crumb"><a href="collezione.html">Collezione</a><span>/</span><span>${P.name}</span></div>
     <span class="label">${P.tag?P.tag+' · ':''}${P.line}</span>
     <h1 class="display">${P.name.replace(/(\.\S+)$/,'<em>$1</em>')}</h1>
-    <div class="pr"><span class="price num">${P.price} €</span><small>Spedizione gratuita in Italia</small></div>
+    <div class="pr"><span class="price num">${P.price} €</span></div>
     <p class="lead">${P.lead}</p>
     <p class="body">${P.body}</p>
     ${hasProf?'':`<div class="notes">${P.notes.map(n=>`<span>${n}</span>`).join('')}</div>`}
     <div class="opts" id="opts">${opts}</div>
     <div class="buybox"><button class="btn" id="buy" type="button" disabled>Aggiungi al carrello</button>
-      <p id="bmsg" role="status">Consegna in 2–4 giorni in Italia.</p></div>
+      <p id="bmsg" role="status">Consegna in 2–4 giorni, gratuita in Italia.</p></div>
     <div class="acc">
       <details open><summary>Materiali<i></i></summary><div class="in"><dl class="facts">${facts}</dl></div></details>
       <details><summary>Come si accende<i></i></summary><div class="in"><p>La prima volta lascia che la cera si sciolga fino ai bordi. Prima di ogni accensione accorcia lo stoppino. Mai più di quattro ore di fila, mai incustodita.</p><p><a class="lnk" href="cura.html">La guida alla cura</a></p></div></details>
@@ -279,7 +285,7 @@ async function add(){if(!W||adding)return;const m=missing();
   if(m.length){paintOpts();const el=box.querySelector(`[data-o="${CSS.escape(m[0].name)}"]`);el.classList.add('need');el.scrollIntoView({behavior:'smooth',block:'center'});return}
   let options;if(W.productOptions.length){const v=W.manageVariants&&W.variants.find(v=>Object.entries(v.choices).every(([k,x])=>sel[k]===x));options=v?{variantId:v.id}:{options:{...sel}}}
   adding=true;paintOpts();
-  try{await yCart.add(P.wid,options,1);bmsg.textContent='Aggiunta al carrello. Consegna in 2–4 giorni in Italia.'}
+  try{await yCart.add(P.wid,options,1);bmsg.textContent='Aggiunta al carrello. Consegna in 2–4 giorni, gratuita in Italia.'}
   catch(e){bmsg.textContent='Non sono riuscito ad aggiungerla. Riprova tra un momento.'}
   finally{adding=false;paintOpts()}}
 buy.addEventListener('click',add);barb.addEventListener('click',add);
