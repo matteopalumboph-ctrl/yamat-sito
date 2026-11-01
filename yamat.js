@@ -35,7 +35,7 @@ if(ft){ft.className='wrap';ft.innerHTML=`<div class="foot">
   <div><h4>Scrivici</h4><ul><li><a href="mailto:yamatcandle@gmail.com">yamatcandle@gmail.com</a></li><li>Via Costalunga 34, Brescia</li><li><a href="https://www.instagram.com/yamat_candle/" target="_blank" rel="noopener">Instagram @yamat_candle</a></li></ul></div>
 </div>
 <div class="firma" aria-hidden="true"><i></i></div>
-<div class="fine"><span>© 2026 Yamat Candle · Artigianato italiano, fatto a mano a Brescia · <a href="https://www.iubenda.com/privacy-policy/42851129" target="_blank" rel="noopener">Privacy</a> · <a href="https://www.iubenda.com/privacy-policy/42851129/cookie-policy" target="_blank" rel="noopener">Cookie</a></span><span>Le foto del bosco e delle stanze sono generate con l’IA dalle foto dei prodotti</span></div>`}
+<div class="fine"><span>© 2026 Yamat Candle · Artigianato italiano, fatto a mano a Brescia · <a href="privacy.html">Privacy</a> · <a href="privacy.html#cookie">Cookie</a></span><span>Le foto del bosco e delle stanze sono generate con l’IA dalle foto dei prodotti</span></div>`}
 
 /* schede prodotto riutilizzabili */
 window.yCard=(p,i=0)=>`<a class="card up" href="${p.page}" data-cursor="Vedi" style="transition-delay:${(i%4)*.08}s">
@@ -198,7 +198,7 @@ if(tick.length&&!RM){let ly=scrollY,v=0;addEventListener('scroll',()=>{v=Math.ma
 
 if(FINE&&!RM){
   /* scorrimento morbido (non nel bosco: lì la camera ha già il suo) */
-  if(!HOME){const sc=document.createElement('script');sc.src='https://cdn.jsdelivr.net/npm/lenis@1.3.27/dist/lenis.min.js';
+  if(!HOME){const sc=document.createElement('script');sc.src='vendor/lenis-1.3.27/dist/lenis.min.js';
     sc.onload=()=>{try{const l=new window.Lenis({lerp:.09,wheelMultiplier:.95,anchors:true});window.yLenis=l;
       (function r(t){l.raf(t);requestAnimationFrame(r)})(performance.now());
       new MutationObserver(()=>{root.classList.contains('menu-open')||root.classList.contains('cart-open')?l.stop():l.start()}).observe(root,{attributes:true,attributeFilter:['class']});

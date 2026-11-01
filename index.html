@@ -21,13 +21,11 @@
 <meta property="og:url" content="https://www.yamatcandle.com/">
 <script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Organization", "@id": "https://www.yamatcandle.com/#org", "name": "Yamat Candle", "alternateName": "YAMÂT", "url": "https://www.yamatcandle.com/", "logo": "https://www.yamatcandle.com/icon-512.png", "image": "https://www.yamatcandle.com/og.jpg", "email": "yamatcandle@gmail.com", "sameAs": ["https://www.instagram.com/yamat_candle/"], "address": {"@type": "PostalAddress", "streetAddress": "Via Costalunga 34", "addressLocality": "Brescia", "addressCountry": "IT"}}, {"@type": "WebSite", "@id": "https://www.yamatcandle.com/#site", "url": "https://www.yamatcandle.com/", "name": "Yamat Candle", "inLanguage": "it", "publisher": {"@id": "https://www.yamatcandle.com/#org"}}, {"@type": "WebPage", "@id": "https://www.yamatcandle.com/#home", "url": "https://www.yamatcandle.com/", "name": "Yamat Candle · Candele artigianali in cemento, fatte a mano a Brescia", "isPartOf": {"@id": "https://www.yamatcandle.com/#site"}, "primaryImageOfPage": {"@type": "ImageObject", "url": "https://www.yamatcandle.com/og.jpg", "width": 1200, "height": 630}}]}</script>
 <meta name="description" content="Candele di cera di soia in vasi di cemento modellati a mano, con lo stoppino in legno che crepita. Fatte a Brescia. Entra nel bosco e scopri la collezione.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="yamat.css">
 <link rel="preload" as="image" href="t1m.jpg" media="(hover: none)" crossorigin="anonymous">
 <link rel="preload" as="image" href="t1.jpg" media="(hover: hover)" crossorigin="anonymous">
 <link rel="preload" as="image" href="t1s.jpg" crossorigin="anonymous">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,300..600,0..100,0..1;1,9..144,300..600,0..100,0..1&family=Figtree:wght@300;400;500&display=swap">
+<link rel="stylesheet" href="fonts/fonts.css">
 <style>
 :root{
   color-scheme: dark;
@@ -282,13 +280,13 @@ img{display:block;max-width:100%}
 <script src="data.js"></script>
 <script>document.body.dataset.clear="1"</script>
 <script src="yamat.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/CopyShader.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/LuminosityHighPassShader.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/EffectComposer.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/RenderPass.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/ShaderPass.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
+<script src="vendor/three-0.128.0/build/three.min.js"></script>
+<script src="vendor/three-0.128.0/examples/js/shaders/CopyShader.js"></script>
+<script src="vendor/three-0.128.0/examples/js/shaders/LuminosityHighPassShader.js"></script>
+<script src="vendor/three-0.128.0/examples/js/postprocessing/EffectComposer.js"></script>
+<script src="vendor/three-0.128.0/examples/js/postprocessing/RenderPass.js"></script>
+<script src="vendor/three-0.128.0/examples/js/postprocessing/ShaderPass.js"></script>
+<script src="vendor/three-0.128.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
 <script>
 (function(){
 const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
