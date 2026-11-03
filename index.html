@@ -307,7 +307,7 @@ document.querySelectorAll('a[href^="#"]').forEach(a=>a.addEventListener('click',
    come segnaposto mentre un gruppo arriva e come riserva per i browser senza WebCodecs. */
 const sec=document.getElementById('film'),cv=document.getElementById('fc'),cx=cv.getContext('2d',{alpha:false});
 const chaps=[...document.querySelectorAll('.chap')],pathBtns=[...document.querySelectorAll('.path button')],hero=document.getElementById('hero'),pathEl=document.getElementById('path');
-let F=null,imgs=[],ok=[],set='d',stops=[],cur=0,dirty=true,ready=false;
+let DIR=1,F=null,imgs=[],ok=[],set='d',stops=[],cur=0,dirty=true,ready=false;
 const VH={clip:[150,130,130,130,120],seam:105,intro:170};   // scorrimento in vh di ogni tratto
 
 /* sul telefono innerHeight cambia di continuo (la barra degli indirizzi entra ed esce mentre si scorre), mentre l'altezza del
@@ -340,7 +340,10 @@ const V={on:false,gen:0};if(/[?&]debug/.test(location.search))window.__V=V;   //
 function b64(t){const b=atob(t),u=new Uint8Array(b.length);for(let i=0;i<b.length;i++)u[i]=b.charCodeAt(i);return u}
 function videoChiudi(){V.on=false;V.gen++;try{V.dec&&V.dec.state!=='closed'&&V.dec.close()}catch(e){}(V.bm||[]).forEach(b=>b&&b.close())}
 async function videoApri(){
-  videoChiudi();const m=F.v&&F.v[set];if(!m||!('VideoDecoder' in window)||!('createImageBitmap' in window))return false;
+  /* sul telefono niente decodifica video nel browser (Matteo 3/11: «ha dei bug, non scorre fluido e pulito»): Safari si riprende
+     il decodificatore, butta le bitmap e blocca la pagina mentre prepara i fotogrammi. Il telefono usa la sequenza di foto
+     608x1080 (una ogni 2 fotogrammi, ~42 KB), come le pagine prodotto di Apple: ogni foto si disegna da sola, senza stato */
+  videoChiudi();if(set==='m')return false;const m=F.v&&F.v[set];if(!m||!('VideoDecoder' in window)||!('createImageBitmap' in window))return false;
   const cfg={codec:m.codec,codedWidth:m.w,codedHeight:m.h,description:b64(m.desc),optimizeForLatency:true};
   try{if(!(await VideoDecoder.isConfigSupported(cfg)).supported)return false}catch(e){return false}
   const G=m.sz.length,gen=V.gen;
@@ -398,8 +401,16 @@ async function carica(){
   const head=video?[0]:[];if(!video)for(let i=0;i<Math.min(24,F.n);i+=st)head.push(i);
   /* il velo si toglie col primo fotogramma del video, o dopo le prime 4 foto: su un 4G arriva entro 2 s */
   const q=[...head,...ord.filter(i=>!head.includes(i))];let k=0,doneN=0;const need=video?99:4;
-  const one=()=>{if(k>=q.length)return;const i=q[k++];const im=new Image();im.decoding='async';im.fetchPriority=k<=4?'high':video?'low':'auto';
-    im.onload=()=>{ok[i]=true;dirty=true;doneN++;if(!ready&&!video){document.getElementById('loadN').textContent=Math.min(100,Math.round(doneN/need*100))+'%';if(doneN>=need)pronto()}one()};
+  /* senza video la prossima foto è quella che serve per prima: 4 secondi di film avanti nella direzione dello scorrimento,
+     uno indietro; poi il resto a passi sempre più fitti */
+  const chiesta=new Uint8Array(F.n);
+  const prossima=()=>{
+    if(!video){const c=Math.round(cur/st)*st,d=DIR||1;
+      for(let j=0;j<=96;j+=st){const i=c+d*j;if(i>=0&&i<F.n&&!chiesta[i])return i}
+      for(let j=st;j<=24;j+=st){const i=c-d*j;if(i>=0&&i<F.n&&!chiesta[i])return i}}
+    while(k<q.length){const i=q[k++];if(!chiesta[i])return i}};
+  const one=()=>{const i=prossima();if(i===undefined)return;chiesta[i]=1;const im=new Image();im.decoding='async';im.fetchPriority=doneN<4?'high':video?'low':'auto';
+    im.onload=()=>{const fatto=()=>{ok[i]=true;dirty=true};(im.decode?im.decode().then(fatto,fatto):fatto());doneN++;if(!ready&&!video){document.getElementById('loadN').textContent=Math.min(100,Math.round(doneN/need*100))+'%';if(doneN>=need)pronto()}one()};
     im.onerror=()=>one();im.src=src(i);imgs[i]=im};
   for(let c=0;c<(video?2:6);c++)one();
 }
@@ -501,6 +512,7 @@ function tick(){
      si decodifica attorno a ciò che si vede, guardando verso dove si va */
   const passo=reduce?(target-cur):(target-cur)*.14;
   cur+=reduce?passo:Math.max(-2.4,Math.min(2.4,passo));
+  if(target!==cur)DIR=Math.sign(target-cur);
   segui(cur,Math.sign(target-cur));
   if(Math.abs(target-cur)<.01)cur=target;
   if(dirty||Math.abs(cur-last)>.002){draw(cur);last=cur;dirty=false}
