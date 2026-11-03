@@ -22,9 +22,9 @@
 <script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Organization", "@id": "https://www.yamatcandle.com/#org", "name": "Yamat Candle", "alternateName": "YAMÂT", "url": "https://www.yamatcandle.com/", "logo": "https://www.yamatcandle.com/icon-512.png", "image": "https://www.yamatcandle.com/og.jpg", "email": "yamatcandle@gmail.com", "sameAs": ["https://www.instagram.com/yamat_candle/"], "address": {"@type": "PostalAddress", "streetAddress": "Via Costalunga 34", "addressLocality": "Brescia", "addressCountry": "IT"}}, {"@type": "WebSite", "@id": "https://www.yamatcandle.com/#site", "url": "https://www.yamatcandle.com/", "name": "Yamat Candle", "inLanguage": "it", "publisher": {"@id": "https://www.yamatcandle.com/#org"}}, {"@type": "WebPage", "@id": "https://www.yamatcandle.com/#home", "url": "https://www.yamatcandle.com/", "name": "Yamat Candle · Candele artigianali in cemento, fatte a mano a Brescia", "isPartOf": {"@id": "https://www.yamatcandle.com/#site"}, "primaryImageOfPage": {"@type": "ImageObject", "url": "https://www.yamatcandle.com/og.jpg", "width": 1200, "height": 630}}]}</script>
 <meta name="description" content="Candele di cera di soia in vasi di cemento modellati a mano, con lo stoppino in legno che crepita. Fatte a Brescia. Entra nel bosco e scopri la collezione.">
 <link rel="stylesheet" href="yamat.css">
-<link rel="preload" as="image" href="t1m.jpg" media="(hover: none)" crossorigin="anonymous">
-<link rel="preload" as="image" href="t1.jpg" media="(hover: hover)" crossorigin="anonymous">
-<link rel="preload" as="image" href="t1s.jpg" crossorigin="anonymous">
+<link rel="preload" as="fetch" href="film/film.json" crossorigin="anonymous">
+<link rel="preload" as="image" href="film/m/0000.webp" media="(max-aspect-ratio: 9/10)" fetchpriority="high">
+<link rel="preload" as="image" href="film/d/0000.webp" media="(min-aspect-ratio: 9/10)" fetchpriority="high">
 <link rel="stylesheet" href="fonts/fonts.css">
 <style>
 :root{
@@ -73,35 +73,39 @@ img{display:block;max-width:100%}
 @keyframes fl{0%,100%{transform:scale(1,1) rotate(-1deg)}50%{transform:scale(.92,1.08) rotate(1.5deg)}}
 #load .n{font:300 12px/1 var(--sans);letter-spacing:.3em;color:var(--bone-dim);margin-top:20px}
 
-/* il volo nel bosco */
-#volo{position:relative;min-height:1310vh}
-/* il bosco è lungo fin dall'inizio: le foto della collezione, più in basso, non rubano banda alla prima tappa */
-@media (hover:none){#volo{min-height:1010vh}}
-#volo .stage{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden}
-#conta{position:absolute;left:var(--gutter);top:calc(env(safe-area-inset-top,0px) + 132px);display:flex;align-items:baseline;gap:8px;font:500 10px/1 var(--sans);letter-spacing:.26em;text-transform:uppercase;color:var(--bone-dim);opacity:0;transform:translateY(-6px);transition:opacity .8s var(--ease),transform .8s var(--ease);pointer-events:none;z-index:3}
-#conta.on{opacity:1;transform:none}
-#conta i{align-self:center;width:6px;height:15px;border-radius:50% 50% 45% 45%/60% 60% 40% 40%;background:radial-gradient(circle at 50% 70%,#fff4d6 0%,#ffc166 42%,rgba(255,140,40,0) 74%);filter:drop-shadow(0 0 6px rgba(255,170,80,.7));animation:fiam 1.6s ease-in-out infinite}
-#conta b{font:300 22px/1 var(--display);letter-spacing:0;color:var(--bone)}#conta span{letter-spacing:.1em}#conta em{font-style:normal;margin-left:4px}
-#conta.pieno b{color:var(--gold-2)}
-@keyframes fiam{0%,100%{transform:scaleY(1)}50%{transform:scaleY(.86) translateY(1px)}}
-.svela{margin:18px 0 0!important;font:500 10px/1.5 var(--sans)!important;letter-spacing:.3em;text-transform:uppercase;color:var(--gold-2);opacity:0!important;transform:translateY(8px);transition:opacity 1.4s var(--ease) .3s,transform 1.4s var(--ease) .3s;max-width:none!important}
-.svela span{color:var(--bone-dim);margin-right:10px}
-.chap.acceso .svela{opacity:1!important;transform:none}
-.chap.acceso h2{text-shadow:0 0 60px rgba(255,180,100,.22)}
-.path button.acc i{background:#f6c27c;border-color:#f6c27c;box-shadow:0 0 14px 3px rgba(255,165,80,.55)}
-#finale{position:absolute;left:50%;bottom:clamp(40px,10vh,110px);transform:translate(-50%,20px);width:min(520px,calc(100vw - 2*var(--gutter)));padding:34px 34px 30px;text-align:center;background:rgba(7,11,9,.62);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid rgba(233,201,143,.28);border-radius:4px;opacity:0;visibility:hidden;transition:opacity 1.4s var(--ease),transform 1.4s var(--ease),visibility 1.4s;z-index:5}
-#finale.on{opacity:1;visibility:visible;transform:translate(-50%,0)}
-#finale h3{font-size:clamp(34px,4vw,52px);margin:14px 0 12px;font-weight:300}
-#finale p{margin:0 auto 24px;max-width:36ch;color:var(--bone-dim);font-size:15px}
-#finale .x{position:absolute;top:10px;right:14px;background:none;border:0;color:var(--bone-dim);font-size:22px;cursor:pointer}
-#biglietto{position:absolute;left:0;top:0;width:230px;padding:18px 20px 16px;background:rgba(7,11,9,.66);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid rgba(233,201,143,.3);border-radius:3px;opacity:0;visibility:hidden;transition:opacity .5s var(--ease),visibility .5s;z-index:6;pointer-events:none}
-#biglietto.on{opacity:1;visibility:visible;pointer-events:auto}
-#biglietto .od{margin:6px 0 10px;font:500 10px/1.5 var(--sans);letter-spacing:.22em;text-transform:uppercase;color:var(--gold-2)}
-#biglietto h4{margin:0 0 12px;font-size:28px;font-weight:300;line-height:1.05}
-#biglietto .r{display:flex;align-items:center;justify-content:space-between;gap:12px}#biglietto .btn{padding:9px 16px;font-size:10px}
-#fhint{position:fixed;left:0;top:0;z-index:60;pointer-events:none;opacity:0;font:500 10px/1 var(--sans,Figtree,sans-serif);letter-spacing:.22em;text-transform:uppercase;color:#f3e3c4;text-shadow:0 0 12px rgba(0,0,0,.8);white-space:nowrap;transition:opacity .4s}
-.fcur,.fcur body,.fcur #volo *{cursor:none}
-#gl{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:pan-y;pointer-events:none}
+/* il film nel bosco: un solo piano sequenza che avanza con la rotella (2/11) */
+#film{position:relative;height:1100vh}
+#film .stage{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden;background:var(--night)}
+#fc{position:absolute;inset:0;width:100%;height:100%;display:block}
+/* velo in basso e ai lati: i titoli si leggono sempre, il bordo del film non si vede */
+#film .stage::before{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:linear-gradient(180deg,rgba(7,11,9,.62),rgba(7,11,9,.18) 14%,rgba(7,11,9,0) 26%,rgba(7,11,9,0) 52%,rgba(7,11,9,.72)),radial-gradient(ellipse 120% 90% at 50% 45%,rgba(7,11,9,0) 55%,rgba(7,11,9,.45))}
+.grana{position:absolute;inset:-50%;z-index:1;pointer-events:none;opacity:.07;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");animation:grana 1s steps(4) infinite}
+@keyframes grana{25%{transform:translate(-3%,2%)}50%{transform:translate(2%,-3%)}75%{transform:translate(-2%,-1%)}}
+#film .hero,#film .chap,#film .path,#film .sound{z-index:2}
+/* il titolo del capitolo scorre più lento del film: sale mentre la camera avanza */
+#film .chap{transform:translate3d(0,calc((.5 - var(--u,.5))*90px),0)}
+#film .chap h2{font-size:clamp(64px,10vw,172px)}
+/* le foglie che passano dal film alla collezione */
+.ponte{position:fixed;inset:0;z-index:40;pointer-events:none;overflow:hidden;visibility:hidden}
+.ponte.on{visibility:visible}
+.ponte img{position:absolute;left:0;top:0;width:var(--w);height:auto;will-change:transform;filter:drop-shadow(0 30px 40px rgba(0,0,0,.45))}
+.ponte img.lontana{filter:blur(3px) brightness(.8) drop-shadow(0 20px 30px rgba(0,0,0,.4))}
+.ponte img.vicina{filter:blur(1.5px) drop-shadow(0 40px 50px rgba(0,0,0,.5))}
+/* velo dietro al titolo d'apertura: il volo passa sopra l'orizzonte chiaro, il testo resta leggibile */
+#film .hero::before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(ellipse 60% 34% at 50% 48%,rgba(7,11,9,.55),rgba(7,11,9,.25) 55%,rgba(7,11,9,0) 100%)}
+#film .hero{text-shadow:0 1px 24px rgba(7,11,9,.45)}
+/* l'Ovale in volo dal film alla collezione */
+.ponte img.ovale{width:200px;opacity:0;transform-origin:50% 50%;filter:drop-shadow(0 30px 40px rgba(0,0,0,.55))}
+/* schermi bassi e larghi (fino a 800 px): il film resta a 16:9, quindi anche i capitoli tengono il loro lato */
+@media (max-width:800px) and (min-aspect-ratio:9/10){.chap.r{right:var(--gutter);left:auto;text-align:right}.chap.r p{margin-left:auto}.chap.r .row{justify-content:flex-end}.chap.r .num-big{left:auto;right:-.05em}}
+/* apertura: il volo parte sopra un cielo chiarissimo; un velo in alto tiene leggibili menu e «Suono del bosco» (GIANNI §12.3).
+   C'è solo finché c'è il titolo d'apertura, poi si spegne */
+#film .velo{position:absolute;left:0;right:0;top:0;height:240px;z-index:1;pointer-events:none;background:linear-gradient(180deg,rgba(7,11,9,.62),rgba(7,11,9,.35) 45%,rgba(7,11,9,0));transition:opacity 1.2s var(--ease)}
+#film .hero.off ~ .velo{opacity:0}
+/* il titolo della collezione sta sopra l'Ovale in volo e sopra le foglie (GIANNI §14.B) */
+#collezione .head{position:relative;z-index:41}
 .hero{position:absolute;inset:0;display:grid;place-items:center;text-align:center;padding-inline:var(--gutter);pointer-events:none;transition:opacity 1.2s var(--ease),transform 1.6s var(--ease)}
 .hero .label{display:block;margin-bottom:28px}
 .hero h1{font-size:clamp(58px,10.5vw,176px)}
@@ -149,7 +153,7 @@ img{display:block;max-width:100%}
 
 /* telefono: il prodotto in alto, il testo in basso su un velo scuro, mai uno sopra l'altro */
 @media (max-aspect-ratio:4/5){
-  #volo .stage::after{content:"";position:absolute;left:0;right:0;bottom:0;height:60%;background:linear-gradient(rgba(7,11,9,0),rgba(7,11,9,.8) 40%,rgba(7,11,9,.95));pointer-events:none;z-index:1}
+  #film .stage::after{content:"";position:absolute;left:0;right:0;bottom:0;height:60%;background:linear-gradient(rgba(7,11,9,0),rgba(7,11,9,.8) 40%,rgba(7,11,9,.95));pointer-events:none;z-index:1}
   .chap,.hero{z-index:2}
   .chap{bottom:calc(env(safe-area-inset-bottom,0px) + 26px);left:var(--gutter);right:var(--gutter);max-width:none}
   .chap h2{font-size:clamp(40px,11.5vw,58px)}
@@ -191,10 +195,10 @@ img{display:block;max-width:100%}
 
 
 <main>
-  <section id="volo" aria-label="Il viaggio nel bosco">
+  <section id="film" aria-label="Il viaggio nel bosco">
     <div class="stage">
-      <canvas id="gl" aria-hidden="true"></canvas>
-
+      <canvas id="fc" aria-hidden="true"></canvas>
+      <div class="grana" aria-hidden="true"></div>
       <div class="hero" id="hero">
         <div>
           <span class="label">Call of Wood · Brescia</span>
@@ -204,6 +208,7 @@ img{display:block;max-width:100%}
         </div>
       </div>
 
+      <div class="velo" aria-hidden="true"></div>
       <article class="chap r" data-c="0">
         <span class="num-big" aria-hidden="true">i</span>
         <span class="label fade">I · Il ceppo di muschio</span>
@@ -250,6 +255,7 @@ img{display:block;max-width:100%}
       <button class="sound" id="sound" type="button" aria-pressed="false"><b aria-hidden="true"><i></i><i></i><i></i></b><span>Suono del bosco</span></button>
     </div>
   </section>
+  <div class="ponte" id="ponte" aria-hidden="true"></div>
 
   <div class="after">
     <section id="collezione" class="sec wrap">
@@ -280,431 +286,224 @@ img{display:block;max-width:100%}
 <script src="data.js"></script>
 <script>document.body.dataset.clear="1"</script>
 <script src="yamat.js"></script>
-<script src="vendor/three-0.128.0/build/three.min.js"></script>
-<script src="vendor/three-0.128.0/examples/js/shaders/CopyShader.js"></script>
-<script src="vendor/three-0.128.0/examples/js/shaders/LuminosityHighPassShader.js"></script>
-<script src="vendor/three-0.128.0/examples/js/postprocessing/EffectComposer.js"></script>
-<script src="vendor/three-0.128.0/examples/js/postprocessing/RenderPass.js"></script>
-<script src="vendor/three-0.128.0/examples/js/postprocessing/ShaderPass.js"></script>
-<script src="vendor/three-0.128.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
 <script>
 (function(){
 const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
-const touch=matchMedia('(hover: none)').matches;
-const N=5, GAP=26, W=92, H=W*941/1672;
-const FOC=[[.21,.47],[.72,.49],[.2,.5],[.68,.5],[.5,.52]];
-/* fx = posizione del prodotto nella clip a 0-25-50-75-100%. Ogni clip ha due tagli, ingranditi con Real-ESRGAN (1/10):
-   w1..w5.mp4 orizzontale 1920x1080, p1..p5.mp4 per il telefono 1080x1440 (ritaglio largo PW della clip, da x0) */
-const PW=1080/2560;
-const VID={0:{id:1,n:121,fx:[.22,.22,.22,.21,.2],x0:0},1:{id:2,n:192,fx:[.75,.75,.74,.73,.73],x0:1356/2560},2:{id:3,n:192,fx:[.22,.23,.24,.28,.3],ps:1.1,py:.15,x0:128/2560},3:{id:4,n:192,fx:[.64,.64,.63,.63,.62],ps:1,py:.12,x0:1076/2560},4:{id:5,n:84,fx:[.5,.5,.5,.5,.5],ps:1,py:.02,x0:740/2560}};
-const SIDE=[1,-1,1,-1,-1];
-/* il gioco delle candele (sotto): tappe con la clip «spente» u1/u2/u4/u5.mp4 */
-const FIA=!reduce,SPEGNI=false,UCLIP={0:1,1:1,3:1,4:1};   // SPEGNI=false: le candele restano accese (22/10, Matteo: lo scorrimento con le spente lasciava aloni)
-const FLK=SPEGNI?UCLIP:{0:1,1:1,2:1,3:1,4:1};
 
 /* ---------- collezione: nomi, prezzi e foto dal negozio ---------- */
-document.getElementById('shop').innerHTML=window.YAMAT.products.map(yCard).join('');document.getElementById('shop').classList.add('feat');
+/* l'Ovale apre la collezione: è la candela con cui il film finisce, e ci si posa sopra (foglie e Ovale, più giù) */
+const LISTA=[...window.YAMAT.products].sort((a,b)=>(b.id==='ovale')-(a.id==='ovale'));
+/* le schede (18 foto da 1600 px) si montano solo quando la collezione si avvicina: prima viene il film (GIANNI §12, 4G) */
+const shopEl=document.getElementById('shop');shopEl.classList.add('feat');
+const monta=()=>{if(shopEl.childElementCount)return;shopEl.innerHTML=LISTA.map(yCard).join('');yReveal()};
+new IntersectionObserver((es,o)=>{if(es.some(e=>e.isIntersecting)){monta();o.disconnect()}},{rootMargin:'250% 0px'}).observe(shopEl);
 yReveal();
+document.querySelectorAll('a[href^="#"]').forEach(a=>a.addEventListener('click',e=>{const id=a.getAttribute('href').slice(1);const el=id==='inizio'?document.body:document.getElementById(id);if(!el)return;e.preventDefault();el.scrollIntoView({behavior:'smooth'})}));
 
-/* ---------- scorrimento morbido ---------- */
-let lenis=null;
-/* scorrimento nativo: funziona con rotella, trackpad e dita; la morbidezza la dà la camera */
-document.querySelectorAll('a[href^="#"]').forEach(a=>a.addEventListener('click',e=>{const id=a.getAttribute('href').slice(1);const el=id==='inizio'?document.body:document.getElementById(id);if(!el)return;e.preventDefault();lenis?lenis.scrollTo(id==='inizio'?0:el,{duration:2.2}):el.scrollIntoView({behavior:'smooth'})}));
-
-/* ---------- 3D ---------- */
-/* il bosco parte appena c'è la prima tappa (Kora) e le mappe di profondità, leggere; le altre foto arrivano mentre si guarda.
-   Sul telefono si scaricano le versioni da 1920 px (t1m…t5m.jpg): stessa resa sullo schermo piccolo, un terzo del peso. */
-const tex={};let done=0;
-const L=new THREE.TextureLoader();
-const pick=f=>touch&&!f.endsWith('s.jpg')?f.replace('.jpg','m.jpg'):f;
-const loadOne=f=>new Promise(r=>L.load(pick(f),t=>{const col=!f.endsWith('s.jpg');if(touch&&col&&t.image.width>2560){const c=document.createElement('canvas');c.width=2560;c.height=Math.round(t.image.height*2560/t.image.width);c.getContext('2d').drawImage(t.image,0,0,c.width,c.height);t.image=c}t.minFilter=col?THREE.LinearMipmapLinearFilter:THREE.LinearFilter;t.generateMipmaps=col;t.encoding=col?THREE.sRGBEncoding:THREE.LinearEncoding;tex[f]=t;r(t)},undefined,()=>r(null)));
-const first=['t1.jpg'];for(let i=1;i<=N;i++)first.push(`t${i}s.jpg`);
-Promise.all(first.map(f=>loadOne(f).then(()=>{done++;document.getElementById('loadN').textContent=Math.round(done/first.length*100)+'%'}))).then(()=>{init();
-  (async()=>{for(let i=2;i<=N;i++){const t=await loadOne(`t${i}.jpg`);if(t&&window.__setTex)window.__setTex(i-1,t)}})()});
-
-function init(){
-const cv=document.getElementById('gl');
-const R=new THREE.WebGLRenderer({canvas:cv,antialias:false,powerPreference:'high-performance'});
-/* nitidezza piena dello schermo (fino a 3x sul telefono, 2x sul computer); se il dispositivo non regge si scala da solo, vedi loop */
-let pr=Math.min(devicePixelRatio||1,touch?3:2);R.setPixelRatio(pr);
-const AN=Math.min(8,R.capabilities.getMaxAnisotropy());Object.keys(tex).forEach(f=>{if(!f.endsWith('s.jpg')){tex[f].anisotropy=AN;tex[f].needsUpdate=true}});
-/* finché la foto di una tappa non è arrivata, la tappa ha il colore della nebbia */
-const blank=new THREE.DataTexture(new Uint8Array([13,23,20,255]),1,1);blank.needsUpdate=true;
-window.__setTex=(i,t)=>{t.anisotropy=AN;t.needsUpdate=true;if(stations[i])stations[i].u.map.value=t};
-R.outputEncoding=THREE.sRGBEncoding;R.toneMapping=THREE.ACESFilmicToneMapping;R.toneMappingExposure=1.05;
-const S=new THREE.Scene();S.background=new THREE.Color(0x070b09);
-const FOG=new THREE.Color(0x0d1714);
-const cam=new THREE.PerspectiveCamera(52,1,.1,500);
-
-/* le tappe: fotografie vere trasformate in rilievo 3D con la mappa di profondità */
-const SX=[0,0,0,0,0];
-const stations=[];
-const segs=touch?[160,90]:[260,146];
-for(let i=0;i<N;i++){
-  const g=new THREE.PlaneGeometry(W,H,segs[0],segs[1]);
-  const u={map:{value:tex[`t${i+1}.jpg`]||blank},dep:{value:tex[`t${i+1}s.jpg`]},disp:{value:i===4?0:5},op:{value:1},time:{value:0},fogc:{value:FOG},camz:{value:0},glow:{value:1}};
-  const m=new THREE.ShaderMaterial({uniforms:u,transparent:true,depthWrite:false,
-    vertexShader:`uniform sampler2D dep;uniform float disp,time;varying vec2 vUv;varying float vD;varying vec3 vW;
-      void main(){vUv=uv;float d=texture2D(dep,uv).r;vD=d;vec3 p=position;p.z+=pow(d,1.25)*disp;
-        vec4 w=modelMatrix*vec4(p,1.);vW=w.xyz;gl_Position=projectionMatrix*viewMatrix*w;}`,
-    fragmentShader:`uniform sampler2D map;uniform float op,time,glow;uniform vec3 fogc;varying vec2 vUv;varying float vD;varying vec3 vW;
-      void main(){vec3 c=texture2D(map,vUv).rgb;
-        float warm=smoothstep(.62,.98,c.r)*smoothstep(.08,.35,c.r-c.b);
-        float fl=1.+warm*(sin(time*9.3)*.1+sin(time*14.7)*.08+sin(time*3.1)*.06+.18)*glow;
-        c*=fl;
-        float edge=smoothstep(0.,.05,vUv.x)*smoothstep(1.,.95,vUv.x)*smoothstep(0.,.06,vUv.y)*smoothstep(1.,.94,vUv.y);
-        float f=smoothstep(.0,.55,1.-vD)*.35;c=mix(c,fogc,f);
-        gl_FragColor=vec4(c,op*edge);}`});
-  const mesh=new THREE.Mesh(g,m);
-  mesh.position.set(0,0,-24-i*GAP);
-  
-  mesh.renderOrder=-i;
-  S.add(mesh);stations.push({mesh,u,z:mesh.position.z,px:(FOC[i][0]-.5)*W,py:(.5-FOC[i][1])*H});
-}
-
-/* clip del volo: fotogrammi guidati dallo scorrimento, su un piano davanti alla camera */
-S.add(cam);
-const vids={};
-Object.keys(VID).forEach(k=>{const v=VID[k];
-  // il video si sposta al fotogramma chiesto dallo scorrimento (codifica tutta a fotogrammi chiave: ricerca immediata)
-  const vd=document.createElement('video');vd.muted=true;vd.defaultMuted=true;vd.setAttribute('muted','');vd.setAttribute('playsinline','');vd.setAttribute('webkit-playsinline','');vd.playsInline=true;vd.preload='auto';
-  v.vd=vd;v.ready=false;v.seeking=false;v.want=0;v.kind='';
-  vd.addEventListener('loadeddata',()=>{v.n=Math.round(vd.duration*24);v.ts.value.set(vd.videoWidth,vd.videoHeight);v.ready=true;v.seeking=true;v.cur=0;vd.currentTime=.02});
-  vd.addEventListener('seeked',()=>{v.mdone=true;sinc(v)});
-  /* la stessa clip con le candele spente: si sposta allo stesso fotogramma e si mostra solo quando lo sono tutte e due */
-  v.uready=false;v.usf=-1;
-  if(FIA&&SPEGNI&&UCLIP[k]){const ud=document.createElement('video');ud.muted=true;ud.defaultMuted=true;ud.setAttribute('muted','');ud.setAttribute('playsinline','');ud.playsInline=true;ud.preload='auto';
-    v.ud=ud;ud.addEventListener('loadeddata',()=>{v.uready=true});ud.addEventListener('seeked',()=>{v.udone=true;sinc(v)});
-    v.utex=new THREE.Texture(ud);v.utex.encoding=THREE.sRGBEncoding;v.utex.minFilter=THREE.LinearFilter;v.utex.generateMipmaps=false}
-  const t=new THREE.Texture(vd);t.encoding=THREE.sRGBEncoding;t.minFilter=THREE.LinearFilter;t.generateMipmaps=false;
-  v.ts={value:new THREE.Vector2(1920,1080)};
-  const m=new THREE.Mesh(new THREE.PlaneGeometry(1,1),new THREE.ShaderMaterial({uniforms:{map:{value:t},ts:v.ts,opacity:{value:1},tint:{value:new THREE.Vector3(1.22,1.2,1.16)},fl:{value:[...Array(16)].map(()=>new THREE.Vector4())},fx:{value:new Array(16).fill(0)},wd:{value:new Array(16).fill(0)},gr:{value:new Array(16).fill(0)},va:{value:16/9},tm:{value:0},amb:{value:0},umap:{value:v.utex||blank},uok:{value:0},ux:{value:new THREE.Vector2(0,1)}},transparent:true,depthTest:false,depthWrite:false,
-    vertexShader:`varying vec2 vUv;void main(){vUv=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}`,
-    fragmentShader:`uniform sampler2D map;uniform vec2 ts;uniform float opacity;uniform vec3 tint;uniform vec4 fl[16];uniform float fx[16],wd[16],gr[16];uniform float va,tm,amb,uok;uniform sampler2D umap;uniform vec2 ux;varying vec2 vUv;
-      vec3 sl(vec3 c){return mix(pow(c*.9478672986+.0521327014,vec3(2.4)),c*.0773993808,vec3(lessThanEqual(c,vec3(.04045))));}
-      vec3 bic(vec2 uv){vec2 sp=uv*ts,tc=floor(sp-.5)+.5,f=sp-tc;
-        vec2 w0=f*(-.5+f*(1.-.5*f)),w1=1.+f*f*(-2.5+1.5*f),w2=f*(.5+f*(2.-1.5*f)),w3=f*f*(-.5+.5*f),w12=w1+w2;
-        vec2 a=(tc-1.)/ts,b=(tc+w2/w12)/ts,c=(tc+2.)/ts;
-        vec3 r=texture2D(map,vec2(a.x,a.y)).rgb*w0.x*w0.y+texture2D(map,vec2(b.x,a.y)).rgb*w12.x*w0.y+texture2D(map,vec2(c.x,a.y)).rgb*w3.x*w0.y
-              +texture2D(map,vec2(a.x,b.y)).rgb*w0.x*w12.y+texture2D(map,vec2(b.x,b.y)).rgb*w12.x*w12.y+texture2D(map,vec2(c.x,b.y)).rgb*w3.x*w12.y
-              +texture2D(map,vec2(a.x,c.y)).rgb*w0.x*w3.y+texture2D(map,vec2(b.x,c.y)).rgb*w12.x*w3.y+texture2D(map,vec2(c.x,c.y)).rgb*w3.x*w3.y;
-        return clamp(r,0.,1.);}
-      void main(){vec3 c=bic(vUv);
-        c=mix(pow(c*.9478672986+.0521327014,vec3(2.4)),c*.0773993808,vec3(lessThanEqual(c,vec3(.04045))));
-        /* il gioco: dentro la sagoma di ogni fiamma si passa dalla clip spenta (umap) a quella accesa; la fiamma sale dallo stoppino,
-           si piega al vento della fiammella; sulla candela spenta c'è lo stoppino scuro e la luce intorno cala */
-        float dim=0.;
-        for(int i=0;i<16;i++){vec4 F=fl[i];if(F.z<=0.)continue;
-          float h=F.z,L=F.w;vec2 d=vec2((vUv.x-F.x)*va,vUv.y-F.y);
-          if(abs(d.x)>h*4.5||d.y<-h*4.5||d.y>h*5.5)continue;
-          float g=exp(-dot(d,d)/(h*h*12.));dim+=g*(1.-L);
-          float k=smoothstep(1.,.72,length(vec2(d.x/(h*1.02),(d.y-h*.45)/(h*2.15))))*smoothstep(-h*.62,-h*.48,d.y);
-          if(k>.001){
-            float yy=clamp((d.y+h*.5)/(h*3.2),0.,1.),b=wd[i]*L;
-            float gg=gr[i];   // la fiamma si alza quando la fiammella si avvicina: si legge la clip stirata in alto dallo stoppino
-            if(abs(b)>.003||gg>.003){float wyv=F.y-h*.5;c=mix(c,sl(bic(vec2(vUv.x-b*h*yy*yy*.9/va,wyv+(vUv.y-wyv)/(1.+.28*gg)))),k);}
-            float top=-h*.6+smoothstep(0.,1.,L)*h*4.4,on=L>=1.?1.:(1.-smoothstep(top-h*.6,top,d.y))*(.72+.28*sin(tm*29.+float(i)*3.))*step(.001,L);
-            if(uok>.5)c=mix(c,sl(texture2D(umap,vec2(ux.x+vUv.x*ux.y,vUv.y)).rgb),k*(1.-on));}
-          /* l'alone: nella clip spenta è tolto anche il bagliore che la fiamma spandeva intorno; torna mentre la fiamma prende */
-          float rh=length(vec2(d.x,d.y-h*.6))/h,kh=(1.-smoothstep(2.3,3.6,rh))*(1.-k);   // solo il bagliore vicino allo stoppino; resta dentro la zona ripulita (4,2 h)
-          if(uok>.5&&kh>.001)c=mix(c,sl(texture2D(umap,vec2(ux.x+vUv.x*ux.y,vUv.y)).rgb),kh*(1.-smoothstep(.15,1.,L)));
-          float wx=d.x-sin((d.y+h*.5)*8./h)*h*.01;   // lo stoppino spento: un filo sottile e corto, appena piegato
-          float wk=(1.-smoothstep(h*.012,h*.026,abs(wx)))*smoothstep(-h*.55,-h*.51,d.y)*(1.-smoothstep(-h*.4,-h*.34,d.y));
-          c=mix(c,vec3(.03,.024,.02),wk*.7*uok*(1.-smoothstep(0.,.25,L)));
-          float kf=smoothstep(1.,.35,length(vec2(d.x/(h*.55),(d.y-h*.3)/(h*1.4))));c+=vec3(1.,.6,.28)*fx[i]*(kf*1.5+g*.5);
-          c*=1.+L*g*(sin(tm*9.3+float(i)*1.7)*.04+sin(tm*14.7+float(i)*2.3)*.03);}
-        c*=1.-.06*amb*uok;
-        gl_FragColor=vec4(c*tint,opacity);}`}));
-  m.material.opacity=1;
-  m.renderOrder=-100;m.position.z=-60;cam.add(m);v.mesh=m;v.tex=t;v.cur=-1;v.shown=false;vids[k]=v;
-  stations[+k].mesh.visible=false;stations[+k].video=true;});
-/* iPhone: Safari prepara i fotogrammi del video solo dopo un play(). Lo si avvia muto, una volta, e si ferma subito;
-   finché il video non ha un fotogramma pronto resta visibile la foto della tappa (mai un buco nel bosco) */
-const sblocca=()=>Object.values(vids).forEach(v=>{if(v.ud&&v.kind&&!v.uunl&&!v.utry){v.utry=true;const q=v.ud.play();if(q&&q.then)q.then(()=>{v.uunl=true;v.ud.pause();if(!v.uready&&v.ud.readyState>=2)v.uready=true}).catch(()=>{}).finally(()=>{v.utry=false});else v.utry=false}
-  if(!v.kind||v.unlocked||v.trying)return;v.trying=true;const p=v.vd.play();
-  if(p&&p.then)p.then(()=>{v.unlocked=true;v.vd.pause();if(!v.ready&&v.vd.readyState>=2)v.vd.dispatchEvent(new Event('loadeddata'))}).catch(()=>{}).finally(()=>{v.trying=false});else v.trying=false});
-if(location.search.includes('dbg'))window.__dbg={vids,stations,cam,R};sblocca();['touchstart','touchend','scroll','click'].forEach(e=>addEventListener(e,sblocca,{passive:true}));
-function pick(v){const kind=cam.aspect<.66?'p':'w';if(v.kind===kind)return;v.kind=kind;
-  v.va=kind==='p'?.75:16/9;v.K=kind==='p'?v.fx.map(x=>(x-v.x0)/PW):v.fx;
-  v.ready=false;v.shown=false;v.seeking=false;v.cur=-1;v.unlocked=false;v.vd.src=kind+v.id+'.mp4';v.vd.load();if(v.ud&&!v.ud.getAttribute('src')){v.ud.src='u'+v.id+'.mp4';v.ud.load()}sblocca();fitVideo(v);}
-function seekTo(v,j){if(!v.ready)return;v.want=j;if(v.seeking||j===v.cur)return;v.seeking=true;v.cur=j;const tt=Math.min(v.vd.duration-.02,(j+.5)/24);
-  v.mdone=false;v.udone=false;v.uwait=!!(v.ud&&v.uready);v.st=performance.now();v.vd.currentTime=tt;if(v.uwait)v.ud.currentTime=Math.min(v.ud.duration-.02,tt);}
-function sinc(v){if(!v.mdone||(v.uwait&&!v.udone))return;v.mdone=v.udone=false;const both=v.uwait;v.uwait=false;
-  v.sf=v.cur;v.seeking=false;v.tex.needsUpdate=true;if(both){v.utex.needsUpdate=true;v.usf=v.cur}v.shown=true;if(v.want!==v.cur)seekTo(v,v.want)}
-function fitVideo(v,f){if(!v.kind)return;if(f!==undefined)v.f=f;const K=v.K,t=(v.f||0)*(K.length-1),i=Math.min(K.length-2,Math.floor(t)),fx=K[i]+(K[i+1]-K[i])*(t-i);
-  const D=60,h=2*D*Math.tan(cam.fov*Math.PI/360),w=h*cam.aspect,va=v.va;
-  let W2=w,H2=w/va;if(H2<h){H2=h;W2=h*va}
-  /* sul telefono il prodotto sale nella metà alta: sotto c'è il testo */
-  const port=cam.aspect<1,ps=v.ps||1.2;if(port){W2*=ps;H2*=ps}
-  const maxS=(W2-w)/2;v.bw=W2;v.bh=H2;v.mesh.scale.set(W2,H2,1);v.mesh.position.x=THREE.MathUtils.clamp((.5-fx)*W2,-maxS,maxS);v.mesh.position.y=port?(v.py!==undefined?v.py:.2)*h:0;}
-
-/* raggi di luce tra gli alberi */
-const shaftTex=(()=>{const c=document.createElement('canvas');c.width=64;c.height=256;const g=c.getContext('2d');const gr=g.createLinearGradient(0,0,0,256);gr.addColorStop(0,'rgba(255,236,200,.55)');gr.addColorStop(1,'rgba(255,236,200,0)');g.fillStyle=gr;g.fillRect(0,0,64,256);const gx=g.createLinearGradient(0,0,64,0);gx.addColorStop(0,'rgba(0,0,0,1)');gx.addColorStop(.5,'rgba(0,0,0,0)');gx.addColorStop(1,'rgba(0,0,0,1)');g.globalCompositeOperation='destination-out';g.fillStyle=gx;g.fillRect(0,0,64,256);return new THREE.CanvasTexture(c)})();
-const shafts=[];
-for(let i=0;i<14;i++){const m=new THREE.Mesh(new THREE.PlaneGeometry(2.2+Math.random()*2.5,26),new THREE.MeshBasicMaterial({map:shaftTex,transparent:true,depthWrite:false,blending:THREE.AdditiveBlending,opacity:.05+Math.random()*.06,color:new THREE.Color().setHSL(.1+Math.random()*.05,.5,.75)}));
-  m.position.set((Math.random()-.5)*16,8,-8-Math.random()*(N*GAP));m.rotation.z=.35+Math.random()*.2;m.rotation.y=(Math.random()-.5)*.6;S.add(m);shafts.push(m)}
-
-/* nebbia bassa che scorre */
-const mistMat=new THREE.ShaderMaterial({transparent:true,depthWrite:false,blending:THREE.AdditiveBlending,uniforms:{time:{value:0}},
-  vertexShader:`varying vec2 vUv;varying vec3 vW;void main(){vUv=uv;vec4 w=modelMatrix*vec4(position,1.);vW=w.xyz;gl_Position=projectionMatrix*viewMatrix*w;}`,
-  fragmentShader:`uniform float time;varying vec2 vUv;varying vec3 vW;
-   float h(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5);}
-   float n(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix(mix(h(i),h(i+vec2(1,0)),f.x),mix(h(i+vec2(0,1)),h(i+vec2(1,1)),f.x),f.y);}
-   float fbm(vec2 p){float v=0.,a=.5;for(int i=0;i<5;i++){v+=a*n(p);p*=2.03;a*=.5;}return v;}
-   void main(){float f=fbm(vW.xz*.12+vec2(time*.03,time*.015));float e=smoothstep(0.,.25,vUv.x)*smoothstep(1.,.75,vUv.x);
-     gl_FragColor=vec4(vec3(.55,.66,.68)*f*f*.22*e,1.);}`});
-const mist=new THREE.Mesh(new THREE.PlaneGeometry(40,N*GAP+80,1,1),mistMat);mist.rotation.x=-Math.PI/2;mist.position.set(0,-.4,-(N*GAP)/2);S.add(mist);
-
-/* lucciole, polline e petali di luce, tutti in 3D */
-function points(n,spread,size,col,kind){
-  const g=new THREE.BufferGeometry(),a=new Float32Array(n*3),s=new Float32Array(n);
-  for(let i=0;i<n;i++){a[i*3]=(Math.random()-.5)*spread;a[i*3+1]=Math.random()*9-1.5;a[i*3+2]=12-Math.random()*(N*GAP+30);s[i]=Math.random()}
-  g.setAttribute('position',new THREE.BufferAttribute(a,3));g.setAttribute('seed',new THREE.BufferAttribute(s,1));
-  const m=new THREE.ShaderMaterial({transparent:true,depthWrite:false,blending:THREE.AdditiveBlending,uniforms:{time:{value:0},px:{value:R.getPixelRatio()},col:{value:new THREE.Color(col)},size:{value:size},kind:{value:kind}},
-    vertexShader:`attribute float seed;uniform float time,px,size,kind;varying float vA;
-      void main(){vec3 p=position;float t=time*(.12+seed*.2)+seed*60.;
-        if(kind<.5){p+=vec3(sin(t*1.3)*.6,sin(t*.9)*.35+cos(t*1.7)*.2,cos(t*1.1)*.6);vA=pow(max(0.,sin(time*(1.2+seed*1.8)+seed*30.)),3.);}
-        else{p.y=mod(p.y+time*(.04+seed*.05),9.)-1.5;p.x+=sin(t)*.4;vA=.25+seed*.35;}
-        vec4 mv=modelViewMatrix*vec4(p,1.);gl_Position=projectionMatrix*mv;
-        gl_PointSize=size*(.5+seed)*px*(22./-mv.z);vA*=smoothstep(60.,6.,-mv.z)*smoothstep(.6,2.,-mv.z);}`,
-    fragmentShader:`uniform vec3 col;varying float vA;void main(){float d=length(gl_PointCoord-.5);float a=smoothstep(.5,0.,d);a*=a;gl_FragColor=vec4(col*a*vA*1.6,a*vA);}`});
-  const p=new THREE.Points(g,m);S.add(p);return m;}
-const pm=[points(touch?260:520,18,6,0xffc877,0),points(touch?700:1500,20,1.6,0xe8ecd8,1)];
-
-/* il gioco del bosco: le candele delle clip sono spente e la fiammella le accende.
-   fiamme.json: le fiamme vere seguite fotogramma per fotogramma in ogni clip (u,v,altezza x1000).
-   u1/u2/u4/u5.mp4: le stesse clip con le candele spente, ripulite fotogramma per fotogramma con LaMa (nere fuori dalle fiamme);
-   lo shader passa dalla clip spenta a quella accesa solo dentro la sagoma della fiamma, e la fiamma sale dallo stoppino.
-   Il ruscello (tappa 3) resta acceso: la clip ha una dissolvenza tra due riprese, con due giri di fiamme. */
-let FL=null;const lit={},fxv={},wnd={},fatte={},gro={};let totC=0,accC=0,finito=false;
-const fi={on:false,x:innerWidth/2,y:innerHeight*.6,tx:innerWidth/2,ty:innerHeight*.6,vx:0,a:0,ui:false,first:true};
-if(FIA)fetch('fiamme.json').then(r=>r.json()).then(j=>{FL=j;Object.keys(FLK).forEach(k=>{if(!j[k])return;lit[k]=j[k].map(()=>SPEGNI?0:1);gro[k]=j[k].map(()=>({g:0,v:0,on:false}));fxv[k]=j[k].map(()=>0);wnd[k]=j[k].map(()=>({b:0,v:0}));totC+=j[k].length});contaUpd()}).catch(()=>{});
-const fMat=new THREE.ShaderMaterial({transparent:true,depthTest:false,depthWrite:false,blending:THREE.AdditiveBlending,uniforms:{t:{value:0},lean:{value:0},a:{value:0}},
-  vertexShader:`varying vec2 vUv;void main(){vUv=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}`,
-  fragmentShader:`uniform float t,lean,a;varying vec2 vUv;
-    float h(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5);}
-    float n(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix(mix(h(i),h(i+vec2(1,0)),f.x),mix(h(i+vec2(0,1)),h(i+vec2(1,1)),f.x),f.y);}
-    void main(){vec2 p=(vUv-vec2(.5,.3))*vec2(.8,1.);float y=p.y/.5;
-      float wob=(n(vec2(y*2.6-t*5.,t*1.7))-.5)*.07*max(y,0.);
-      p.x-=lean*y*y*.22+wob;
-      float w=.085*pow(max(0.,1.-y),.8)*sqrt(clamp((y+.22)*1.5,0.,1.));
-      float r=abs(p.x)/max(w,.0008);
-      float body=smoothstep(1.,.45,r)*smoothstep(1.,.8,y)*step(-.22,y);
-      float core=smoothstep(.65,.05,r)*smoothstep(.7,.15,y)*smoothstep(-.18,.02,y);
-      vec3 col=mix(vec3(1.,.36,.06),vec3(1.,.74,.36),body);col=mix(col,vec3(1.,.96,.86),core);
-      col=mix(col,vec3(.3,.45,1.),smoothstep(.12,-.15,y)*(1.-core)*.55);
-      vec2 q=vec2(p.x,p.y-.13)*vec2(1.,.75);float halo=(exp(-dot(q,q)*60.)*.45+exp(-dot(q,q)*14.)*.12)*smoothstep(.5,.25,abs(vUv.x-.5))*smoothstep(.5,.25,abs(vUv.y-.5));
-      float fl=.92+.08*sin(t*13.)+.05*sin(t*21.+1.);
-      gl_FragColor=vec4((col*body*1.7+vec3(1.,.55,.22)*halo)*a*fl,1.);}`});
-const fMesh=new THREE.Mesh(new THREE.PlaneGeometry(1,1),fMat);fMesh.renderOrder=999;fMesh.frustumCulled=false;cam.add(fMesh);fMesh.visible=false;
-/* particelle in pixel di schermo: scintille (si sommano alla luce) e fumo (grigio, quando una fiamma si spegne) */
-function sciame(n,add,col,alpha){const P=new Float32Array(n*3),A=new Float32Array(n),Z=new Float32Array(n),V=[];for(let i=0;i<n;i++){V.push({x:0,y:0,vx:0,vy:0,l:0,m:1,g:1,s:1});P[i*3+2]=-8}
-  const G=new THREE.BufferGeometry();G.setAttribute('position',new THREE.BufferAttribute(P,3));G.setAttribute('al',new THREE.BufferAttribute(A,1));G.setAttribute('sz',new THREE.BufferAttribute(Z,1));
-  const M=new THREE.ShaderMaterial({transparent:true,depthTest:false,depthWrite:false,blending:add?THREE.AdditiveBlending:THREE.NormalBlending,uniforms:{px:{value:R.getPixelRatio()},col:{value:new THREE.Color(...col)}},
-    vertexShader:`attribute float al,sz;uniform float px;varying float vA;void main(){vA=al;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);gl_PointSize=sz*px;}`,
-    fragmentShader:add?`uniform vec3 col;varying float vA;void main(){float d=length(gl_PointCoord-.5);float a=smoothstep(.5,0.,d);a*=a;gl_FragColor=vec4(col*a*vA*2.,1.);}`
-                      :`uniform vec3 col;varying float vA;void main(){float d=length(gl_PointCoord-.5);float a=smoothstep(.5,.05,d);gl_FragColor=vec4(col,a*a*vA*${alpha});}`});
-  const pts=new THREE.Points(G,M);pts.frustumCulled=false;pts.renderOrder=add?998:997;cam.add(pts);let I=0;
-  return {V,pts,emit(o){const e=V[I=(I+1)%n];Object.assign(e,{l:1,m:1,g:1,s:1},o);return e},
-    step(dt,U,sizeF){let any=false;for(let i=0;i<n;i++){const e=V[i];if(e.l>0){any=true;e.l-=dt/1000*(.9/e.m);e.vy-=dt*.004*e.g;e.x+=e.vx*dt/16;e.y+=e.vy*dt/16;e.vx*=.97;e.vy*=.985}
-      P[i*3]=(e.x-innerWidth/2)*U;P[i*3+1]=-(e.y-innerHeight/2)*U;A[i]=Math.max(0,e.l);Z[i]=sizeF(e)}
-      G.attributes.position.needsUpdate=G.attributes.al.needsUpdate=G.attributes.sz.needsUpdate=true;pts.visible=any;return any}}}
-const scin=sciame(220,true,[1,.62,.25]),fumo=sciame(90,false,[.62,.6,.58],.32);
-function spark(x,y,n,f){for(let j=0;j<n;j++){const an=Math.random()*Math.PI*2,s=(Math.random()*.7+.3)*f;
-  scin.emit({x:x+(Math.random()-.5)*6,y:y+(Math.random()-.5)*6,vx:Math.cos(an)*s,vy:Math.sin(an)*s*.6-f*.8,m:.5+Math.random()*.9})}}
-/* il profumo che si libera: scintille lente che salgono ondeggiando */
-function profumo(x,y,n){for(let j=0;j<n;j++)scin.emit({x:x+(Math.random()-.5)*30,y:y+(Math.random()-.5)*10,vx:(Math.random()-.5)*.6,vy:-.4-Math.random()*.6,g:-.05,m:2.2+Math.random()*1.6,s:.7})}
-function fumata(x,y){for(let j=0;j<16;j++)fumo.emit({x:x+(Math.random()-.5)*4,y:y-j*1.5,vx:(Math.random()-.5)*.35,vy:-.5-Math.random()*.5,g:-.02,m:1.3+Math.random()*.9,s:1})}
-const DF=8;const upx=()=>2*DF*Math.tan(cam.fov*Math.PI/360)/innerHeight;   // unità per pixel alla distanza della fiammella
-addEventListener('pointermove',e=>{if(e.pointerType!=='mouse')return;fi.tx=e.clientX;fi.ty=e.clientY;fi.on=true;
-  fi.ui=!!(e.target.closest&&e.target.closest('a,button,input,select,textarea,label,[role=button],.chap p,#finale,#biglietto'))});
-document.documentElement.addEventListener('mouseleave',()=>fi.on=false);
-/* sul telefono la fiammella è sopra il dito: si accendono sfiorandole mentre si scorre */
-const tPos=e=>{const t=e.touches[0];if(!t)return;if(!fi.on){fi.x=t.clientX;fi.y=t.clientY}fi.tx=t.clientX;fi.ty=t.clientY;fi.on=true;fi.ui=!!(e.target.closest&&e.target.closest('a,button,input,select,textarea,label,[role=button],#finale'))};
-addEventListener('touchstart',tPos,{passive:true});addEventListener('touchmove',tPos,{passive:true});
-addEventListener('touchend',e=>{if(!e.touches.length)fi.on=false},{passive:true});addEventListener('touchcancel',()=>fi.on=false,{passive:true});
-/* dove sta sullo schermo la fiamma c della clip k, adesso (in pixel) */
-function flamePx(v,F){const m=v.mesh,tn=Math.tan(cam.fov*Math.PI/360),hh=60*tn,ww=hh*cam.aspect;
-  let u=F[0]/1000;if(v.kind==='p')u=(u-v.x0)/PW;const vv=1-F[1]/1000,h=F[2]/1000;
-  const lx=m.position.x+(u-.5)*m.scale.x,ly=m.position.y+(vv+h*.3-.5)*m.scale.y;
-  const wy=m.position.y+(vv-h*.45-.5)*m.scale.y;
-  return {x:(lx/ww*.5+.5)*innerWidth,y:(1-(ly/hh*.5+.5))*innerHeight,wy:(1-(wy/hh*.5+.5))*innerHeight,h:h*m.scale.y/(2*hh)*innerHeight,u,v:vv,hu:h}}
-/* suoni, solo se il suono del bosco è acceso: il fuoco che prende, il fruscio dello spegnersi, una nota quando una tappa è tutta accesa */
-function suono(tipo){if(!ac||!master||master.gain.value<.01)return;const now=ac.currentTime;
-  if(tipo==='nota'){[523.25,659.25,783.99,1046.5].forEach((f,i)=>{const o=ac.createOscillator(),g=ac.createGain();o.type='sine';o.frequency.value=f;g.gain.setValueAtTime(0,now+i*.09);g.gain.linearRampToValueAtTime(.05,now+i*.09+.02);g.gain.exponentialRampToValueAtTime(.0001,now+i*.09+2.4);o.connect(g);g.connect(master);o.start(now+i*.09);o.stop(now+i*.09+2.5)});return}
-  const dur=tipo==='spegni'?.35:.5,o=ac.createBufferSource(),bb=ac.createBuffer(1,ac.sampleRate*dur,ac.sampleRate),dd=bb.getChannelData(0);
-  for(let i=0;i<dd.length;i++)dd[i]=(Math.random()*2-1)*Math.pow(1-i/dd.length,2.5)*Math.min(1,i/400);
-  o.buffer=bb;const f=ac.createBiquadFilter();f.type=tipo==='spegni'?'highpass':'lowpass';f.frequency.value=tipo==='spegni'?1400:900;const g=ac.createGain();g.gain.value=tipo==='spegni'?.18:.35;o.connect(f);f.connect(g);g.connect(master);o.start()}
-/* contatore, profumi svelati e finale */
-const stage=document.querySelector('#volo .stage');
-const conta=FIA&&SPEGNI?stage.appendChild(Object.assign(document.createElement('div'),{id:'conta',innerHTML:'<i aria-hidden="true"></i><b>0</b><span>/ 0</span><em>candele accese</em>'})):null;
-function contaUpd(){if(!conta)return;conta.querySelector('b').textContent=accC;conta.querySelector('span').textContent='/ '+totC;conta.classList.toggle('pieno',totC>0&&accC===totC)}
-const PRODT={0:'kora',1:'c02d',2:'trilogy',3:'fioritura',4:'ovale'};
-function nelLaria(k){const Y=window.YAMAT||{},id=PRODT[k],fam=(Y.accords||[]).find(f=>(f.in||[]).includes(id)),p=(Y.products||[]).find(p=>p.id===id);
-  return (fam?fam.words:(p&&p.notes||[]).join(' · ')).toLowerCase()}
-Object.keys(FLK).forEach(k=>{const ch=document.querySelector(`.chap[data-c="${k}"]`);if(!ch||!FIA)return;
-  const s=document.createElement('p');s.className='svela';s.innerHTML=`<span>Nell’aria</span> ${nelLaria(k)}`;ch.insertBefore(s,ch.querySelector('.row'))});
-const finale=FIA&&SPEGNI?stage.appendChild(Object.assign(document.createElement('div'),{id:'finale',innerHTML:'<span class="label">La radura</span><h3 class="display">Hai acceso <em>il bosco.</em></h3><p>Ogni candela Yamat è fatta per questo momento. Scegli la luce da portare a casa.</p><a class="btn" href="#collezione">Scegli la tua candela</a><button type="button" class="x" aria-label="Chiudi">×</button>'})):null;
-if(finale)finale.querySelector('.x').addEventListener('click',()=>finale.classList.remove('on'));
-function tappaAccesa(k,v){fatte[k]=true;suono('nota');
-  const ch=document.querySelector(`.chap[data-c="${k}"]`);if(ch)ch.classList.add('acceso');
-  const b=document.querySelector(`.path button[data-g="${k}"]`);if(b)b.classList.add('acc');
-  FL[k].forEach(T=>{const F=T[Math.min(T.length-1,Math.max(0,v.sf||0))];if(F[2]>0){const P=flamePx(v,F);profumo(P.x,P.y,10)}});
-  if(Object.keys(UCLIP).every(q=>!FL[q]||fatte[q])&&!finito){finito=true;setTimeout(()=>{if(finale)finale.classList.add('on');for(let j=0;j<60;j++)profumo(Math.random()*innerWidth,innerHeight*(.4+Math.random()*.5),1)},1400)}}
-function accendi(k,c,x,y){if(lit[k][c]>0)return;lit[k][c]=.001;fxv[k][c]=1;spark(x,y,22,2.2);fi.first=false;suono('accendi');accC++;contaUpd();document.documentElement.classList.add('fiacc')}
-function spegni(k,c,x,y){lit[k][c]=0;fumata(x,y);suono('spegni');accC--;contaUpd()}
-if(window.__dbg)Object.assign(window.__dbg,{fi,lit,flamePx,FL:()=>FL,fMat,fMesh,accendi});
-const hint=FIA?document.body.appendChild(Object.assign(document.createElement('div'),{id:'fhint',textContent:SPEGNI?(touch?'Sfiora le candele per accenderle':'Avvicinala alle candele'):(touch?'Tocca una fiamma':'Avvicina la fiamma a una candela')})):null;
-/* il biglietto: nome, profumo, prezzo e «Scopri» accanto alla candela che si sta guardando */
-const BIG={0:'kora',1:'c02d',2:'trilogy',3:'fioritura',4:'ovale'};
-const big=false&&FIA&&!SPEGNI&&!touch?stage.appendChild(Object.assign(document.createElement('div'),{id:'biglietto'})):null;let bigK=-1,bigT=0,bigOver=false;
-if(big){big.addEventListener('pointerenter',()=>bigOver=true);big.addEventListener('pointerleave',()=>bigOver=false)}
-function biglietto(k,P){fi.first=false;if(true){const ch=document.querySelector(`.chap[data-c="${k}"]`);if(ch)ch.classList.add('acceso');return}if(!big)return;const Y=window.YAMAT||{},p=(Y.products||[]).find(q=>q.id===BIG[k]);if(!p)return;
-  if(bigK!==k){bigK=k;const fam=(Y.accords||[]).find(f=>(f.in||[]).includes(p.id)),odore=(fam?fam.words:(p.notes||[]).join(' · '));
-    big.innerHTML=`<span class="label">Nell’aria</span><p class="od">${odore}</p><h4 class="display">${p.name}</h4><div class="r"><span class="price num">${p.price} €</span><a class="btn" href="${p.page}">Scopri</a></div>`}
-  const r=stage.getBoundingClientRect(),w=big.offsetWidth||230,hh=big.offsetHeight||150;
-  let x=P.x+Math.max(46,P.h*1.6);if(x+w>innerWidth-16)x=P.x-Math.max(46,P.h*1.6)-w;x=Math.max(16,Math.min(innerWidth-w-16,x));
-  const y=Math.min(innerHeight-hh-16,Math.max(80,P.y-hh*.55));
-  big.style.transform=`translate(${Math.round(x-r.left)}px,${Math.round(y-r.top)}px)`;big.classList.add('on');bigT=performance.now();fi.first=false}
-function fiammaUpdate(t,dt){
-  const ok=FIA&&FL;
-  /* la fiammella vola dietro al mouse con un ritardo morbido e si piega nella direzione opposta al movimento */
-  const k2=1-Math.pow(.0009,dt/1000);const px=fi.x;fi.x+=(fi.tx-fi.x)*k2;fi.y+=(fi.ty-fi.y)*k2;const FY=fi.y-(touch?60:0);   // sul telefono la fiammella sta sopra il dito, non sotto
-  const vx=(fi.x-px)/Math.max(dt,1)*16;fi.vx+=(vx-fi.vx)*.15;
-  const inBosco=sec.getBoundingClientRect().bottom>innerHeight*.6;
-  const want=FIA&&fi.on&&!fi.ui&&inBosco?1:0;fi.a+=(want-fi.a)*.12;
-  document.documentElement.classList.toggle('fcur',FIA&&fi.on&&!fi.ui&&inBosco&&!touch);
-  fMesh.visible=fi.a>.01;
-  const U=upx(),sz=58*U;
-  fMesh.scale.set(sz*1.25,sz*1.25,1);fMesh.position.set((fi.x-innerWidth/2)*U,-(FY-innerHeight/2)*U+sz*.2,-DF);
-  if(hint){if(touch){hint.style.transform=`translate(var(--gutter),${conta?(parseFloat(getComputedStyle(conta).top)||132)+30:132}px)`;hint.style.opacity=fi.first&&inBosco&&FL?.85:0}else{hint.style.transform=`translate(${fi.x+26}px,${fi.y-10}px)`;hint.style.opacity=fi.first&&FL?fi.a*.9:0}}
-  if(conta)conta.classList.toggle('on',!!FL&&inBosco&&sp>.02&&sp<.995);
-  if(big&&big.classList.contains('on')&&!bigOver&&performance.now()-bigT>(touch?4000:1600))big.classList.remove('on');
-  fMat.uniforms.t.value=t;fMat.uniforms.lean.value=THREE.MathUtils.clamp(-fi.vx*.05,-1.2,1.2);fMat.uniforms.a.value=fi.a;
-  if(fi.a>.5&&Math.abs(fi.vx)+Math.random()*2>2.2)spark(fi.x,FY-12,1,.6);
-  scin.step(dt,U,e=>(2+e.m*(e.s<1?1.2:3))*Math.max(0,e.l)+.01);fumo.step(dt,U,e=>(10+(1-e.l)*46)*e.s);
-  /* le candele: si accendono quando la base della fiammella tocca lo stoppino; la fiamma accesa si piega all'aria che le passa accanto,
-     e se la fiammella le sfreccia sopra velocissima si spegne con un filo di fumo (solo col mouse) */
-  Object.keys(vids).forEach(k=>{const v=vids[k],m=v.mesh.material.uniforms;m.tm.value=t;m.va.value=v.va||16/9;
-    m.uok.value=v.uready&&v.usf===v.sf?1:0;m.ux.value.set(v.kind==='p'?v.x0:0,v.kind==='p'?PW:1);
-    const T=ok&&FLK[k]&&FL[k];let un=0,n=0,acc=0;
-    for(let c=0;c<16;c++){const F=T&&T[c]&&T[c][Math.min(T[c].length-1,Math.max(0,v.sf||0))];
-      if(!F||F[2]<=0){m.fl.value[c].set(0,0,0,0);m.fx.value[c]=0;m.wd.value[c]=0;continue}
-      const P=flamePx(v,F),vis=v.mesh.material.opacity>.6,qy=Math.min(P.wy,Math.max(P.y-P.h*.9,FY)),dist=Math.hypot(P.x-fi.x,qy-FY);   // distanza dalla fiamma, dallo stoppino alla punta
-      if(SPEGNI){
-        if(lit[k][c]===0&&fi.a>.5&&vis&&dist<(touch?Math.max(18,P.h*.7):Math.max(10,P.h*.45)))accendi(k,c,P.x,P.wy);
-        else if(!touch&&lit[k][c]>=1&&fi.a>.5&&vis&&Math.abs(fi.vx)>40&&Math.hypot(P.x-fi.x,P.y-FY)<Math.max(14,P.h*1.2))spegni(k,c,P.x,P.wy);
-        if(lit[k][c]>0)lit[k][c]=Math.min(1,lit[k][c]+dt/900);fxv[k][c]*=Math.pow(.12,dt/1000);
-      }else{
-        /* candele accese: avvicinando la fiammella la fiamma si alza e si ravviva, la luce si scalda, e accanto compare il biglietto */
-        const near=vis&&fi.a>.5&&Math.hypot(P.x-fi.x,P.y-FY)<Math.max(30,P.h*2.2),gw=gro[k][c];
-        gw.v+=((near?1:0)-gw.g)*.07;gw.v*=.8;gw.g=Math.max(0,gw.g+gw.v);
-        fxv[k][c]+=((near?.3:0)-fxv[k][c])*.07;
-        if(near&&!gw.on){gw.on=true;spark(P.x,P.y-P.h*.6,8,1.1);suono('accendi')}else if(!near)gw.on=false;
-        if(near&&(+k!==4||c<2))biglietto(+k,P);
-      }
-      const w=wnd[k][c],infl=fi.a*Math.exp(-Math.pow(Math.hypot(P.x-fi.x,P.y-FY)/(P.h*4+40),2));
-      w.v+=(THREE.MathUtils.clamp(fi.vx*.05*infl,-1.3,1.3)-w.b)*.16;w.v*=.8;w.b+=w.v;   // molla: si piega e torna oscillando
-      const L=lit[k][c];m.fl.value[c].set(P.u,P.v,P.hu,L);m.fx.value[c]=fxv[k][c];m.wd.value[c]=w.b;m.gr.value[c]=SPEGNI?0:gro[k][c].g;un+=1-L;n++;if(L>=1)acc++}
-    m.amb.value=n?un/n:0;
-    if(SPEGNI&&T&&n&&acc===n&&!fatte[k])tappaAccesa(k,v);
-  });
-}
-
-/* post-produzione: bagliore delle fiamme, vignetta, grana */
-const comp=new THREE.EffectComposer(R);
-comp.addPass(new THREE.RenderPass(S,cam));
-const bloom=new THREE.UnrealBloomPass(new THREE.Vector2(512,512),touch?.6:.75,.8,.86);comp.addPass(bloom);
-/* il bagliore lavora sempre alla stessa scala (come prima), qualunque sia la risoluzione dello schermo: stessa resa, meno lavoro */
-const bset=bloom.setSize.bind(bloom);bloom.setSize=()=>bset(Math.round(cv.clientWidth*(touch?2:1.6)),Math.round(cv.clientHeight*(touch?2:1.6)));
-const fin=new THREE.ShaderPass({uniforms:{tDiffuse:{value:null},time:{value:0},asp:{value:1}},
-  vertexShader:`varying vec2 vUv;void main(){vUv=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}`,
-  fragmentShader:`uniform sampler2D tDiffuse;uniform float time,asp;varying vec2 vUv;
-   float h(vec2 p){return fract(sin(dot(p,vec2(12.9898,78.233)))*43758.5453);}
-   void main(){vec2 d=vUv-.5;float r=length(d*vec2(asp,1.));
-     vec3 c;c.r=texture2D(tDiffuse,vUv+d*.001).r;c.g=texture2D(tDiffuse,vUv).g;c.b=texture2D(tDiffuse,vUv-d*.001).b;
-     c*=mix(1.,.35,smoothstep(.35,1.05,r));
-     c=mix(c,c*vec3(1.05,1.,.92),.5);
-     c+=(h(gl_FragCoord.xy+fract(time)*vec2(37.,91.))-.5)*.04;
-     gl_FragColor=vec4(c,1.);}`});
-comp.addPass(fin);
-
-function size(){const w=cv.clientWidth,h=cv.clientHeight;R.setSize(w,h,false);comp.setSize(w,h);cam.aspect=w/h;
-  cam.fov=w<h?68:52;cam.updateProjectionMatrix();fin.uniforms.asp.value=w/h;Object.values(vids).forEach(v=>{if(v.kind)pick(v);fitVideo(v)});}
-size();addEventListener('resize',size);
-
-/* il percorso della camera: z avanza, x ondeggia verso ogni tappa */
-const sec=document.getElementById('volo');
-sec.style.height=(N*(touch?170:230)+160)+'vh';
+/* ---------- il film: le clip del bosco e i passaggi di camera (film/build_film.py) ----------
+   Ogni tratto ha la sua lunghezza di scorrimento: le candele restano più a lungo, i voli tra una e l'altra corrono.
+   È un video vero, 1920x1080 a 24 fotogrammi al secondo (Matteo 2/11: «bassissima qualità, non è fluido»): il sito scarica
+   gruppi da 12 fotogrammi e li decodifica al volo con WebCodecs, solo attorno al punto in cui si è. Le foto WebP piccole restano
+   come segnaposto mentre un gruppo arriva e come riserva per i browser senza WebCodecs. */
+const sec=document.getElementById('film'),cv=document.getElementById('fc'),cx=cv.getContext('2d',{alpha:false});
 const chaps=[...document.querySelectorAll('.chap')],pathBtns=[...document.querySelectorAll('.path button')],hero=document.getElementById('hero'),pathEl=document.getElementById('path');
-const Z0=stations[0].z+52, Z1=stations[N-1].z+30;
-let sp=0,mx=0,my=0,tmx=0,tmy=0,active=-2;
-addEventListener('pointermove',e=>{tmx=e.clientX/innerWidth-.5;tmy=e.clientY/innerHeight-.5});
-function prog(){const r=sec.getBoundingClientRect(),tot=sec.offsetHeight-innerHeight;return Math.min(1,Math.max(0,-r.top/tot))}
-const clock=new THREE.Clock();
-function target(i,d){const st=stations[i];const port=cam.aspect<1;
-  const vw=2*d*Math.tan(cam.fov*Math.PI/360)*cam.aspect, vh=vw/cam.aspect;
-  return {x:st.px+(port?0:SIDE[i]*.2*vw), y:st.py+(port?[-.22,-.22,-.22,-.2,-.08][i]:.16)*vh};}
-function camAt(p){
-  const z=Z0+(Z1-Z0)*p;
-  let i=0;for(let k=0;k<N;k++){if(z<=stations[k].z+32+.0001)i=k}
-  // i = tappa corrente (quella davanti che non abbiamo ancora superato)
-  let cur=0;for(let k=0;k<N;k++){if(z>stations[k].z+24)continue;cur=k+1}
-  cur=Math.min(cur,N-1);
-  const a=target(cur,Math.max(24,z-stations[cur].z));
-  let x=a.x,y=a.y;
-  if(cur<N-1){const s=stations[cur];const m=THREE.MathUtils.smoothstep(-(z-s.z),-32,-24);
-    if(m>0){const b=target(cur+1,z-stations[cur+1].z);x=x+(b.x-x)*m;y=y+(b.y-y)*m}}
-  return {x,y,z};
+let F=null,imgs=[],ok=[],set='d',stops=[],cur=0,dirty=true,ready=false;
+const VH={clip:[150,130,130,130,120],seam:105,intro:170};   // scorrimento in vh di ogni tratto
+
+function layout(){
+  const port=innerWidth<innerHeight*.9;set=port?'m':'d';
+  let y=0;stops=F.segs.map(s=>{
+    /* un tratto lento pesa di più: la rotella ci passa sopra più adagio (pesi cumulati, fotogramma per fotogramma) */
+    const w=[0];for(let f=s.a;f<s.b;f++){const sl=(F.slow||[]).find(r=>f>=r[0]&&f<r[1]);w.push(w[w.length-1]+(sl?sl[2]:1))}
+    const len=(s.k==='clip'?VH.clip[s.i]:s.i<0?VH.intro:VH.seam)*(port?.85:1)*w[w.length-1]/Math.max(1,s.b-s.a);
+    const o={...s,w,y0:y,y1:y+len};y+=len;return o});
+  sec.style.height=(y+100)+'vh';
+  lati();
 }
-let fN=0,fT=0,fL=performance.now(),ready0=false;
-function frame(){
-  const t=clock.getElapsedTime();
-  /* se il dispositivo non tiene il passo (sotto ~28 fotogrammi al secondo) si abbassa la risoluzione di mezzo punto, fino a 1.25 */
-  const now=performance.now(),dt=now-fL;fL=now;
-  if(t>2.5&&dt<250){fT+=dt;if(++fN>=50){if(fT/fN>36&&pr>1.25){pr=Math.max(1.25,pr-.5);R.setPixelRatio(pr);comp.setPixelRatio(pr);pm.forEach(m=>m.uniforms.px.value=pr);size()}fN=0;fT=0}}
-  const target=prog();sp+=(target-sp)*(reduce?1:.055);
-  mx+=(tmx-mx)*.04;my+=(tmy-my)*.04;
-  const c=camAt(sp);
-  const bob=reduce?0:Math.sin(t*.9)*.05;
-  cam.position.set(c.x+mx*.5,c.y+bob*.4-my*.25,c.z);
-  const look=new THREE.Vector3(c.x+mx*.2,c.y-my*.1,c.z-40);
-  cam.lookAt(look);
-  // tappe: si attraversano, dissolvendo appena la camera le raggiunge
-  let near=-1,best=1e9;
-  let vidMax=0;
-  Object.keys(vids).forEach(k=>{const v=vids[k],st=stations[+k];const d=cam.position.z-st.z;
-    // la clip copre la tappa da quando la vediamo (d=80) a quando la superiamo (d=24)
-    if(!v.kind&&d<104)pick(v);   // la clip si scarica quando la tappa si avvicina: la prima arriva subito, le altre non si rubano la banda
-    if(v.seeking&&v.mdone&&v.uwait&&performance.now()-v.st>1500){v.uwait=false;sinc(v)}
-    if(v.uready&&!v.seeking&&v.ready&&v.usf!==v.sf){v.cur=-1}
-    const f=THREE.MathUtils.clamp((52-d)/(52-30),0,1);seekTo(v,Math.round(f*(v.n-1)));if(cam.aspect<1)fitVideo(v,f);
-    /* passaggio tra le tappe: la clip che finisce avanza verso chi guarda e si spegne nel buio del bosco,
-       SOLO DOPO entra la candela successiva: mai due clip una sopra l'altra (prima sembrava un errore) */
-    const out=THREE.MathUtils.smoothstep(d,27,33),inn=+k===0?1-THREE.MathUtils.smoothstep(d,95,110):1-THREE.MathUtils.smoothstep(d,GAP+23,GAP+27);
-    v.mesh.material.opacity=out*inn;
-    if(v.bw){const z=1+(1-out)*.2-(1-inn)*.05*(+k>0?1:0);v.mesh.scale.set(v.bw*z,v.bh*z,1)}v.mesh.material.uniforms.opacity.value=v.mesh.material.opacity;v.mesh.visible=v.mesh.material.opacity>.003&&v.shown;if(v.mesh.visible)vidMax=Math.max(vidMax,v.mesh.material.opacity);});
-  /* il bosco si mostra solo quando il primo fotogramma della clip è pronto: prima si vedeva per un attimo la foto di riserva, inquadrata diversa */
-  if(!ready0&&((vids[0]&&vids[0].shown&&(!vids[0].ud||vids[0].usf===vids[0].sf))||t>7)){ready0=true;document.getElementById('load').classList.add('done')}
-  stations.forEach((s,i)=>{const d=cam.position.z-s.z;s.u.time.value=t;
-    s.u.op.value=THREE.MathUtils.smoothstep(d,24,32)*(1-THREE.MathUtils.smoothstep(d,95,130))*(1-vidMax);
-    s.mesh.visible=(!s.video||!(vids[i]&&vids[i].shown))&&s.u.op.value>.003&&(!s.video||d<60)&&(i>0||ready0);   // la foto di riserva solo per la tappa vicina: da lontano sembrava un riquadro appeso nel buio
-    if(d>31&&d<50&&d<best){best=d;near=i}});
-  const inHero=sp<.03;
+/* scorrimento → fotogramma (con la virgola) */
+function frameAt(){
+  const r=sec.getBoundingClientRect(),vh=innerHeight/100,y=-r.top/vh;
+  for(const s of stops){if(y<s.y1){const u=Math.max(0,(y-s.y0)/(s.y1-s.y0));return {f:pesato(s,u),s,u}}}
+  const s=stops[stops.length-1];return {f:s.b,s,u:1};
+}
+function pesato(s,u){const w=s.w,t=u*w[w.length-1];let k=0;while(k<w.length-2&&w[k+1]<t)k++;return s.a+k+Math.min(1,(t-w[k])/Math.max(1e-6,w[k+1]-w[k]))}
+function src(i){return `film/${set}/${String(i).padStart(4,'0')}.webp`}
+
+/* ---------- il video: gruppi da 12 fotogrammi (un fotogramma chiave + 11), decodificati quando servono ---------- */
+const V={on:false,gen:0};if(/[?&]debug/.test(location.search))window.__V=V;   // per le prove: index.html?debug
+function b64(t){const b=atob(t),u=new Uint8Array(b.length);for(let i=0;i<b.length;i++)u[i]=b.charCodeAt(i);return u}
+function videoChiudi(){V.on=false;V.gen++;try{V.dec&&V.dec.state!=='closed'&&V.dec.close()}catch(e){}(V.bm||[]).forEach(b=>b&&b.close())}
+async function videoApri(){
+  videoChiudi();const m=F.v&&F.v[set];if(!m||!('VideoDecoder' in window)||!('createImageBitmap' in window))return false;
+  const cfg={codec:m.codec,codedWidth:m.w,codedHeight:m.h,description:b64(m.desc),optimizeForLatency:true};
+  try{if(!(await VideoDecoder.isConfigSupported(cfg)).supported)return false}catch(e){return false}
+  const G=m.sz.length,gen=V.gen;
+  Object.assign(V,{on:true,m,cfg,G,bytes:new Array(G),req:new Uint8Array(G),gd:new Uint8Array(G),bm:new Array(F.n),dec:null,busy:false,inflight:0,wg:0,dir:1});
+  scarica(gen);return true}
+const gruppo=i=>Math.min(V.G-1,Math.max(0,Math.floor(i/V.m.g)));
+/* cosa serve adesso: il gruppo in cui si è, poi quelli nella direzione dello scorrimento, poi quello alle spalle */
+const vicini=()=>[V.wg,V.wg+V.dir,V.wg+2*V.dir,V.wg-V.dir,V.wg+3*V.dir].filter(g=>g>=0&&g<V.G);
+function scarica(gen){
+  while(V.on&&gen===V.gen&&V.inflight<3){
+    /* solo attorno a dove si è: 8 secondi di film avanti, 1 indietro. Chi non scorre fino in fondo non scarica tutto */
+    let g=vicini().find(g=>!V.req[g]);
+    if(g===undefined)for(let d=0;d<=16;d++){const h=V.wg+d*V.dir;if(h>=0&&h<V.G&&!V.req[h]){g=h;break}}
+    if(g===undefined)return;
+    V.req[g]=1;V.inflight++;
+    fetch(`film/v${set}/${String(g).padStart(4,'0')}.bin`).then(r=>{if(!r.ok)throw 0;return r.arrayBuffer()})
+      .then(b=>{if(gen!==V.gen)return;V.bytes[g]=new Uint8Array(b);V.inflight--;decodifica();scarica(gen)})
+      .catch(()=>{if(gen!==V.gen)return;V.inflight--;V.req[g]=0;setTimeout(()=>scarica(gen),1500)})}
+}
+function decoder(){
+  if(V.dec&&V.dec.state==='configured')return V.dec;const gen=V.gen;
+  V.dec=new VideoDecoder({output:fr=>{const i=Math.round(fr.timestamp*24/1e6);
+      createImageBitmap(fr).then(b=>{if(gen!==V.gen||!V.gd[gruppo(i)]){b.close();return}if(V.bm[i])V.bm[i].close();V.bm[i]=b;dirty=true;if(!ready&&i===0)pronto()})
+        .catch(()=>{}).finally(()=>fr.close())},
+    error:()=>{if(gen===V.gen){V.on=false;dirty=true}}});
+  V.dec.configure(V.cfg);return V.dec}
+/* i gruppi vicini si mettono in coda uno dietro l'altro, senza aspettare che il precedente sia finito;
+   flush solo quando la coda si svuota, per far uscire gli ultimi fotogrammi */
+function decodifica(){
+  if(!V.on)return;const dec=decoder(),gen=V.gen;
+  for(const g of vicini()){
+    if(!V.bytes[g]||V.gd[g])continue;if(dec.decodeQueueSize>24)break;
+    const sz=V.m.sz[g],u=V.bytes[g];let o=0;V.gd[g]=1;
+    sz.forEach((n,k)=>{const i=g*V.m.g+k;dec.decode(new EncodedVideoChunk({type:k?'delta':'key',timestamp:Math.round(i*1e6/24),data:u.subarray(o,o+n)}));o+=n})}
+  if(!V.busy&&dec.decodeQueueSize>0){V.busy=true;
+    dec.flush().then(()=>{if(gen!==V.gen)return;V.busy=false;libera();decodifica()}).catch(()=>{if(gen===V.gen)V.busy=false})}
+}
+/* in memoria solo i gruppi vicini: un fotogramma a 1920 sono 8 MB */
+function libera(){const tieni=new Set(vicini().slice(0,4));
+  for(let g=0;g<V.G;g++)if(V.gd[g]&&!tieni.has(g))V.gd[g]=0;
+  for(let i=0;i<F.n;i++)if(V.bm[i]&&!V.gd[gruppo(i)]){V.bm[i].close();V.bm[i]=null}}
+function segui(f,dir){if(!V.on)return;const g=gruppo(Math.round(f));if(dir)V.dir=dir;if(g!==V.wg){V.wg=g;libera();scarica(V.gen)}decodifica()}
+function pronto(){ready=true;document.getElementById('load').classList.add('done')}
+/* le foto: col video bastano i segnaposto (una ogni secondo); senza, si scaricano a passi, prima una ogni 16, poi 8, 4, 2 */
+async function carica(){
+  imgs=new Array(F.n);ok=new Array(F.n).fill(false);
+  const video=await videoApri(),st=F.st||1,passi=video?[24]:[16,8,4,2,1].filter(x=>x>=st);
+  const ord=[],seen=new Set();
+  for(const p of passi)for(let i=0;i<F.n;i+=p)if(!seen.has(i)){seen.add(i);ord.push(i)}
+  /* senza video le prime 24 immagini vengono davanti a tutto: è da lì che si parte */
+  const head=video?[0]:[];if(!video)for(let i=0;i<Math.min(24,F.n);i+=st)head.push(i);
+  /* il velo si toglie col primo fotogramma del video, o dopo le prime 4 foto: su un 4G arriva entro 2 s */
+  const q=[...head,...ord.filter(i=>!head.includes(i))];let k=0,doneN=0;const need=video?99:4;
+  const one=()=>{if(k>=q.length)return;const i=q[k++];const im=new Image();im.decoding='async';im.fetchPriority=k<=4?'high':video?'low':'auto';
+    im.onload=()=>{ok[i]=true;dirty=true;doneN++;if(!ready&&!video){document.getElementById('loadN').textContent=Math.min(100,Math.round(doneN/need*100))+'%';if(doneN>=need)pronto()}one()};
+    im.onerror=()=>one();im.src=src(i);imgs[i]=im};
+  for(let c=0;c<(video?2:6);c++)one();
+}
+/* il fotogramma più vicino che c'è: prima il video, poi le foto */
+const pic=i=>(V.on&&V.bm&&V.bm[i])||(ok[i]?imgs[i]:null);
+function vicino(i,dir){for(let d=0;d<32;d++){const j=i+dir*d;if(j>=0&&j<F.n&&pic(j))return j}return -1}
+function size(){const d=Math.min(devicePixelRatio||1,2);cv.width=Math.round(cv.clientWidth*d);cv.height=Math.round(cv.clientHeight*d);dirty=true}
+/* punto focale (GIANNI §12.1): sul computer il prodotto sta nella metà libera dal testo, intero.
+   Il capitolo col testo a destra vuole la candela a sinistra e viceversa; nei passaggi il punto scorre da un capitolo all'altro.
+   Se il taglio «cover» non basta a spostarla, l'immagine si ingrandisce un poco (al massimo del 14%). */
+let TX=[];
+/* la Fioritura è un gruppo largo (bouquet, candela e Scrigno): il suo centro sta più dentro, così lo Scrigno non tocca il bordo */
+const TXC={3:.56};
+function lati(){const wide=set==='d';TX=chaps.map((el,k)=>!wide?.5:TXC[k]??(el.classList.contains('r')?.34:.64))}
+function txAt(f){for(const s of stops){if(f<=s.b+.5){
+  if(s.k==='clip')return TX[s.i];const u=Math.min(1,Math.max(0,(f-s.a)/Math.max(1,s.b-s.a)));
+  const a=s.i<0?.5:TX[s.i],b=TX[s.i+1]??TX[s.i];return a+(b-a)*u}}return TX[TX.length-1]}
+let VIEW={s:1,ox:0,oy:0,iw:1,ih:1};
+function vista(f,im){
+  const W=cv.width,H=cv.height,iw=im.naturalWidth||im.width,ih=im.naturalHeight||im.height,s0=Math.max(W/iw,H/ih);
+  if(set!=='d'||!F.fx){VIEW={s:s0,ox:(W-iw*s0)/2,oy:(H-ih*s0)/2,iw,ih};return}
+  const fx=F.fx[Math.min(F.n-1,Math.max(0,Math.round(f)))],tx=txAt(f);
+  let need=s0;if(fx*iw*s0<W*tx)need=W*tx/(fx*iw);else need=Math.max(s0,W*(1-tx)/(iw*(1-fx)));
+  const s=Math.min(need,s0*1.14),ox=Math.min(0,Math.max(W-iw*s,W*tx-fx*iw*s));
+  VIEW={s,ox,oy:(H-ih*s)*.55,iw,ih};
+}
+function cover(im,al){const v=VIEW;cx.globalAlpha=al;cx.drawImage(im,v.ox,v.oy,v.iw*v.s,v.ih*v.s)}
+function draw(f){
+  const i0=Math.floor(f),t=f-i0;
+  if(V.on){V.draws=(V.draws||0)+1;if(!V.bm[i0])V.miss=(V.miss||0)+1}   // quante volte il video non era pronto (per le prove)
+  const a=vicino(i0,-1),b=vicino(i0+1,1);
+  if(a<0&&b<0)return;
+  vista(f,pic(a<0?b:a));
+  if(a<0||b<0||a===b){cover(pic(a<0?b:a),1);return}
+  const u=(f-a)/(b-a);
+  cover(pic(a),1);if(u>.02)cover(pic(b),Math.min(1,u));cx.globalAlpha=1;
+}
+
+/* ---------- foglie: dal film alla collezione, come se il vento le portasse giù ---------- */
+const ponte=document.getElementById('ponte');
+const FOGLIE=[{f:1,x:.12,w:190,v:1.25,r:-30,rv:160,cls:''},{f:3,x:.78,w:150,v:1.6,r:40,rv:-210,cls:''},{f:5,x:.42,w:110,v:.9,r:10,rv:120,cls:'lontana'},
+  {f:2,x:.9,w:90,v:.75,r:-60,rv:90,cls:'lontana'},{f:4,x:.25,w:260,v:2.1,r:20,rv:-140,cls:'vicina'}];
+const fogl=FOGLIE.map(o=>{const im=new Image();im.dataset.src=`film/foglia${o.f}.webp`;im.alt='';im.className=o.cls;im.style.setProperty('--w',`calc(${o.w}px * var(--sf,1))`);ponte.appendChild(im);return {o,im}});
+/* l'Ovale lascia il film e si posa sulla prima scheda della collezione (GIANNI §12.4).
+   Parte esattamente dov'è nell'ultimo fotogramma (riquadro in OV, in frazioni del fotogramma 1920x1080), cresce un poco
+   verso la camera, poi scende con le foglie e si appoggia sulla foto della scheda, dove svanisce. */
+const OV={x0:724/1920,y0:312/1080,x1:1214/1920,y1:759/1080},CARD={x0:.384,y0:.302,x1:.623};
+const ovv=new Image();ovv.dataset.src='film/ovale_volo.webp';ovv.alt='';ovv.className='ovale';ponte.appendChild(ovv);
+const ovCard=()=>document.querySelector('#shop .card[href="ovale-double-04.html"] figure');
+const ease=t=>t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;
+function ovale(rel){
+  const fig=ovCard();if(!fig||!F||rel<-.02){ovv.style.opacity=0;cv.style.opacity=1;return}
+  const r=sec.getBoundingClientRect(),dpr=cv.width/cv.clientWidth,v=VIEW;
+  /* dov'è l'Ovale sullo schermo, nel palco che sta salendo */
+  const st=sec.querySelector('.stage').getBoundingClientRect();
+  /* sul telefono il fotogramma è un taglio 608x1080 attorno al prodotto (build_film.py, crop_m): si riportano lì le frazioni */
+  let o=OV;if(set==='m'){const fx=F.fx[F.n-1],x=Math.min(Math.max(fx*1920-304,0),1920-608);o={x0:(OV.x0*1920-x)/608,x1:(OV.x1*1920-x)/608,y0:OV.y0,y1:OV.y1}}
+  const a={x:st.left+(v.ox+o.x0*v.iw*v.s)/dpr,y:st.top+(v.oy+o.y0*v.ih*v.s)/dpr,w:(o.x1-o.x0)*v.iw*v.s/dpr};
+  /* atterraggio: la foto della scheda (t5.jpg) è l'inquadratura finale del film; la candela lì sta in CARD (frazioni della foto).
+     Si rifà il taglio «cover» della figura, così l'Ovale in volo si posa esattamente sulla candela della foto e sparisce dentro. */
+  const c=fig.getBoundingClientRect(),im=fig.querySelector('img'),nw=im.naturalWidth||16,nh=im.naturalHeight||9;
+  const sc=Math.max(c.width/nw,c.height/nh)*1.02,iw=nw*sc,ih=nh*sc,ix=c.left+(c.width-iw)/2,iy=c.top+(c.height-ih)/2;
+  const b={x:ix+CARD.x0*iw,y:iy+CARD.y0*ih,w:(CARD.x1-CARD.x0)*iw};
+  /* arriva all'82% del tratto, poi resta posato e svanisce dentro la foto: mai due Ovali sfalsati */
+  /* il bosco si spegne mentre l'Ovale si alza: ne resta uno solo, quello che vola. Finché il bosco non è spento l'Ovale
+     resta incollato al suo posto nel film (k), poi si stacca, cresce verso la camera e scende */
+  const buio=Math.min(1,Math.max(0,rel/.16)),k=buio*buio;
+  cv.style.opacity=(1-buio).toFixed(3);   // a nero pieno: dell'Ovale del film non resta nemmeno l'etichetta (GIANNI §14.A)
+  const p=Math.min(1,Math.max(0,(rel-.02)/.95)),e=ease(Math.min(1,p/.82))*k,lift=Math.sin(Math.PI*Math.min(1,p*1.4))*.16*k;
+  /* traiettoria (GIANNI §14.B): curva larga sul lato destro, lontana dal titolo «Nove luci», che comunque le sta sopra;
+     l'Ovale rimpicciolisce presto, così sul telefono non esce dal bordo in basso */
+  const es=ease(Math.min(1,p/.45))*k,w=(a.w+(b.w-a.w)*es)*(1+lift);
+  const cxp=Math.min(innerWidth-w*.55,Math.max(a.x+a.w/2,b.x+b.w/2)+innerWidth*.2),cyp=(a.y+b.y)/2;
+  const ax=a.x+a.w/2,bx=b.x+b.w/2,ccx=(1-e)*(1-e)*ax+2*(1-e)*e*cxp+e*e*bx,ccy=(1-e)*(1-e)*a.y+2*(1-e)*e*cyp+e*e*b.y;
+  const yl=ccy-H_lift(p)*k*innerHeight,tt=Math.min(1,Math.max(0,(e-.7)/.3)),x=ccx-w/2,y=Math.min(yl,innerHeight-w*.95)*(1-tt)+yl*tt;   // dentro lo schermo finché vola, libero quando si posa
+  ovv.style.width=w+'px';ovv.style.transform=`translate3d(${x}px,${y}px,0) rotate(${Math.sin(Math.min(1,p/.82)*Math.PI)*-6}deg)`;
+  ovv.style.opacity=p<=0?0:p<.86?1:Math.max(0,(1-p)/.14);
+}
+const H_lift=p=>Math.sin(Math.PI*Math.min(1,p/.82))*.08;
+function foglie(){
+  const B=sec.offsetTop+sec.offsetHeight,y=scrollY,H=innerHeight;
+  const rel=(y+H-B)/H;   // 0: il bordo del film entra dal basso; 1: è in cima allo schermo
+  if(rel>-2.5&&!ovv.src){ponte.querySelectorAll('img[data-src]').forEach(im=>im.src=im.dataset.src);monta()}
+  const on=rel>-.15&&rel<2.2;ponte.classList.toggle('on',on);if(!on){if(rel<0)cv.style.opacity=1;return}
+  ovale(rel);
+  ponte.style.setProperty('--sf',innerWidth<700?.6:1);
+  fogl.forEach(({o,im},k)=>{const yy=H*(1.25-(rel+.1)*o.v)+k*40,xx=innerWidth*o.x+Math.sin(rel*3+k)*40-o.w/2;
+    im.style.transform=`translate3d(${xx}px,${yy}px,0) rotate(${o.r+rel*o.rv}deg)`});
+}
+
+/* ---------- il ciclo ---------- */
+let target=0,last=-1,active=-2;
+function tick(){
+  const p=frameAt();target=p.f;
+  segui(target,Math.sign(target-cur));
+  cur+=reduce?(target-cur):(target-cur)*.14;
+  if(Math.abs(target-cur)<.01)cur=target;
+  if(dirty||Math.abs(cur-last)>.002){draw(cur);last=cur;dirty=false}
+  /* titoli: ogni candela ha il suo, solo mentre la camera è ferma su di lei */
+  const s=p.s,intro=stops[0].i<0,inHero=intro?(s.i<0&&p.u<.55):(s.k==='clip'&&s.i===0&&p.u<.16);
   hero.classList.toggle('off',!inHero);
-  const act=inHero?-1:near;
+  const act=!inHero&&s.k==='clip'&&p.u<.94?s.i:-1;
   if(act!==active){active=act;chaps.forEach((el,k)=>el.classList.toggle('on',k===act))}
-  pathBtns.forEach((b,k)=>b.classList.toggle('on',k===near&&!inHero));
-  pathEl.style.setProperty('--p',sp.toFixed(4));
-  pm.forEach(m=>m.uniforms.time.value=t);mistMat.uniforms.time.value=t;fin.uniforms.time.value=t;fiammaUpdate(t,Math.min(dt,80));
-  shafts.forEach((m,i)=>{m.material.opacity=(.05+.04*Math.sin(t*.3+i))*(1-THREE.MathUtils.smoothstep(sp,.9,1))});
-  comp.render();
+  if(act>=0)chaps[act].style.setProperty('--u',(s.i===0&&!intro?(p.u-.16)/.78:p.u).toFixed(3));
+  const tot=stops[stops.length-1].y1;pathEl.style.setProperty('--p',Math.min(1,(s.y0+(s.y1-s.y0)*p.u)/tot).toFixed(4));
+  pathBtns.forEach((b,k)=>b.classList.toggle('on',k===Math.max(0,s.i)&&!inHero));
+  foglie();
+  requestAnimationFrame(tick);
 }
-(function loop(){frame();requestAnimationFrame(loop)})();if(window.__dbg)window.__dbg.frame=frame;
-pathBtns.forEach(b=>b.addEventListener('click',()=>{const k=+b.dataset.g;const z=stations[k].z+42;const p=(z-Z0)/(Z1-Z0);
-  const top=sec.offsetTop+(sec.offsetHeight-innerHeight)*p;lenis?lenis.scrollTo(top,{duration:2.6}):scrollTo({top,behavior:'smooth'})}));
-}
-setTimeout(()=>document.getElementById('load').classList.add('done'),12000);
+pathBtns.forEach(b=>b.addEventListener('click',()=>{const k=+b.dataset.g;const s=stops.find(x=>x.k==='clip'&&x.i===k);
+  const vh=innerHeight/100;scrollTo({top:sec.offsetTop+(s.y0+(s.y1-s.y0)*.2)*vh,behavior:'smooth'})}));
+fetch('film/film.json').then(r=>r.json()).then(j=>{F=j;layout();size();carica();cur=frameAt().f;requestAnimationFrame(tick)});
+addEventListener('resize',()=>{if(!F)return;const was=set;layout();size();if(set!==was)carica()});
+setTimeout(()=>document.getElementById('load').classList.add('done'),9000);
 
 /* ---------- suono del bosco, generato ---------- */
 let ac=null,master=null;
