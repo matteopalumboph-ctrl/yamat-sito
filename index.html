@@ -348,7 +348,7 @@ async function videoApri(){
   scarica(gen);return true}
 const gruppo=i=>Math.min(V.G-1,Math.max(0,Math.floor(i/V.m.g)));
 /* cosa serve adesso: il gruppo in cui si è, poi quelli nella direzione dello scorrimento, poi quello alle spalle */
-const vicini=()=>(set==='m'?[V.wg,V.wg+V.dir,V.wg+2*V.dir,V.wg+3*V.dir,V.wg-V.dir,V.wg+4*V.dir,V.wg+5*V.dir]:[V.wg,V.wg+V.dir,V.wg+2*V.dir,V.wg-V.dir,V.wg+3*V.dir]).filter(g=>g>=0&&g<V.G);
+const vicini=()=>(set==='m'?[V.wg,V.wg+V.dir,V.wg+2*V.dir,V.wg-V.dir,V.wg+3*V.dir,V.wg+4*V.dir]:[V.wg,V.wg+V.dir,V.wg+2*V.dir,V.wg-V.dir,V.wg+3*V.dir]).filter(g=>g>=0&&g<V.G);
 function scarica(gen){
   while(V.on&&gen===V.gen&&V.inflight<3){
     /* solo attorno a dove si è: 8 secondi di film avanti, 1 indietro. Chi non scorre fino in fondo non scarica tutto */
@@ -361,25 +361,29 @@ function scarica(gen){
       .catch(()=>{if(gen!==V.gen)return;V.inflight--;V.req[g]=0;setTimeout(()=>scarica(gen),1500)})}
 }
 function decoder(){
-  if(V.dec&&V.dec.state==='configured')return V.dec;const gen=V.gen;
+  if(V.dec&&V.dec.state==='configured')return V.dec;const gen=V.gen;try{V.dec&&V.dec.state!=='closed'&&V.dec.close()}catch(e){}
   V.dec=new VideoDecoder({output:fr=>{const i=Math.round(fr.timestamp*24/1e6);
-      createImageBitmap(fr).then(b=>{if(gen!==V.gen||!V.gd[gruppo(i)]){b.close();return}if(V.bm[i])V.bm[i].close();V.bm[i]=b;dirty=true;if(!ready&&i===0)pronto()})
+      createImageBitmap(fr).then(b=>{if(gen!==V.gen||!V.gd[gruppo(i)]){b.close();return}V.err=0;if(V.bm[i])V.bm[i].close();V.bm[i]=b;dirty=true;if(!ready&&i===0)pronto()})
         .catch(()=>{}).finally(()=>fr.close())},
-    error:()=>{if(gen===V.gen){V.on=false;dirty=true}}});
+    /* il telefono si riprende il decodificatore quando si resta fermi o la memoria serve ad altro: prima il film passava per
+       sempre alle foto di riserva (una ogni 8 fotogrammi, sfumate: i «lampi» di Matteo 3/11). Ora se ne apre un altro e si
+       ridecodifica attorno a dove si è; i fotogrammi già pronti restano */
+    error:()=>{if(gen!==V.gen)return;V.dec=null;V.busy=false;V.gd.fill(0);V.err=(V.err||0)+1;
+      if(V.err>8){V.on=false;dirty=true;return}setTimeout(()=>{if(gen===V.gen)decodifica()},50)}});
   V.dec.configure(V.cfg);return V.dec}
 /* i gruppi vicini si mettono in coda uno dietro l'altro, senza aspettare che il precedente sia finito;
    flush solo quando la coda si svuota, per far uscire gli ultimi fotogrammi */
 function decodifica(){
   if(!V.on)return;const dec=decoder(),gen=V.gen;
   for(const g of vicini()){
-    if(!V.bytes[g]||V.gd[g])continue;if(dec.decodeQueueSize>(set==='m'?48:24))break;
+    if(!V.bytes[g]||V.gd[g])continue;if(dec.decodeQueueSize>(set==='m'?36:24))break;
     const sz=V.m.sz[g],u=V.bytes[g];let o=0;V.gd[g]=1;
     sz.forEach((n,k)=>{const i=g*V.m.g+k;dec.decode(new EncodedVideoChunk({type:k?'delta':'key',timestamp:Math.round(i*1e6/24),data:u.subarray(o,o+n)}));o+=n})}
   if(!V.busy&&dec.decodeQueueSize>0){V.busy=true;
     dec.flush().then(()=>{if(gen!==V.gen)return;V.busy=false;libera();decodifica()}).catch(()=>{if(gen===V.gen)V.busy=false})}
 }
 /* in memoria solo i gruppi vicini: un fotogramma a 1920 sono 8 MB */
-function libera(){const tieni=new Set(vicini().slice(0,set==='m'?7:4));
+function libera(){const tieni=new Set(vicini().slice(0,set==='m'?5:4));
   for(let g=0;g<V.G;g++)if(V.gd[g]&&!tieni.has(g))V.gd[g]=0;
   for(let i=0;i<F.n;i++)if(V.bm[i]&&!V.gd[gruppo(i)]){V.bm[i].close();V.bm[i]=null}}
 function segui(f,dir){if(!V.on)return;const g=gruppo(Math.round(f));if(dir)V.dir=dir;if(g!==V.wg){V.wg=g;libera();scarica(V.gen)}decodifica()}
@@ -429,7 +433,9 @@ function draw(f){
   const a=vicino(i0,-1),b=vicino(i0+1,1);
   if(a<0&&b<0)return;
   vista(f,pic(a<0?b:a));
+  if(V.log)V.log.push([+f.toFixed(2),a,b,!!(V.bm&&V.bm[a]),!!(V.bm&&V.bm[b]),performance.now()|0]);   // solo con ?debug, per le prove
   if(a<0||b<0||a===b){cover(pic(a<0?b:a),1);return}
+  if(b-a>2){cover(pic(f-a<=b-f?a:b),1);cx.globalAlpha=1;return}   // buco: il più vicino, fermo
   const u=(f-a)/(b-a);
   cover(pic(a),1);if(u>.02)cover(pic(b),Math.min(1,u));cx.globalAlpha=1;
 }
