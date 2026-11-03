@@ -417,7 +417,7 @@ async function carica(){
 /* il fotogramma più vicino che c'è: prima il video, poi le foto */
 const pic=i=>(V.on&&V.bm&&V.bm[i])||(ok[i]?imgs[i]:null);
 function vicino(i,dir){for(let d=0;d<32;d++){const j=i+dir*d;if(j>=0&&j<F.n&&pic(j))return j}return -1}
-function size(){const d=Math.min(devicePixelRatio||1,2),w=Math.round(cv.clientWidth*d),h=Math.round(cv.clientHeight*d);if(w===cv.width&&h===cv.height)return;cv.width=w;cv.height=h;dirty=true}
+function size(){const d=Math.min(devicePixelRatio||1,2,(set==='m'?1080:2048)/Math.max(1,set==='m'?cv.clientHeight:cv.clientWidth)),w=Math.round(cv.clientWidth*d),h=Math.round(cv.clientHeight*d);if(w===cv.width&&h===cv.height)return;cv.width=w;cv.height=h;dirty=true}
 /* punto focale (GIANNI §12.1): sul computer il prodotto sta nella metà libera dal testo, intero.
    Il capitolo col testo a destra vuole la candela a sinistra e viceversa; nei passaggi il punto scorre da un capitolo all'altro.
    Se il taglio «cover» non basta a spostarla, l'immagine si ingrandisce un poco (al massimo del 14%). */
@@ -510,8 +510,9 @@ function tick(){
   /* tetto di velocità: un lancio del dito sul telefono porta avanti centinaia di fotogrammi in un attimo e nessun decodificatore
      li prepara in tempo (il film saltava). Così il film corre al massimo 2,4 fotogrammi per giro (~145 al secondo) e li mostra tutti;
      si decodifica attorno a ciò che si vede, guardando verso dove si va */
-  const passo=reduce?(target-cur):(target-cur)*.14;
-  cur+=reduce?passo:Math.max(-2.4,Math.min(2.4,passo));
+  /* computer: niente tetto, la rotella va più veloce e il film restava indietro (Matteo 3/11: «anche da computer ha dei lag») */
+  const passo=reduce?(target-cur):(target-cur)*.2,tetto=set==='m'?4:1e9;
+  cur+=reduce?passo:Math.max(-tetto,Math.min(tetto,passo));
   if(target!==cur)DIR=Math.sign(target-cur);
   segui(cur,Math.sign(target-cur));
   if(Math.abs(target-cur)<.01)cur=target;
