@@ -310,7 +310,13 @@ const chaps=[...document.querySelectorAll('.chap')],pathBtns=[...document.queryS
 let F=null,imgs=[],ok=[],set='d',stops=[],cur=0,dirty=true,ready=false;
 const VH={clip:[150,130,130,130,120],seam:105,intro:170};   // scorrimento in vh di ogni tratto
 
+/* sul telefono innerHeight cambia di continuo (la barra degli indirizzi entra ed esce mentre si scorre), mentre l'altezza del
+   film è in vh del CSS, che restano fermi: misurare con innerHeight faceva saltare il film avanti e indietro (Matteo 3/11:
+   «sul cellulare non scorre bene»). Si misura un 100vh vero, lo stesso del CSS */
+const sonda=document.createElement('div');sonda.style.cssText='position:absolute;top:0;left:0;width:1px;height:100vh;visibility:hidden;pointer-events:none';
+document.body.appendChild(sonda);let VHP=sonda.offsetHeight/100||innerHeight/100;
 function layout(){
+  VHP=sonda.offsetHeight/100||innerHeight/100;
   const port=innerWidth<innerHeight*.9;set=port?'m':'d';
   let y=0;stops=F.segs.map(s=>{
     /* un tratto lento pesa di più: la rotella ci passa sopra più adagio (pesi cumulati, fotogramma per fotogramma) */
@@ -322,7 +328,7 @@ function layout(){
 }
 /* scorrimento → fotogramma (con la virgola) */
 function frameAt(){
-  const r=sec.getBoundingClientRect(),vh=innerHeight/100,y=-r.top/vh;
+  const r=sec.getBoundingClientRect(),y=-r.top/VHP;
   for(const s of stops){if(y<s.y1){const u=Math.max(0,(y-s.y0)/(s.y1-s.y0));return {f:pesato(s,u),s,u}}}
   const s=stops[stops.length-1];return {f:s.b,s,u:1};
 }
@@ -342,7 +348,7 @@ async function videoApri(){
   scarica(gen);return true}
 const gruppo=i=>Math.min(V.G-1,Math.max(0,Math.floor(i/V.m.g)));
 /* cosa serve adesso: il gruppo in cui si è, poi quelli nella direzione dello scorrimento, poi quello alle spalle */
-const vicini=()=>[V.wg,V.wg+V.dir,V.wg+2*V.dir,V.wg-V.dir,V.wg+3*V.dir].filter(g=>g>=0&&g<V.G);
+const vicini=()=>(set==='m'?[V.wg,V.wg+V.dir,V.wg+2*V.dir,V.wg+3*V.dir,V.wg-V.dir,V.wg+4*V.dir,V.wg+5*V.dir]:[V.wg,V.wg+V.dir,V.wg+2*V.dir,V.wg-V.dir,V.wg+3*V.dir]).filter(g=>g>=0&&g<V.G);
 function scarica(gen){
   while(V.on&&gen===V.gen&&V.inflight<3){
     /* solo attorno a dove si è: 8 secondi di film avanti, 1 indietro. Chi non scorre fino in fondo non scarica tutto */
@@ -366,14 +372,14 @@ function decoder(){
 function decodifica(){
   if(!V.on)return;const dec=decoder(),gen=V.gen;
   for(const g of vicini()){
-    if(!V.bytes[g]||V.gd[g])continue;if(dec.decodeQueueSize>24)break;
+    if(!V.bytes[g]||V.gd[g])continue;if(dec.decodeQueueSize>(set==='m'?48:24))break;
     const sz=V.m.sz[g],u=V.bytes[g];let o=0;V.gd[g]=1;
     sz.forEach((n,k)=>{const i=g*V.m.g+k;dec.decode(new EncodedVideoChunk({type:k?'delta':'key',timestamp:Math.round(i*1e6/24),data:u.subarray(o,o+n)}));o+=n})}
   if(!V.busy&&dec.decodeQueueSize>0){V.busy=true;
     dec.flush().then(()=>{if(gen!==V.gen)return;V.busy=false;libera();decodifica()}).catch(()=>{if(gen===V.gen)V.busy=false})}
 }
 /* in memoria solo i gruppi vicini: un fotogramma a 1920 sono 8 MB */
-function libera(){const tieni=new Set(vicini().slice(0,4));
+function libera(){const tieni=new Set(vicini().slice(0,set==='m'?7:4));
   for(let g=0;g<V.G;g++)if(V.gd[g]&&!tieni.has(g))V.gd[g]=0;
   for(let i=0;i<F.n;i++)if(V.bm[i]&&!V.gd[gruppo(i)]){V.bm[i].close();V.bm[i]=null}}
 function segui(f,dir){if(!V.on)return;const g=gruppo(Math.round(f));if(dir)V.dir=dir;if(g!==V.wg){V.wg=g;libera();scarica(V.gen)}decodifica()}
@@ -381,7 +387,7 @@ function pronto(){ready=true;document.getElementById('load').classList.add('done
 /* le foto: col video bastano i segnaposto (una ogni secondo); senza, si scaricano a passi, prima una ogni 16, poi 8, 4, 2 */
 async function carica(){
   imgs=new Array(F.n);ok=new Array(F.n).fill(false);
-  const video=await videoApri(),st=F.st||1,passi=video?[24]:[16,8,4,2,1].filter(x=>x>=st);
+  const video=await videoApri(),st=F.st||1,passi=video?(set==='m'?[24,8]:[24]):[16,8,4,2,1].filter(x=>x>=st);
   const ord=[],seen=new Set();
   for(const p of passi)for(let i=0;i<F.n;i+=p)if(!seen.has(i)){seen.add(i);ord.push(i)}
   /* senza video le prime 24 immagini vengono davanti a tutto: è da lì che si parte */
@@ -396,7 +402,7 @@ async function carica(){
 /* il fotogramma più vicino che c'è: prima il video, poi le foto */
 const pic=i=>(V.on&&V.bm&&V.bm[i])||(ok[i]?imgs[i]:null);
 function vicino(i,dir){for(let d=0;d<32;d++){const j=i+dir*d;if(j>=0&&j<F.n&&pic(j))return j}return -1}
-function size(){const d=Math.min(devicePixelRatio||1,2);cv.width=Math.round(cv.clientWidth*d);cv.height=Math.round(cv.clientHeight*d);dirty=true}
+function size(){const d=Math.min(devicePixelRatio||1,2),w=Math.round(cv.clientWidth*d),h=Math.round(cv.clientHeight*d);if(w===cv.width&&h===cv.height)return;cv.width=w;cv.height=h;dirty=true}
 /* punto focale (GIANNI §12.1): sul computer il prodotto sta nella metà libera dal testo, intero.
    Il capitolo col testo a destra vuole la candela a sinistra e viceversa; nei passaggi il punto scorre da un capitolo all'altro.
    Se il taglio «cover» non basta a spostarla, l'immagine si ingrandisce un poco (al massimo del 14%). */
@@ -484,8 +490,12 @@ function foglie(){
 let target=0,last=-1,active=-2;
 function tick(){
   const p=frameAt();target=p.f;
-  segui(target,Math.sign(target-cur));
-  cur+=reduce?(target-cur):(target-cur)*.14;
+  /* tetto di velocità: un lancio del dito sul telefono porta avanti centinaia di fotogrammi in un attimo e nessun decodificatore
+     li prepara in tempo (il film saltava). Così il film corre al massimo 2,4 fotogrammi per giro (~145 al secondo) e li mostra tutti;
+     si decodifica attorno a ciò che si vede, guardando verso dove si va */
+  const passo=reduce?(target-cur):(target-cur)*.14;
+  cur+=reduce?passo:Math.max(-2.4,Math.min(2.4,passo));
+  segui(cur,Math.sign(target-cur));
   if(Math.abs(target-cur)<.01)cur=target;
   if(dirty||Math.abs(cur-last)>.002){draw(cur);last=cur;dirty=false}
   /* titoli: ogni candela ha il suo, solo mentre la camera è ferma su di lei */
@@ -500,9 +510,10 @@ function tick(){
   requestAnimationFrame(tick);
 }
 pathBtns.forEach(b=>b.addEventListener('click',()=>{const k=+b.dataset.g;const s=stops.find(x=>x.k==='clip'&&x.i===k);
-  const vh=innerHeight/100;scrollTo({top:sec.offsetTop+(s.y0+(s.y1-s.y0)*.2)*vh,behavior:'smooth'})}));
+  scrollTo({top:sec.offsetTop+(s.y0+(s.y1-s.y0)*.2)*VHP,behavior:'smooth'})}));
 fetch('film/film.json').then(r=>r.json()).then(j=>{F=j;layout();size();carica();cur=frameAt().f;requestAnimationFrame(tick)});
-addEventListener('resize',()=>{if(!F)return;const was=set;layout();size();if(set!==was)carica()});
+let lastW=innerWidth;
+addEventListener('resize',()=>{if(!F)return;size();if(innerWidth===lastW&&set===(innerWidth<innerHeight*.9?'m':'d'))return;lastW=innerWidth;const was=set;layout();size();if(set!==was)carica()});
 setTimeout(()=>document.getElementById('load').classList.add('done'),9000);
 
 /* ---------- suono del bosco, generato ---------- */
