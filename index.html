@@ -353,7 +353,7 @@ const gruppo=i=>Math.min(V.G-1,Math.max(0,Math.floor(i/V.m.g)));
 /* cosa serve adesso: il gruppo in cui si è, poi quelli nella direzione dello scorrimento, poi quello alle spalle */
 const vicini=()=>(set==='m'?[V.wg,V.wg+V.dir,V.wg+2*V.dir,V.wg-V.dir,V.wg+3*V.dir,V.wg+4*V.dir]:[V.wg,V.wg+V.dir,V.wg+2*V.dir,V.wg-V.dir,V.wg+3*V.dir]).filter(g=>g>=0&&g<V.G);
 function scarica(gen){
-  while(V.on&&gen===V.gen&&V.inflight<3){
+  while(V.on&&gen===V.gen&&V.inflight<4){
     /* solo attorno a dove si è: 8 secondi di film avanti, 1 indietro. Chi non scorre fino in fondo non scarica tutto */
     let g=vicini().find(g=>!V.req[g]);
     if(g===undefined)for(let d=0;d<=16;d++){const h=V.wg+d*V.dir;if(h>=0&&h<V.G&&!V.req[h]){g=h;break}}
@@ -394,7 +394,7 @@ function pronto(){ready=true;document.getElementById('load').classList.add('done
 /* le foto: col video bastano i segnaposto (una ogni secondo); senza, si scaricano a passi, prima una ogni 16, poi 8, 4, 2 */
 async function carica(){
   imgs=new Array(F.n);ok=new Array(F.n).fill(false);
-  const video=await videoApri(),st=F.st||1,passi=video?(set==='m'?[24,8]:[24]):[16,8,4,2,1].filter(x=>x>=st);
+  const video=await videoApri(),st=F.st||1,passi=video?[24,8]:[16,8,4,2,1].filter(x=>x>=st);
   const ord=[],seen=new Set();
   for(const p of passi)for(let i=0;i<F.n;i+=p)if(!seen.has(i)){seen.add(i);ord.push(i)}
   /* senza video le prime 24 immagini vengono davanti a tutto: è da lì che si parte */
