@@ -1,0 +1,5 @@
+Modelli e foto veri del bosco 3D (tutti CC0, uso commerciale libero, nessuna attribuzione obbligatoria).
+- ceppo.glb = tree_stump_01, rocce.glb = rock_moss_set_01, tronco.glb = dead_tree_trunk, felci.glb = fern_02: Poly Haven (polyhaven.com), Rob Tuytel, Kless Gyzen, Rico Cilliers.
+- erba/foglie/terra *.webp = forrest_ground_01, forest_leaves_02, forest_ground_04: Poly Haven.
+- cerva.glb (Deer), cervo.glb (Stag), volpe.glb (Fox): Quaternius (quaternius.com) via poly.pizza, CC0.
+Scaricati e alleggeriti il 4/11/2026 (gltf-transform: meshopt, webp 1024).
