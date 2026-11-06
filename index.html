@@ -307,7 +307,7 @@ document.querySelectorAll('a[href^="#"]').forEach(a=>a.addEventListener('click',
    come segnaposto mentre un gruppo arriva e come riserva per i browser senza WebCodecs. */
 const sec=document.getElementById('film'),cv=document.getElementById('fc'),cx=cv.getContext('2d',{alpha:false});
 const chaps=[...document.querySelectorAll('.chap')],pathBtns=[...document.querySelectorAll('.path button')],hero=document.getElementById('hero'),pathEl=document.getElementById('path');
-let DIR=1,F=null,imgs=[],ok=[],set='d',stops=[],cur=0,dirty=true,ready=false;
+let DIR=1,F=null,set='d',stops=[],cur=0,dirty=true,ready=false;
 const VH={clip:[150,130,130,130,120],seam:105,intro:170};   // scorrimento in vh di ogni tratto
 
 /* sul telefono innerHeight cambia di continuo (la barra degli indirizzi entra ed esce mentre si scorre), mentre l'altezza del
@@ -391,16 +391,40 @@ function libera(){const tieni=new Set(vicini().slice(0,set==='m'?5:4));
   for(let i=0;i<F.n;i++)if(V.bm[i]&&!V.gd[gruppo(i)]){V.bm[i].close();V.bm[i]=null}}
 function segui(f,dir){if(!V.on)return;const g=gruppo(Math.round(f));if(dir)V.dir=dir;if(g!==V.wg){V.wg=g;libera();scarica(V.gen)}decodifica()}
 function pronto(){ready=true;document.getElementById('load').classList.add('done')}
-/* le foto: col video bastano i segnaposto (una ogni secondo); senza, si scaricano a passi, prima una ogni 16, poi 8, 4, 2 */
+/* le foto: col video bastano i segnaposto (una ogni secondo); senza, si scaricano a passi, prima una ogni 16, poi 8, 4, 2.
+   Matteo 6/11 «non è scorrevole, troppi bug»: prima ogni foto restava un <img> decodificato, 697 × 2,6 MB sul telefono.
+   Safari le buttava e le ridecodificava mentre si scorreva (scatti), o ricaricava la pagina per la memoria.
+   Ora si tengono i file compressi (26 MB in tutto) e si decodificano in ImageBitmap, fuori dal giro principale, solo le foto
+   attorno a dove si è (80 fotogrammi avanti, 24 indietro); le altre si chiudono: dietro oltre 32, avanti oltre 96 */
+let blobs=[],fbm=[],fdec=new Uint8Array(0),CG=0,FW={c:-1e9,inv:0};
+const FA=()=>set==='m'?80:64,FB=24;
+function bmp(b){return 'createImageBitmap' in window?createImageBitmap(b):new Promise((ok,no)=>{const im=new Image(),u=URL.createObjectURL(b);
+  im.onload=()=>{(im.decode?im.decode():Promise.resolve()).then(()=>ok(im),()=>ok(im));URL.revokeObjectURL(u)};im.onerror=no;im.src=u})}
+const dentro=(i,c,d)=>{const r=(i-c)*d;return r>=-FB&&r<=FA()};
+/* GIANNI §56: si chiude dietro oltre 32 fotogrammi, avanti oltre FA+16 */
+const lontana=(i,c,d)=>{const r=(i-c)*d;return r<-(FB+8)||r>FA()+16};let FMAX=0;
+function fsegui(gen){
+  if(gen!==CG)return;const c=Math.round(cur),d=DIR||1;
+  /* via le foto lontane (con un margine, così non si chiude e riapre la stessa foto avanti e indietro) */
+  if(Math.abs(c-FW.c)>=4||d!==FW.d){FW.c=c;FW.d=d;for(let i=0;i<F.n;i++)if(fbm[i]&&lontana(i,c,d)){fbm[i].close&&fbm[i].close();fbm[i]=null;fdec[i]=0}}
+  /* le prossime da decodificare: dalla più vicina, prima nella direzione dello scorrimento */
+  while(FW.inv<2){let i=-1;
+    for(let j=0;j<=FA();j++){const a=c+d*j;if(a>=0&&a<F.n&&blobs[a]&&!fdec[a]){i=a;break}const b=c-d*j;if(j<=FB&&b>=0&&b<F.n&&blobs[b]&&!fdec[b]){i=b;break}}
+    if(i<0)return;fdec[i]=1;FW.inv++;
+    bmp(blobs[i]).then(m=>{FW.inv--;if(gen!==CG||lontana(i,Math.round(cur),DIR||1)){m.close&&m.close();fdec[i]=0}else{fbm[i]=m;dirty=true;nuova(i);if(V.log){const n=fbm.filter(Boolean).length;if(n>FMAX)FMAX=n}}fsegui(gen)},()=>{FW.inv--;fdec[i]=0})}
+}
+let nuova=()=>{};
+if(/[?&]debug/.test(location.search))window.__FF=()=>({foto:fbm.filter(Boolean).length,max:FMAX,file:blobs.filter(Boolean).length});
 async function carica(){
-  imgs=new Array(F.n);ok=new Array(F.n).fill(false);
+  const gen=++CG;fbm.forEach(m=>m&&m.close&&m.close());blobs=new Array(F.n);fbm=new Array(F.n);fdec=new Uint8Array(F.n);FW={c:-1e9,inv:0};
   const video=await videoApri(),st=F.st||1,passi=video?[24,8]:[16,8,4,2,1].filter(x=>x>=st);
   const ord=[],seen=new Set();
   for(const p of passi)for(let i=0;i<F.n;i+=p)if(!seen.has(i)){seen.add(i);ord.push(i)}
   /* senza video le prime 24 immagini vengono davanti a tutto: è da lì che si parte */
   const head=video?[0]:[];if(!video)for(let i=0;i<Math.min(24,F.n);i+=st)head.push(i);
-  /* il velo si toglie col primo fotogramma del video, o dopo le prime 4 foto: su un 4G arriva entro 2 s */
+  /* il velo si toglie col primo fotogramma del video, o dopo le prime 4 foto pronte: su un 4G arriva entro 2 s */
   const q=[...head,...ord.filter(i=>!head.includes(i))];let k=0,doneN=0;const need=video?99:4;
+  nuova=()=>{doneN++;if(!ready&&!video){document.getElementById('loadN').textContent=Math.min(100,Math.round(doneN/need*100))+'%';if(doneN>=need)pronto()}};
   /* senza video la prossima foto è quella che serve per prima: 4 secondi di film avanti nella direzione dello scorrimento,
      uno indietro; poi il resto a passi sempre più fitti */
   const chiesta=new Uint8Array(F.n);
@@ -409,13 +433,14 @@ async function carica(){
       for(let j=0;j<=96;j+=st){const i=c+d*j;if(i>=0&&i<F.n&&!chiesta[i])return i}
       for(let j=st;j<=24;j+=st){const i=c-d*j;if(i>=0&&i<F.n&&!chiesta[i])return i}}
     while(k<q.length){const i=q[k++];if(!chiesta[i])return i}};
-  const one=()=>{const i=prossima();if(i===undefined)return;chiesta[i]=1;const im=new Image();im.decoding='async';im.fetchPriority=doneN<4?'high':video?'low':'auto';
-    im.onload=()=>{const fatto=()=>{ok[i]=true;dirty=true};(im.decode?im.decode().then(fatto,fatto):fatto());doneN++;if(!ready&&!video){document.getElementById('loadN').textContent=Math.min(100,Math.round(doneN/need*100))+'%';if(doneN>=need)pronto()}one()};
-    im.onerror=()=>one();im.src=src(i);imgs[i]=im};
+  let n=0;
+  const one=()=>{if(gen!==CG)return;const i=prossima();if(i===undefined)return;chiesta[i]=1;
+    fetch(src(i),{priority:n++<4?'high':video?'low':'auto'}).then(r=>{if(!r.ok)throw 0;return r.blob()})
+      .then(b=>{if(gen!==CG)return;blobs[i]=b;fsegui(gen);one()},()=>{chiesta[i]=0;setTimeout(one,1500)})};
   for(let c=0;c<(video?2:6);c++)one();
 }
 /* il fotogramma più vicino che c'è: prima il video, poi le foto */
-const pic=i=>(V.on&&V.bm&&V.bm[i])||(ok[i]?imgs[i]:null);
+const pic=i=>(V.on&&V.bm&&V.bm[i])||fbm[i]||null;
 function vicino(i,dir){for(let d=0;d<32;d++){const j=i+dir*d;if(j>=0&&j<F.n&&pic(j))return j}return -1}
 function size(){const d=Math.min(devicePixelRatio||1,2,(set==='m'?1080:2048)/Math.max(1,set==='m'?cv.clientHeight:cv.clientWidth)),w=Math.round(cv.clientWidth*d),h=Math.round(cv.clientHeight*d);if(w===cv.width&&h===cv.height)return;cv.width=w;cv.height=h;dirty=true}
 /* punto focale (GIANNI §12.1): sul computer il prodotto sta nella metà libera dal testo, intero.
@@ -511,10 +536,10 @@ function tick(){
      li prepara in tempo (il film saltava). Così il film corre al massimo 2,4 fotogrammi per giro (~145 al secondo) e li mostra tutti;
      si decodifica attorno a ciò che si vede, guardando verso dove si va */
   /* computer: niente tetto, la rotella va più veloce e il film restava indietro (Matteo 3/11: «anche da computer ha dei lag») */
-  const passo=reduce?(target-cur):(target-cur)*.2,tetto=set==='m'?4:1e9;
+  const passo=reduce?(target-cur):(target-cur)*.2,tetto=set==='m'?10:1e9;
   cur+=reduce?passo:Math.max(-tetto,Math.min(tetto,passo));
   if(target!==cur)DIR=Math.sign(target-cur);
-  segui(cur,Math.sign(target-cur));
+  segui(cur,Math.sign(target-cur));fsegui(CG);
   if(Math.abs(target-cur)<.01)cur=target;
   if(dirty||Math.abs(cur-last)>.002){draw(cur);last=cur;dirty=false}
   /* titoli: ogni candela ha il suo, solo mentre la camera è ferma su di lei */
