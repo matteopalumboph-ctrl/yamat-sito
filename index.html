@@ -18,10 +18,13 @@
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="canonical" href="https://www.yamatcandle.com/">
-<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Organization", "@id": "https://www.yamatcandle.com/#org", "name": "Yamat Candle", "alternateName": "YAMÂT", "url": "https://www.yamatcandle.com/", "logo": "https://www.yamatcandle.com/icon-512.png", "image": "https://www.yamatcandle.com/og.jpg", "email": "yamatcandle@gmail.com", "sameAs": ["https://www.instagram.com/yamat_candle/"], "address": {"@type": "PostalAddress", "streetAddress": "Via Costalunga 34", "addressLocality": "Brescia", "addressCountry": "IT"}}, {"@type": "WebSite", "@id": "https://www.yamatcandle.com/#site", "url": "https://www.yamatcandle.com/", "name": "Yamat Candle", "inLanguage": "it", "publisher": {"@id": "https://www.yamatcandle.com/#org"}}, {"@type": "WebPage", "@id": "https://www.yamatcandle.com/#home", "url": "https://www.yamatcandle.com/", "name": "Yamat Candle · Candele artigianali in cemento, fatte a mano a Brescia", "isPartOf": {"@id": "https://www.yamatcandle.com/#site"}, "primaryImageOfPage": {"@type": "ImageObject", "url": "https://www.yamatcandle.com/og.jpg", "width": 1200, "height": 630}}]}</script>
 <meta property="og:url" content="https://www.yamatcandle.com/">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Organization", "@id": "https://www.yamatcandle.com/#org", "name": "Yamat Candle", "alternateName": "YAMÂT", "url": "https://www.yamatcandle.com/", "logo": "https://www.yamatcandle.com/icon-512.png", "image": "https://www.yamatcandle.com/og.jpg", "email": "yamatcandle@gmail.com", "sameAs": ["https://www.instagram.com/yamat_candle/"], "address": {"@type": "PostalAddress", "streetAddress": "Via Costalunga 34", "addressLocality": "Brescia", "addressCountry": "IT"}}, {"@type": "WebSite", "@id": "https://www.yamatcandle.com/#site", "url": "https://www.yamatcandle.com/", "name": "Yamat Candle", "inLanguage": "it", "publisher": {"@id": "https://www.yamatcandle.com/#org"}}, {"@type": "WebPage", "@id": "https://www.yamatcandle.com/#home", "url": "https://www.yamatcandle.com/", "name": "Yamat Candle · Candele artigianali in cemento, fatte a mano a Brescia", "isPartOf": {"@id": "https://www.yamatcandle.com/#site"}, "primaryImageOfPage": {"@type": "ImageObject", "url": "https://www.yamatcandle.com/og.jpg", "width": 1200, "height": 630}}]}</script>
 <meta name="description" content="Candele di cera di soia in vasi di cemento modellati a mano, con lo stoppino in legno che crepita. Fatte a Brescia. Entra nel bosco e scopri la collezione.">
 <link rel="stylesheet" href="yamat.css">
+<link rel="preload" as="fetch" href="film/film.json" crossorigin="anonymous">
+<link rel="preload" as="image" href="film/m/0000.webp" media="(max-aspect-ratio: 9/10)" fetchpriority="high">
+<link rel="preload" as="image" href="film/d/0000.webp" media="(min-aspect-ratio: 9/10)" fetchpriority="high">
 <link rel="stylesheet" href="fonts/fonts.css">
 <style>
 :root{
@@ -170,7 +173,7 @@ img{display:block;max-width:100%}
 .next b em{font-style:italic;color:var(--gold-2);font-variation-settings:"SOFT" 100,"WONK" 1,"opsz" 144}
 .next small{color:var(--bone-dim);font-size:14px;text-align:right;max-width:26ch}
 .next a:hover b{transform:translateX(20px)}
-@media (max-width:800px){.next a{grid-template-columns:36px 1fr}.next small{grid-column:2;text-align:left}}
+@media (max-width:800px){.next a{grid-template-columns:36px 1fr}.next small{grid-column:2;text-align:left}
 /* dopo il bosco */
 .after{position:relative;background:var(--night)}
 .after::before{content:"";position:absolute;left:0;right:0;top:-30vh;height:30vh;background:linear-gradient(transparent,var(--night));pointer-events:none}
@@ -180,33 +183,6 @@ img{display:block;max-width:100%}
 .head p{max-width:36ch;color:var(--bone-dim);margin:0;text-align:right}
 @media (max-width:800px){.head{grid-template-columns:1fr}.head p{text-align:left}}
 @media (prefers-reduced-motion:reduce){*{transition-duration:.01ms!important;animation:none!important}}
-
-/* bosco 3D cartoon (4/11): la scena è viva, niente grana da pellicola; il velo resta solo in basso per i testi */
-#film{height:auto}
-#film .stage::before{background:linear-gradient(180deg,rgba(7,11,9,.38),rgba(7,11,9,0) 20%,rgba(7,11,9,0) 56%,rgba(7,11,9,.62)),radial-gradient(ellipse 130% 95% at 50% 45%,rgba(7,11,9,0) 60%,rgba(7,11,9,.32))}
-#fc{touch-action:pan-y}
-/* GIANNI §20.1: un velo scuro dietro ogni capitolo, anche sul computer, così il testo regge sul ruscello e sui fiori */
-#film .chap::after{content:"";position:absolute;inset:-26% -30% -22% -30%;z-index:-2;pointer-events:none;opacity:0;transition:opacity .9s var(--ease);
-  background:radial-gradient(ellipse 60% 58% at 50% 55%,rgba(7,11,9,.74),rgba(7,11,9,.42) 55%,rgba(7,11,9,0) 100%)}
-#film .chap.on::after{opacity:1}
-/* GIANNI §20.3: in fondo al sentiero la radura porta da qualche parte */
-#film .uscita{position:absolute;inset:0;z-index:3;display:grid;place-items:center;text-align:center;padding-inline:var(--gutter);pointer-events:none;opacity:0;transform:translateY(18px);transition:opacity 1.2s var(--ease),transform 1.4s var(--ease)}
-#film .uscita.on{opacity:1;transform:none;pointer-events:auto}
-#film .uscita::before{content:"";position:absolute;inset:0;z-index:-1;background:radial-gradient(ellipse 62% 44% at 50% 60%,rgba(7,11,9,.66),rgba(7,11,9,0))}
-#film .uscita h2{font-size:clamp(46px,7vw,112px)}
-#film .uscita p{max-width:40ch;margin:22px auto 0;opacity:.85}
-#film .uscita .row{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:34px}
-/* GIANNI §25.4: sul computer descrizione e prezzo più grandi (+25%) e più chiari */
-@media (min-width:801px){#film .chap p{max-width:36ch;font-size:clamp(17px,1.38vw,21px);line-height:1.6;color:rgba(248,242,230,.96);text-shadow:0 1px 14px rgba(0,0,0,.55)}
-  #film .chap .price{font-size:clamp(24px,1.9vw,30px);color:#fbf5ea}#film .chap .btn{font-size:12.5px;padding:15px 26px}}
-/* GIANNI §25.5: il blocco finale su un velo scuro, pulsanti più grandi */
-#film .uscita::before{background:radial-gradient(ellipse 70% 56% at 50% 52%,rgba(7,11,9,.82),rgba(7,11,9,.5) 55%,rgba(7,11,9,0) 100%)}
-#film .uscita p{opacity:.95;font-size:clamp(15px,1.15vw,18px)}
-#film .uscita .btn{font-size:12.5px;padding:16px 28px}
-/* GIANNI §27.3: sul telefono l'ultima riga resta ad almeno 150 px dal bordo basso; il testo sale soltanto */
-@media (max-aspect-ratio:4/5){#film .chap{bottom:calc(env(safe-area-inset-bottom,0px) + 150px);transform:translate3d(0,calc(var(--u,.5)*-26px),0)}#film .stage::after{height:72%}}
-/* GIANNI §20.5: sul telefono «Suono del bosco» si fa da parte mentre parla una candela */
-@media (max-aspect-ratio:4/5){#film .sound{transition:opacity .6s var(--ease)}#film.parla .sound{opacity:0;pointer-events:none}}
 </style>
 
 <div id="load" role="status" aria-live="polite">
@@ -222,10 +198,10 @@ img{display:block;max-width:100%}
   <section id="film" aria-label="Il viaggio nel bosco">
     <div class="stage">
       <canvas id="fc" aria-hidden="true"></canvas>
-      
+      <div class="grana" aria-hidden="true"></div>
       <div class="hero" id="hero">
         <div>
-          <span class="label">Candele in cemento fatte a mano · Brescia</span>
+          <span class="label">Call of Wood · Brescia</span>
           <h1 class="display">Entra nel <em>bosco.</em></h1>
           <p>All'imbrunire, lungo il sentiero, qualcuno ha acceso cinque candele. Seguile fino alla radura.</p>
           <div class="go"><span class="label" style="color:var(--bone-dim)">Scorri</span><i></i></div>
@@ -269,14 +245,6 @@ img{display:block;max-width:100%}
         <div class="row fade"><span class="price num">89,99 €</span><a class="btn" href="ovale-double-04.html">Scopri</a></div>
       </article>
 
-      <div class="uscita" id="uscita">
-        <div>
-          <span class="label">La radura</span>
-          <h2 class="display">Cinque luci, <em>una è tua.</em></h2>
-          <p>Cemento modellato a mano, cera di soia, stoppino di legno. Spedite da Brescia.</p>
-          <div class="row"><a class="btn" href="collezione.html">Entra in negozio</a><a class="btn ghost" href="assistenza.html">Scrivici</a><a class="btn ghost" href="#">Torna all’inizio</a></div>
-        </div>
-      </div>
       <nav class="path" id="path" aria-label="Tappe del viaggio">
         <button type="button" data-g="0"><span>Il ceppo</span><i></i></button>
         <button type="button" data-g="1"><span>Le radici</span><i></i></button>
@@ -287,7 +255,8 @@ img{display:block;max-width:100%}
       <button class="sound" id="sound" type="button" aria-pressed="false"><b aria-hidden="true"><i></i><i></i><i></i></b><span>Suono del bosco</span></button>
     </div>
   </section>
-  
+  <div class="ponte" id="ponte" aria-hidden="true"></div>
+
   <div class="after">
     <section id="collezione" class="sec wrap">
       <div class="head">
@@ -319,6 +288,8 @@ img{display:block;max-width:100%}
 <script src="yamat.js"></script>
 <script>
 (function(){
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+
 /* ---------- collezione: nomi, prezzi e foto dal negozio ---------- */
 /* l'Ovale apre la collezione: è la candela con cui il film finisce, e ci si posa sopra (foglie e Ovale, più giù) */
 const LISTA=[...window.YAMAT.products].sort((a,b)=>(b.id==='ovale')-(a.id==='ovale'));
@@ -328,6 +299,241 @@ const monta=()=>{if(shopEl.childElementCount)return;shopEl.innerHTML=LISTA.map(y
 new IntersectionObserver((es,o)=>{if(es.some(e=>e.isIntersecting)){monta();o.disconnect()}},{rootMargin:'250% 0px'}).observe(shopEl);
 yReveal();
 document.querySelectorAll('a[href^="#"]').forEach(a=>a.addEventListener('click',e=>{const id=a.getAttribute('href').slice(1);const el=id==='inizio'?document.body:document.getElementById(id);if(!el)return;e.preventDefault();el.scrollIntoView({behavior:'smooth'})}));
+
+/* ---------- il film: le clip del bosco e i passaggi di camera (film/build_film.py) ----------
+   Ogni tratto ha la sua lunghezza di scorrimento: le candele restano più a lungo, i voli tra una e l'altra corrono.
+   È un video vero, 1920x1080 a 24 fotogrammi al secondo (Matteo 2/11: «bassissima qualità, non è fluido»): il sito scarica
+   gruppi da 12 fotogrammi e li decodifica al volo con WebCodecs, solo attorno al punto in cui si è. Le foto WebP piccole restano
+   come segnaposto mentre un gruppo arriva e come riserva per i browser senza WebCodecs. */
+const sec=document.getElementById('film'),cv=document.getElementById('fc'),cx=cv.getContext('2d',{alpha:false});
+const chaps=[...document.querySelectorAll('.chap')],pathBtns=[...document.querySelectorAll('.path button')],hero=document.getElementById('hero'),pathEl=document.getElementById('path');
+let DIR=1,F=null,imgs=[],ok=[],set='d',stops=[],cur=0,dirty=true,ready=false;
+const VH={clip:[150,130,130,130,120],seam:105,intro:170};   // scorrimento in vh di ogni tratto
+
+/* sul telefono innerHeight cambia di continuo (la barra degli indirizzi entra ed esce mentre si scorre), mentre l'altezza del
+   film è in vh del CSS, che restano fermi: misurare con innerHeight faceva saltare il film avanti e indietro (Matteo 3/11:
+   «sul cellulare non scorre bene»). Si misura un 100vh vero, lo stesso del CSS */
+const sonda=document.createElement('div');sonda.style.cssText='position:absolute;top:0;left:0;width:1px;height:100vh;visibility:hidden;pointer-events:none';
+document.body.appendChild(sonda);let VHP=sonda.offsetHeight/100||innerHeight/100;
+function layout(){
+  VHP=sonda.offsetHeight/100||innerHeight/100;
+  const port=innerWidth<innerHeight*.9;set=port?'m':'d';
+  let y=0;stops=F.segs.map(s=>{
+    /* un tratto lento pesa di più: la rotella ci passa sopra più adagio (pesi cumulati, fotogramma per fotogramma) */
+    const w=[0];for(let f=s.a;f<s.b;f++){const sl=(F.slow||[]).find(r=>f>=r[0]&&f<r[1]);w.push(w[w.length-1]+(sl?sl[2]:1))}
+    const len=(s.k==='clip'?VH.clip[s.i]:s.i<0?VH.intro:VH.seam)*(port?.85:1)*w[w.length-1]/Math.max(1,s.b-s.a);
+    const o={...s,w,y0:y,y1:y+len};y+=len;return o});
+  sec.style.height=(y+100)+'vh';
+  lati();
+}
+/* scorrimento → fotogramma (con la virgola) */
+function frameAt(){
+  const r=sec.getBoundingClientRect(),y=-r.top/VHP;
+  for(const s of stops){if(y<s.y1){const u=Math.max(0,(y-s.y0)/(s.y1-s.y0));return {f:pesato(s,u),s,u}}}
+  const s=stops[stops.length-1];return {f:s.b,s,u:1};
+}
+function pesato(s,u){const w=s.w,t=u*w[w.length-1];let k=0;while(k<w.length-2&&w[k+1]<t)k++;return s.a+k+Math.min(1,(t-w[k])/Math.max(1e-6,w[k+1]-w[k]))}
+function src(i){return `film/${set}/${String(i).padStart(4,'0')}.webp`}
+
+/* ---------- il video: gruppi da 12 fotogrammi (un fotogramma chiave + 11), decodificati quando servono ---------- */
+const V={on:false,gen:0};if(/[?&]debug/.test(location.search))window.__V=V;   // per le prove: index.html?debug
+function b64(t){const b=atob(t),u=new Uint8Array(b.length);for(let i=0;i<b.length;i++)u[i]=b.charCodeAt(i);return u}
+function videoChiudi(){V.on=false;V.gen++;try{V.dec&&V.dec.state!=='closed'&&V.dec.close()}catch(e){}(V.bm||[]).forEach(b=>b&&b.close())}
+async function videoApri(){
+  /* sul telefono niente decodifica video nel browser (Matteo 3/11: «ha dei bug, non scorre fluido e pulito»): Safari si riprende
+     il decodificatore, butta le bitmap e blocca la pagina mentre prepara i fotogrammi. Il telefono usa la sequenza di foto
+     608x1080 (una ogni 2 fotogrammi, ~42 KB), come le pagine prodotto di Apple: ogni foto si disegna da sola, senza stato */
+  videoChiudi();if(set==='m')return false;const m=F.v&&F.v[set];if(!m||!('VideoDecoder' in window)||!('createImageBitmap' in window))return false;
+  const cfg={codec:m.codec,codedWidth:m.w,codedHeight:m.h,description:b64(m.desc),optimizeForLatency:true};
+  try{if(!(await VideoDecoder.isConfigSupported(cfg)).supported)return false}catch(e){return false}
+  const G=m.sz.length,gen=V.gen;
+  Object.assign(V,{on:true,m,cfg,G,bytes:new Array(G),req:new Uint8Array(G),gd:new Uint8Array(G),bm:new Array(F.n),dec:null,busy:false,inflight:0,wg:0,dir:1});
+  scarica(gen);return true}
+const gruppo=i=>Math.min(V.G-1,Math.max(0,Math.floor(i/V.m.g)));
+/* cosa serve adesso: il gruppo in cui si è, poi quelli nella direzione dello scorrimento, poi quello alle spalle */
+const vicini=()=>(set==='m'?[V.wg,V.wg+V.dir,V.wg+2*V.dir,V.wg-V.dir,V.wg+3*V.dir,V.wg+4*V.dir]:[V.wg,V.wg+V.dir,V.wg+2*V.dir,V.wg-V.dir,V.wg+3*V.dir]).filter(g=>g>=0&&g<V.G);
+function scarica(gen){
+  while(V.on&&gen===V.gen&&V.inflight<4){
+    /* solo attorno a dove si è: 8 secondi di film avanti, 1 indietro. Chi non scorre fino in fondo non scarica tutto */
+    let g=vicini().find(g=>!V.req[g]);
+    if(g===undefined)for(let d=0;d<=16;d++){const h=V.wg+d*V.dir;if(h>=0&&h<V.G&&!V.req[h]){g=h;break}}
+    if(g===undefined)return;
+    V.req[g]=1;V.inflight++;
+    fetch(`film/v${set}/${String(g).padStart(4,'0')}.bin`).then(r=>{if(!r.ok)throw 0;return r.arrayBuffer()})
+      .then(b=>{if(gen!==V.gen)return;V.bytes[g]=new Uint8Array(b);V.inflight--;decodifica();scarica(gen)})
+      .catch(()=>{if(gen!==V.gen)return;V.inflight--;V.req[g]=0;setTimeout(()=>scarica(gen),1500)})}
+}
+function decoder(){
+  if(V.dec&&V.dec.state==='configured')return V.dec;const gen=V.gen;try{V.dec&&V.dec.state!=='closed'&&V.dec.close()}catch(e){}
+  V.dec=new VideoDecoder({output:fr=>{const i=Math.round(fr.timestamp*24/1e6);
+      createImageBitmap(fr).then(b=>{if(gen!==V.gen||!V.gd[gruppo(i)]){b.close();return}V.err=0;if(V.bm[i])V.bm[i].close();V.bm[i]=b;dirty=true;if(!ready&&i===0)pronto()})
+        .catch(()=>{}).finally(()=>fr.close())},
+    /* il telefono si riprende il decodificatore quando si resta fermi o la memoria serve ad altro: prima il film passava per
+       sempre alle foto di riserva (una ogni 8 fotogrammi, sfumate: i «lampi» di Matteo 3/11). Ora se ne apre un altro e si
+       ridecodifica attorno a dove si è; i fotogrammi già pronti restano */
+    error:()=>{if(gen!==V.gen)return;V.dec=null;V.busy=false;V.gd.fill(0);V.err=(V.err||0)+1;
+      if(V.err>8){V.on=false;dirty=true;return}setTimeout(()=>{if(gen===V.gen)decodifica()},50)}});
+  V.dec.configure(V.cfg);return V.dec}
+/* i gruppi vicini si mettono in coda uno dietro l'altro, senza aspettare che il precedente sia finito;
+   flush solo quando la coda si svuota, per far uscire gli ultimi fotogrammi */
+function decodifica(){
+  if(!V.on)return;const dec=decoder(),gen=V.gen;
+  for(const g of vicini()){
+    if(!V.bytes[g]||V.gd[g])continue;if(dec.decodeQueueSize>(set==='m'?36:24))break;
+    const sz=V.m.sz[g],u=V.bytes[g];let o=0;V.gd[g]=1;
+    sz.forEach((n,k)=>{const i=g*V.m.g+k;dec.decode(new EncodedVideoChunk({type:k?'delta':'key',timestamp:Math.round(i*1e6/24),data:u.subarray(o,o+n)}));o+=n})}
+  if(!V.busy&&dec.decodeQueueSize>0){V.busy=true;
+    dec.flush().then(()=>{if(gen!==V.gen)return;V.busy=false;libera();decodifica()}).catch(()=>{if(gen===V.gen)V.busy=false})}
+}
+/* in memoria solo i gruppi vicini: un fotogramma a 1920 sono 8 MB */
+function libera(){const tieni=new Set(vicini().slice(0,set==='m'?5:4));
+  for(let g=0;g<V.G;g++)if(V.gd[g]&&!tieni.has(g))V.gd[g]=0;
+  for(let i=0;i<F.n;i++)if(V.bm[i]&&!V.gd[gruppo(i)]){V.bm[i].close();V.bm[i]=null}}
+function segui(f,dir){if(!V.on)return;const g=gruppo(Math.round(f));if(dir)V.dir=dir;if(g!==V.wg){V.wg=g;libera();scarica(V.gen)}decodifica()}
+function pronto(){ready=true;document.getElementById('load').classList.add('done')}
+/* le foto: col video bastano i segnaposto (una ogni secondo); senza, si scaricano a passi, prima una ogni 16, poi 8, 4, 2 */
+async function carica(){
+  imgs=new Array(F.n);ok=new Array(F.n).fill(false);
+  const video=await videoApri(),st=F.st||1,passi=video?[24,8]:[16,8,4,2,1].filter(x=>x>=st);
+  const ord=[],seen=new Set();
+  for(const p of passi)for(let i=0;i<F.n;i+=p)if(!seen.has(i)){seen.add(i);ord.push(i)}
+  /* senza video le prime 24 immagini vengono davanti a tutto: è da lì che si parte */
+  const head=video?[0]:[];if(!video)for(let i=0;i<Math.min(24,F.n);i+=st)head.push(i);
+  /* il velo si toglie col primo fotogramma del video, o dopo le prime 4 foto: su un 4G arriva entro 2 s */
+  const q=[...head,...ord.filter(i=>!head.includes(i))];let k=0,doneN=0;const need=video?99:4;
+  /* senza video la prossima foto è quella che serve per prima: 4 secondi di film avanti nella direzione dello scorrimento,
+     uno indietro; poi il resto a passi sempre più fitti */
+  const chiesta=new Uint8Array(F.n);
+  const prossima=()=>{
+    if(!video){const c=Math.round(cur/st)*st,d=DIR||1;
+      for(let j=0;j<=96;j+=st){const i=c+d*j;if(i>=0&&i<F.n&&!chiesta[i])return i}
+      for(let j=st;j<=24;j+=st){const i=c-d*j;if(i>=0&&i<F.n&&!chiesta[i])return i}}
+    while(k<q.length){const i=q[k++];if(!chiesta[i])return i}};
+  const one=()=>{const i=prossima();if(i===undefined)return;chiesta[i]=1;const im=new Image();im.decoding='async';im.fetchPriority=doneN<4?'high':video?'low':'auto';
+    im.onload=()=>{const fatto=()=>{ok[i]=true;dirty=true};(im.decode?im.decode().then(fatto,fatto):fatto());doneN++;if(!ready&&!video){document.getElementById('loadN').textContent=Math.min(100,Math.round(doneN/need*100))+'%';if(doneN>=need)pronto()}one()};
+    im.onerror=()=>one();im.src=src(i);imgs[i]=im};
+  for(let c=0;c<(video?2:6);c++)one();
+}
+/* il fotogramma più vicino che c'è: prima il video, poi le foto */
+const pic=i=>(V.on&&V.bm&&V.bm[i])||(ok[i]?imgs[i]:null);
+function vicino(i,dir){for(let d=0;d<32;d++){const j=i+dir*d;if(j>=0&&j<F.n&&pic(j))return j}return -1}
+function size(){const d=Math.min(devicePixelRatio||1,2,(set==='m'?1080:2048)/Math.max(1,set==='m'?cv.clientHeight:cv.clientWidth)),w=Math.round(cv.clientWidth*d),h=Math.round(cv.clientHeight*d);if(w===cv.width&&h===cv.height)return;cv.width=w;cv.height=h;dirty=true}
+/* punto focale (GIANNI §12.1): sul computer il prodotto sta nella metà libera dal testo, intero.
+   Il capitolo col testo a destra vuole la candela a sinistra e viceversa; nei passaggi il punto scorre da un capitolo all'altro.
+   Se il taglio «cover» non basta a spostarla, l'immagine si ingrandisce un poco (al massimo del 14%). */
+let TX=[];
+/* la Fioritura è un gruppo largo (bouquet, candela e Scrigno): il suo centro sta più dentro, così lo Scrigno non tocca il bordo */
+const TXC={3:.56};
+function lati(){const wide=set==='d';TX=chaps.map((el,k)=>!wide?.5:TXC[k]??(el.classList.contains('r')?.34:.64))}
+function txAt(f){for(const s of stops){if(f<=s.b+.5){
+  if(s.k==='clip')return TX[s.i];const u=Math.min(1,Math.max(0,(f-s.a)/Math.max(1,s.b-s.a)));
+  const a=s.i<0?.5:TX[s.i],b=TX[s.i+1]??TX[s.i];return a+(b-a)*u}}return TX[TX.length-1]}
+let VIEW={s:1,ox:0,oy:0,iw:1,ih:1};
+function vista(f,im){
+  const W=cv.width,H=cv.height,iw=im.naturalWidth||im.width,ih=im.naturalHeight||im.height,s0=Math.max(W/iw,H/ih);
+  if(set!=='d'||!F.fx){VIEW={s:s0,ox:(W-iw*s0)/2,oy:(H-ih*s0)/2,iw,ih};return}
+  const fx=F.fx[Math.min(F.n-1,Math.max(0,Math.round(f)))],tx=txAt(f);
+  let need=s0;if(fx*iw*s0<W*tx)need=W*tx/(fx*iw);else need=Math.max(s0,W*(1-tx)/(iw*(1-fx)));
+  const s=Math.min(need,s0*1.14),ox=Math.min(0,Math.max(W-iw*s,W*tx-fx*iw*s));
+  VIEW={s,ox,oy:(H-ih*s)*.55,iw,ih};
+}
+function cover(im,al){const v=VIEW;cx.globalAlpha=al;cx.drawImage(im,v.ox,v.oy,v.iw*v.s,v.ih*v.s)}
+function draw(f){
+  const i0=Math.floor(f),t=f-i0;
+  if(V.on){V.draws=(V.draws||0)+1;if(!V.bm[i0])V.miss=(V.miss||0)+1}   // quante volte il video non era pronto (per le prove)
+  const a=vicino(i0,-1),b=vicino(i0+1,1);
+  if(a<0&&b<0)return;
+  vista(f,pic(a<0?b:a));
+  if(V.log)V.log.push([+f.toFixed(2),a,b,!!(V.bm&&V.bm[a]),!!(V.bm&&V.bm[b]),performance.now()|0]);   // solo con ?debug, per le prove
+  if(a<0||b<0||a===b){cover(pic(a<0?b:a),1);return}
+  if(b-a>2){cover(pic(f-a<=b-f?a:b),1);cx.globalAlpha=1;return}   // buco: il più vicino, fermo
+  const u=(f-a)/(b-a);
+  cover(pic(a),1);if(u>.02)cover(pic(b),Math.min(1,u));cx.globalAlpha=1;
+}
+
+/* ---------- foglie: dal film alla collezione, come se il vento le portasse giù ---------- */
+const ponte=document.getElementById('ponte');
+const FOGLIE=[{f:1,x:.12,w:190,v:1.25,r:-30,rv:160,cls:''},{f:3,x:.78,w:150,v:1.6,r:40,rv:-210,cls:''},{f:5,x:.42,w:110,v:.9,r:10,rv:120,cls:'lontana'},
+  {f:2,x:.9,w:90,v:.75,r:-60,rv:90,cls:'lontana'},{f:4,x:.25,w:260,v:2.1,r:20,rv:-140,cls:'vicina'}];
+const fogl=FOGLIE.map(o=>{const im=new Image();im.dataset.src=`film/foglia${o.f}.webp`;im.alt='';im.className=o.cls;im.style.setProperty('--w',`calc(${o.w}px * var(--sf,1))`);ponte.appendChild(im);return {o,im}});
+/* l'Ovale lascia il film e si posa sulla prima scheda della collezione (GIANNI §12.4).
+   Parte esattamente dov'è nell'ultimo fotogramma (riquadro in OV, in frazioni del fotogramma 1920x1080), cresce un poco
+   verso la camera, poi scende con le foglie e si appoggia sulla foto della scheda, dove svanisce. */
+const OV={x0:724/1920,y0:312/1080,x1:1214/1920,y1:759/1080},CARD={x0:.384,y0:.302,x1:.623};
+const ovv=new Image();ovv.dataset.src='film/ovale_volo.webp';ovv.alt='';ovv.className='ovale';ponte.appendChild(ovv);
+const ovCard=()=>document.querySelector('#shop .card[href="ovale-double-04.html"] figure');
+const ease=t=>t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;
+function ovale(rel){
+  const fig=ovCard();if(!fig||!F||rel<-.02){ovv.style.opacity=0;cv.style.opacity=1;return}
+  const r=sec.getBoundingClientRect(),dpr=cv.width/cv.clientWidth,v=VIEW;
+  /* dov'è l'Ovale sullo schermo, nel palco che sta salendo */
+  const st=sec.querySelector('.stage').getBoundingClientRect();
+  /* sul telefono il fotogramma è un taglio 608x1080 attorno al prodotto (build_film.py, crop_m): si riportano lì le frazioni */
+  let o=OV;if(set==='m'){const fx=F.fx[F.n-1],x=Math.min(Math.max(fx*1920-304,0),1920-608);o={x0:(OV.x0*1920-x)/608,x1:(OV.x1*1920-x)/608,y0:OV.y0,y1:OV.y1}}
+  const a={x:st.left+(v.ox+o.x0*v.iw*v.s)/dpr,y:st.top+(v.oy+o.y0*v.ih*v.s)/dpr,w:(o.x1-o.x0)*v.iw*v.s/dpr};
+  /* atterraggio: la foto della scheda (t5.jpg) è l'inquadratura finale del film; la candela lì sta in CARD (frazioni della foto).
+     Si rifà il taglio «cover» della figura, così l'Ovale in volo si posa esattamente sulla candela della foto e sparisce dentro. */
+  const c=fig.getBoundingClientRect(),im=fig.querySelector('img'),nw=im.naturalWidth||16,nh=im.naturalHeight||9;
+  const sc=Math.max(c.width/nw,c.height/nh)*1.02,iw=nw*sc,ih=nh*sc,ix=c.left+(c.width-iw)/2,iy=c.top+(c.height-ih)/2;
+  const b={x:ix+CARD.x0*iw,y:iy+CARD.y0*ih,w:(CARD.x1-CARD.x0)*iw};
+  /* arriva all'82% del tratto, poi resta posato e svanisce dentro la foto: mai due Ovali sfalsati */
+  /* il bosco si spegne mentre l'Ovale si alza: ne resta uno solo, quello che vola. Finché il bosco non è spento l'Ovale
+     resta incollato al suo posto nel film (k), poi si stacca, cresce verso la camera e scende */
+  const buio=Math.min(1,Math.max(0,rel/.16)),k=buio*buio;
+  cv.style.opacity=(1-buio).toFixed(3);   // a nero pieno: dell'Ovale del film non resta nemmeno l'etichetta (GIANNI §14.A)
+  const p=Math.min(1,Math.max(0,(rel-.02)/.95)),e=ease(Math.min(1,p/.82))*k,lift=Math.sin(Math.PI*Math.min(1,p*1.4))*.16*k;
+  /* traiettoria (GIANNI §14.B): curva larga sul lato destro, lontana dal titolo «Nove luci», che comunque le sta sopra;
+     l'Ovale rimpicciolisce presto, così sul telefono non esce dal bordo in basso */
+  const es=ease(Math.min(1,p/.45))*k,w=(a.w+(b.w-a.w)*es)*(1+lift);
+  const cxp=Math.min(innerWidth-w*.55,Math.max(a.x+a.w/2,b.x+b.w/2)+innerWidth*.2),cyp=(a.y+b.y)/2;
+  const ax=a.x+a.w/2,bx=b.x+b.w/2,ccx=(1-e)*(1-e)*ax+2*(1-e)*e*cxp+e*e*bx,ccy=(1-e)*(1-e)*a.y+2*(1-e)*e*cyp+e*e*b.y;
+  const yl=ccy-H_lift(p)*k*innerHeight,tt=Math.min(1,Math.max(0,(e-.7)/.3)),x=ccx-w/2,y=Math.min(yl,innerHeight-w*.95)*(1-tt)+yl*tt;   // dentro lo schermo finché vola, libero quando si posa
+  ovv.style.width=w+'px';ovv.style.transform=`translate3d(${x}px,${y}px,0) rotate(${Math.sin(Math.min(1,p/.82)*Math.PI)*-6}deg)`;
+  ovv.style.opacity=p<=0?0:p<.86?1:Math.max(0,(1-p)/.14);
+}
+const H_lift=p=>Math.sin(Math.PI*Math.min(1,p/.82))*.08;
+function foglie(){
+  const B=sec.offsetTop+sec.offsetHeight,y=scrollY,H=innerHeight;
+  const rel=(y+H-B)/H;   // 0: il bordo del film entra dal basso; 1: è in cima allo schermo
+  if(rel>-2.5&&!ovv.src){ponte.querySelectorAll('img[data-src]').forEach(im=>im.src=im.dataset.src);monta()}
+  const on=rel>-.15&&rel<2.2;ponte.classList.toggle('on',on);if(!on){if(rel<0)cv.style.opacity=1;return}
+  ovale(rel);
+  ponte.style.setProperty('--sf',innerWidth<700?.6:1);
+  fogl.forEach(({o,im},k)=>{const yy=H*(1.25-(rel+.1)*o.v)+k*40,xx=innerWidth*o.x+Math.sin(rel*3+k)*40-o.w/2;
+    im.style.transform=`translate3d(${xx}px,${yy}px,0) rotate(${o.r+rel*o.rv}deg)`});
+}
+
+/* ---------- il ciclo ---------- */
+let target=0,last=-1,active=-2;
+function tick(){
+  const p=frameAt();target=p.f;
+  /* tetto di velocità: un lancio del dito sul telefono porta avanti centinaia di fotogrammi in un attimo e nessun decodificatore
+     li prepara in tempo (il film saltava). Così il film corre al massimo 2,4 fotogrammi per giro (~145 al secondo) e li mostra tutti;
+     si decodifica attorno a ciò che si vede, guardando verso dove si va */
+  /* computer: niente tetto, la rotella va più veloce e il film restava indietro (Matteo 3/11: «anche da computer ha dei lag») */
+  const passo=reduce?(target-cur):(target-cur)*.2,tetto=set==='m'?4:1e9;
+  cur+=reduce?passo:Math.max(-tetto,Math.min(tetto,passo));
+  if(target!==cur)DIR=Math.sign(target-cur);
+  segui(cur,Math.sign(target-cur));
+  if(Math.abs(target-cur)<.01)cur=target;
+  if(dirty||Math.abs(cur-last)>.002){draw(cur);last=cur;dirty=false}
+  /* titoli: ogni candela ha il suo, solo mentre la camera è ferma su di lei */
+  const s=p.s,intro=stops[0].i<0,inHero=intro?(s.i<0&&p.u<.55):(s.k==='clip'&&s.i===0&&p.u<.16);
+  hero.classList.toggle('off',!inHero);
+  const act=!inHero&&s.k==='clip'&&p.u<.94?s.i:-1;
+  if(act!==active){active=act;chaps.forEach((el,k)=>el.classList.toggle('on',k===act))}
+  if(act>=0)chaps[act].style.setProperty('--u',(s.i===0&&!intro?(p.u-.16)/.78:p.u).toFixed(3));
+  const tot=stops[stops.length-1].y1;pathEl.style.setProperty('--p',Math.min(1,(s.y0+(s.y1-s.y0)*p.u)/tot).toFixed(4));
+  pathBtns.forEach((b,k)=>b.classList.toggle('on',k===Math.max(0,s.i)&&!inHero));
+  foglie();
+  requestAnimationFrame(tick);
+}
+pathBtns.forEach(b=>b.addEventListener('click',()=>{const k=+b.dataset.g;const s=stops.find(x=>x.k==='clip'&&x.i===k);
+  scrollTo({top:sec.offsetTop+(s.y0+(s.y1-s.y0)*.2)*VHP,behavior:'smooth'})}));
+fetch('film/film.json').then(r=>r.json()).then(j=>{F=j;layout();size();carica();cur=frameAt().f;requestAnimationFrame(tick)});
+let lastW=innerWidth;
+addEventListener('resize',()=>{if(!F)return;size();if(innerWidth===lastW&&set===(innerWidth<innerHeight*.9?'m':'d'))return;lastW=innerWidth;const was=set;layout();size();if(set!==was)carica()});
+setTimeout(()=>document.getElementById('load').classList.add('done'),9000);
 
 /* ---------- suono del bosco, generato ---------- */
 let ac=null,master=null;
@@ -349,5 +555,3 @@ document.getElementById('sound').addEventListener('click',e=>{
 });
 })();
 </script>
-<script type="importmap">{"imports":{"three":"./vendor/three-0.169.0/build/three.module.js","three/addons/":"./vendor/three-0.169.0/examples/jsm/"}}</script>
-<script type="module" src="bosco3d/bosco.js"></script>
